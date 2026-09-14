@@ -57,8 +57,8 @@ export class UnlockDialogController {
         dialog.finish = (onComplete) => {
             const isCupertino = this._extension._lockscreenMode === 'cupertino';
             if (isCupertino && this._extension._cupertinoUnlockFade) {
-                const capturedSnapshots = global.wack_window_snapshots
-                    ? global.wack_window_snapshots.slice()
+                const capturedSnapshots = Array.isArray(global.wack_window_snapshots)
+                    ? global.wack_window_snapshots.splice(0)
                     : [];
 
                 const panel = Main.panel;
@@ -163,7 +163,8 @@ export class UnlockDialogController {
                                 this._extension._wallpaperManager.customWallpaperOverlay.destroy();
                                 this._extension._wallpaperManager.customWallpaperOverlay = null;
                             }
-                            global.wack_window_snapshots = [];
+                            if (global.wack_window_snapshots)
+                                delete global.wack_window_snapshots;
                             onComplete();
                         };
 

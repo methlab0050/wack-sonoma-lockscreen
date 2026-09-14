@@ -1,3 +1,5 @@
+import Gio from 'gi://Gio';
+
 export function _log(msg) {
     console.debug(msg);
 }
@@ -13,6 +15,33 @@ export function _setActorVisible(actor, visible, opacity) {
     actor.remove_all_transitions();
     actor.visible = visible;
     actor.opacity = opacity;
+}
+
+/**
+ * Resolves a wallpaper URI accessible by the GDM greeter (running as user 'gdm').
+ * In GDM, user home directories may be mode 0700, making source_uri unreadable.
+ * meta.uri points to the shared world-readable copy in /var/tmp created by
+ * crossSessionManager, so prefer it whenever it exists on disk.
+ *
+ * @param {object} meta
+ * @returns {string|null}
+ */
+export function resolveGdmAccessibleUri(meta) {
+    if (!meta)
+        return null;
+    if (meta.uri) {
+        try {
+            const uriPath = meta.uri.startsWith('file://') ? meta.uri.substring(7) : meta.uri;
+            if (Gio.File.new_for_path(uriPath).query_exists(null))
+                return meta.uri.startsWith('file://') ? meta.uri : `file://${meta.uri}`;
+        } catch (_) {}
+    }
+    if (meta.resolved_slide_path)
+        return meta.resolved_slide_path.startsWith('file://') ? meta.resolved_slide_path : `file://${meta.resolved_slide_path}`;
+    const fallback = meta.source_uri ?? meta.uri;
+    if (fallback)
+        return fallback.startsWith('file://') ? fallback : `file://${fallback}`;
+    return null;
 }
 
 // GDM mode positioning and transitions

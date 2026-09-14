@@ -615,6 +615,7 @@ export default class WackLockscreenClockExtension extends Extension {
                     this._applyCancelButtonBackground(currentAuthPrompt.cancelButton, promptColor);
             } else if (!promptVibrancy) {
                 this._clearCupertinoPromptBackground();
+                this._clearBottomButtonsBackground();
             }
         } catch (e) {
             _logError(`[WACK/Extension] _updateClockAlphaAndPromptColor error: ${e}`);
@@ -683,6 +684,7 @@ export default class WackLockscreenClockExtension extends Extension {
     _applyA11yButtonBackground(button, color) { this._promptStyling?.applyA11yButtonBackground(button, color); }
     _applySessionButtonBackground(button, color) { this._promptStyling?.applySessionButtonBackground(button, color); }
     _clearCupertinoPromptBackground() { this._promptStyling?.clearCupertinoPromptBackground(); }
+    _clearBottomButtonsBackground() { this._promptStyling?.clearBottomButtonsBackground(); }
     _onAuthPromptAllocation() { this._promptStyling?.onAuthPromptAllocation(); }
 
     _setupCupertinoAvatarOverride() { this._avatarManager?.setupCupertinoAvatarOverride(); }

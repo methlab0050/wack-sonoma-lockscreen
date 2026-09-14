@@ -12,35 +12,51 @@ export class GdmAvatarManager {
         this.gdmOrigUserWellYAlign = null;
         this._lastAvatarColor = null;
         this._connectedUser = null;
+        this._dialog = null;
     }
 
-    setup() {
+    setup(dialog = null) {
         if (this.gdmAvatarSetup) return;
-        const authPrompt = this._gdm._dialog?._authPrompt;
-        if (!authPrompt) return;
+        this._dialog = dialog || this._gdm._dialog;
+        const authPrompt = this._dialog?._authPrompt;
         this.gdmAvatarSetup = true;
 
-        if (authPrompt._userWell) {
-            this.gdmOrigUserWellYAlign = authPrompt._userWell.y_align;
-            authPrompt._userWell.y_align = Clutter.ActorAlign.START;
-        }
+        if (authPrompt) {
+            if (authPrompt._userWell) {
+                this.gdmOrigUserWellYAlign = authPrompt._userWell.y_align;
+                authPrompt._userWell.y_align = Clutter.ActorAlign.START;
+            }
 
-        if (!this.gdmOrigUpdateUser) {
-            const methodName = authPrompt.setUser ? 'setUser' : 'updateUser';
-            this.gdmOrigMethodName = methodName;
-            this.gdmOrigUpdateUser = authPrompt[methodName].bind(authPrompt);
-            authPrompt[methodName] = (user) => {
-                this.gdmOrigUpdateUser(user);
+            if (!this.gdmOrigUpdateUser) {
+                const methodName = authPrompt.setUser ? 'setUser' : 'updateUser';
+                this.gdmOrigMethodName = methodName;
+                this.gdmOrigUpdateUser = authPrompt[methodName].bind(authPrompt);
+                authPrompt[methodName] = (user) => {
+                    this.gdmOrigUpdateUser(user);
+                    this.wrapGdmAvatar();
+                };
                 this.wrapGdmAvatar();
-            };
-            this.wrapGdmAvatar();
+            }
+
+            authPrompt.connectObject('destroy', () => this.teardown(), this);
         }
 
-        authPrompt.connectObject('destroy', () => this.teardown(), this);
+        const userList = this._dialog?._userList;
+        if (userList) {
+            userList.connectObject(
+                'item-added', (_ul, item) => this._setupUserListItem(item),
+                this
+            );
+            if (userList._items) {
+                for (const item of userList._items.values()) {
+                    this._setupUserListItem(item);
+                }
+            }
+        }
     }
 
     teardown() {
-        const authPrompt = this._gdm._dialog?._authPrompt;
+        const authPrompt = this._dialog?._authPrompt || this._gdm._dialog?._authPrompt;
         if (authPrompt) authPrompt.disconnectObject(this);
 
         if (authPrompt && authPrompt._userWell && this.gdmOrigUserWellYAlign !== undefined && this.gdmOrigUserWellYAlign !== null) {
@@ -60,14 +76,93 @@ export class GdmAvatarManager {
         }
 
         this.unwrapGdmAvatar();
+
+        // Disconnect from userList and clear any vibrancy styles and update wrappers
+        const userList = this._dialog?._userList || this._gdm._dialog?._userList;
+        if (userList) {
+            userList.disconnectObject(this);
+            if (userList._items) {
+                for (const item of userList._items.values()) {
+                    const avatar = item._userWidget?._avatar;
+                    const user = avatar?._user || item._userWidget?._user;
+                    if (user)
+                        user.disconnectObject(this);
+                    if (avatar) {
+                        if (avatar._wackOrigUpdate) {
+                            avatar.update = avatar._wackOrigUpdate;
+                            delete avatar._wackOrigUpdate;
+                        }
+                        if (avatar._wackHasVibrancy && !this._hasImageAvatar(avatar)) {
+                            avatar.set_style(null);
+                        }
+                        delete avatar._wackHasVibrancy;
+                    }
+                }
+            }
+        }
+
         this.gdmAvatarSetup = false;
         this._lastAvatarColor = null;
+        this._dialog = null;
+    }
+
+    _setupUserListItem(item) {
+        const avatar = item?._userWidget?._avatar;
+        if (!avatar) return;
+
+        if (!avatar._wackOrigUpdate) {
+            avatar._wackOrigUpdate = avatar.update.bind(avatar);
+            avatar.update = () => {
+                avatar._wackOrigUpdate();
+                this._applyStyleToUserListItemAvatar(avatar);
+            };
+
+            const user = avatar._user || item?._userWidget?._user;
+            if (user && !user.is_loaded) {
+                user.connectObject(
+                    'notify::is-loaded', () => this._applyStyleToUserListItemAvatar(avatar),
+                    'changed', () => this._applyStyleToUserListItemAvatar(avatar),
+                    this
+                );
+            }
+        }
+
+        this._applyStyleToUserListItemAvatar(avatar);
+    }
+
+    _applyStyleToUserListItemAvatar(avatar) {
+        if (!avatar) return;
+
+        // Never touch picture avatars! GNOME Shell sets their photo via background-image on avatar.style.
+        if (this._hasImageAvatar(avatar)) {
+            delete avatar._wackHasVibrancy;
+            return;
+        }
+
+        // If user info is still loading via AccountsService, wait until it's loaded before styling
+        // so we don't prematurely style an account whose photo hasn't been read yet.
+        const user = avatar._user;
+        if (user && !user.is_loaded)
+            return;
+
+        if (this._lastAvatarColor) {
+            const color = this._lastAvatarColor;
+            const bgRgba = color.rgba || `rgba(${color.r}, ${color.g}, ${color.b}, 1.0)`;
+            const buttonStyle = `background-color: ${bgRgba} !important; border-radius: 999px !important;`;
+            if (avatar.get_style() !== buttonStyle) {
+                avatar.set_style(buttonStyle);
+                avatar._wackHasVibrancy = true;
+            }
+        }
     }
 
     _hasImageAvatar(avatar) {
-        if (!avatar || !avatar._user) return false;
+        if (!avatar) return false;
+        if (avatar.has_style_class_name?.('user-avatar')) return true;
+        const style = avatar.get_style?.() || '';
+        if (style.includes('background-image')) return true;
         const user = avatar._user;
-        if (typeof user.get_icon_file === 'function') {
+        if (user && typeof user.get_icon_file === 'function') {
             const iconFile = user.get_icon_file();
             if (iconFile && typeof iconFile === 'string' && iconFile !== '' && Gio.File.new_for_path(iconFile).query_exists(null))
                 return true;
@@ -83,14 +178,6 @@ export class GdmAvatarManager {
 
         this._updatingVibrancy = true;
         try {
-            // avatarColor.r/g/b is the final pre-blended opaque color (preblend:true).
-            // We apply this solid color to BOTH the button wrapper AND the inner avatar
-            // widget. The button's background-color is visually behind the avatar widget
-            // and thus never seen. The avatar widget itself HAS an opaque background
-            // (its CSS background-color paints the circle), so setting set_style() on it
-            // with the solid pre-blended dark/light color is what actually shows through.
-            // This mirrors exactly how a11y/session buttons are colored: one solid
-            // background-color on the visible widget, no semi-transparent overlay layers.
             const bgRgba = color.rgba || `rgba(${color.r}, ${color.g}, ${color.b}, 1.0)`;
             const buttonStyle = `background-color: ${bgRgba} !important; border-radius: 999px !important;`;
 
@@ -103,28 +190,42 @@ export class GdmAvatarManager {
                 if (this._hasImageAvatar(avatar)) {
                     if (avatarButton.get_style() !== null)
                         avatarButton.set_style(null);
-                    if (avatar && avatar.get_style() !== null)
-                        avatar.set_style(null);
+                    // Never clear or overwrite avatar.style for picture avatars!
+                    delete avatar._wackHasVibrancy;
                 } else {
                     if (avatarButton.get_style() !== buttonStyle)
                         avatarButton.set_style(buttonStyle);
-                    // Apply to the avatar widget directly — its background-color is the
-                    // circle fill that the user actually sees; the button's is behind it.
-                    if (avatar && avatar.get_style() !== buttonStyle)
+                    // Apply to the avatar widget directly for placeholder/symbolic avatars
+                    if (avatar && avatar.get_style() !== buttonStyle) {
                         avatar.set_style(buttonStyle);
+                        avatar._wackHasVibrancy = true;
+                    }
                 }
             };
 
-            const authPrompt = this._gdm._dialog?._authPrompt;
+            const authPrompt = this._dialog?._authPrompt || this._gdm._dialog?._authPrompt;
             applyToWell(authPrompt?._userWell?.get_child());
             applyToWell(this._gdm._cupertinoRestPrompt?._userWell?.get_child());
+
+            // Also apply to empty-avatar tiles in the user selection list.
+            this.updateUserListVibrancy();
         } finally {
             this._updatingVibrancy = false;
         }
     }
 
+    updateUserListVibrancy() {
+        const userList = this._dialog?._userList || this._gdm._dialog?._userList;
+        if (!userList?._items) return;
+
+        for (const item of userList._items.values()) {
+            this._setupUserListItem(item);
+        }
+    }
+
+
     wrapGdmAvatar() {
-        const authPrompt = this._gdm._dialog?._authPrompt;
+        const authPrompt = this._dialog?._authPrompt || this._gdm._dialog?._authPrompt;
         if (!authPrompt) {
             _log('[WACK/GdmManager] _wrapGdmAvatar: no authPrompt');
             return;
@@ -193,7 +294,7 @@ export class GdmAvatarManager {
             this._connectedUser = null;
         }
 
-        const authPrompt = this._gdm._dialog?._authPrompt;
+        const authPrompt = this._dialog?._authPrompt || this._gdm._dialog?._authPrompt;
         if (!authPrompt) return;
 
         const uw = authPrompt._userWell?.get_child();
@@ -213,7 +314,10 @@ export class GdmAvatarManager {
                     avatar.update = avatar._wackOrigUpdate;
                     delete avatar._wackOrigUpdate;
                 }
-                avatar.set_style(null);
+                if (avatar._wackHasVibrancy && !this._hasImageAvatar(avatar)) {
+                    avatar.set_style(null);
+                }
+                delete avatar._wackHasVibrancy;
                 button.set_child(null);
                 uw.remove_child(button);
                 uw.insert_child_at_index(avatar, 0);

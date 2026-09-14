@@ -253,6 +253,7 @@ export class GdmManager {
         this._clockManager.setup(dialog, this._dialogParent);
         this._messageManager.setup(this._dialogParent);
         this._userListManager.setup(dialog);
+        this._avatarManager.setup(dialog);
 
         // Shift user selection list down
         if (dialog._userSelectionBox) {
@@ -476,6 +477,12 @@ export class GdmManager {
             this._origBeginVerificationForItem = dialog._beginVerificationForItem.bind(dialog);
             dialog._beginVerificationForItem = (...args) => {
                 this._isNotListed = false;
+                // Pre-warm the colour cache for this user immediately so the
+                // vibrancy update is already resolved when the crossfade starts.
+                const item = args[0];
+                const userName = item?.user?.get_user_name?.() ?? item?.userName ?? null;
+                if (userName)
+                    this._prewarmUserWallpaperColor(userName).catch(() => {});
                 return this._origBeginVerificationForItem(...args);
             };
         }
@@ -692,6 +699,7 @@ export class GdmManager {
             dialog._authPrompt.translation_y = 0;
             dialog._authPrompt.remove_style_class_name('wack-cupertino-prompt');
             this._clearCupertinoPromptBackground();
+            this._clearBottomButtonsBackground();
             if (dialog._authPrompt._message)
                 dialog._authPrompt._message.remove_style_class_name('wack-cupertino-message');
             if (dialog._authPrompt._capsLockWarningLabel)
@@ -807,6 +815,7 @@ export class GdmManager {
 
     _setPromptBackgroundBlur(active, animate = true) { this._wallpaperManager.setPromptBackgroundBlur(active, animate); }
     _applyWallpaper(userName = null) { this._wallpaperManager.applyWallpaper(userName); }
+    _prewarmUserWallpaperColor(userName) { return this._wallpaperManager.prewarmUserWallpaperColor(userName); }
 
     _positionClock(dialogBox = null) { this._clockManager.positionClock(dialogBox); }
     _positionUserList(dialogBox = null) { this._userListManager.positionUserList(dialogBox); }
@@ -815,10 +824,11 @@ export class GdmManager {
     _stopCursorBlink() { this._promptStyling.stopCursorBlink(); }
     _findPromptEntry(actor) { return this._promptStyling.findPromptEntry(actor); }
     _clearCupertinoPromptBackground() { this._promptStyling.clearCupertinoPromptBackground(); }
+    _clearBottomButtonsBackground() { this._promptStyling.clearBottomButtonsBackground(); }
     _updateCupertinoPromptBackground(metadata = null) { return this._promptStyling.updateCupertinoPromptBackground(metadata); }
     _updateBottomButtonsBackground(metadata = null) { return this._promptStyling.updateBottomButtonsBackground(metadata); }
 
-    _setupGdmAvatarOverride() { this._avatarManager.setup(); }
+    _setupGdmAvatarOverride() { this._avatarManager.setup(this._dialog); }
     _teardownGdmAvatarOverride() { this._avatarManager.teardown(); }
 
     _setLegacyPromptChrome(visible, animate = true) { this._animController.setLegacyPromptChrome(visible, animate); }

@@ -4,12 +4,12 @@ import GLib from 'gi://GLib';
 import St from 'gi://St';
 import Shell from 'gi://Shell';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
-import { getWallpaperAlpha } from '../main/alphaManager.js';
+import { getWallpaperAlpha, getWallpaperPromptColor } from '../main/alphaManager.js';
 import {
     PROMPT_BLUR_RADIUS,
     PROMPT_BLUR_BRIGHTNESS,
 } from '../main/constants.js';
-import { _log, GDM_CROSSFADE_DURATION } from './gdmUtils.js';
+import { _log, GDM_CROSSFADE_DURATION, resolveGdmAccessibleUri } from './gdmUtils.js';
 
 export class GdmWallpaperManager {
     constructor(gdmManager) {
@@ -230,6 +230,65 @@ export class GdmWallpaperManager {
             lockscreenMessageEnable: metadata?.lockscreenMessageEnable ?? null,
             lockscreenMessageText: metadata?.lockscreenMessageText ?? null,
         });
+    }
+
+    /**
+     * Pre-warm the wallpaper pixel cache for the given user so that when
+     * applyWallpaper() fires the colour is already resolved and the prompt
+     * vibrancy update is instant — no mid-crossfade snap.
+     *
+     * Called from _beginVerificationForItem (the moment a user tile is
+     * clicked, before _showPrompt / onUserSelected / applyWallpaper).
+     */
+    async prewarmUserWallpaperColor(userName) {
+        if (!userName) return;
+
+        let metadata = null;
+        try {
+            const metaFile = Gio.File.new_for_path(`/var/tmp/wack-shared-wallpaper-${userName}.json`);
+            if (metaFile.query_exists(null)) {
+                const [ok, contents] = metaFile.load_contents(null);
+                if (ok)
+                    metadata = JSON.parse(new TextDecoder().decode(contents));
+            }
+        } catch (e) {
+            _log('[WACK/GdmManager] prewarmUserWallpaperColor: failed to read metadata: ' + e);
+            return;
+        }
+
+        if (!metadata) return;
+
+        // If cached promptColor already exists and has valid r/g/b, nothing
+        // needs pre-warming — updateCupertinoPromptBackground will take the
+        // synchronous fast-path anyway.
+        const promptColor = metadata.promptColor;
+        if (promptColor && promptColor.r != null && promptColor.g != null && promptColor.b != null)
+            return;
+
+        const uri = resolveGdmAccessibleUri(metadata);
+        if (!uri) return;
+
+        // Fire the sampler with no position-sensitive bounds — we just need
+        // the primary colour cached so the prompt entry derivation is instant.
+        // Bounds will be recalculated correctly by updateCupertinoPromptBackground.
+        try {
+            await getWallpaperPromptColor({
+                uri,
+                isColor: metadata.is_color,
+                primaryColor: metadata.primary_color,
+                secondaryColor: metadata.secondary_color,
+                shadingType: metadata.shading_type,
+                wellH: 0,
+                yCenterFraction: null,
+                promptBounds: null,
+                cancelBounds: null,
+                avatarBounds: null,
+                a11yBounds: null,
+                sessionBounds: null,
+            });
+        } catch (e) {
+            _log('[WACK/GdmManager] prewarmUserWallpaperColor: sample failed: ' + e);
+        }
     }
 
     applyWallpaper(requestedUserName = null) {

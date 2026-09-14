@@ -13,7 +13,7 @@ import {
     SESSION_BUTTON_X_OFFSET,
     SESSION_BUTTON_Y_OFFSET,
 } from '../main/constants.js';
-import { _logError } from './gdmUtils.js';
+import { _logError, resolveGdmAccessibleUri } from './gdmUtils.js';
 
 export class GdmPromptStyling {
     constructor(gdmManager) {
@@ -21,11 +21,14 @@ export class GdmPromptStyling {
         this.cursorBlinkTimeoutId = 0;
         this.promptColorRequestId = 0;
         this.bottomButtonsColorRequestId = 0;
+        this._lastA11yColor = null;
+        this._lastSessionColor = null;
     }
 
     teardown() {
         this.stopCursorBlink();
         this.clearCupertinoPromptBackground();
+        this.clearBottomButtonsBackground();
     }
 
     startCursorBlink() {
@@ -103,6 +106,9 @@ export class GdmPromptStyling {
     }
 
     applyPromptEntryBackground(entry, color) {
+        if (!entry)
+            return;
+
         if (!color) {
             if (entry._wackOriginalStyle !== undefined) {
                 entry.set_style(entry._wackOriginalStyle);
@@ -135,8 +141,64 @@ export class GdmPromptStyling {
         } else {
             bgStyle = ` background-gradient-direction: none !important; background-image: none !important; background-color: rgb(${color.r}, ${color.g}, ${color.b}) !important;`;
         }
+        const parent = entry.get_parent();
+        const themeNode = entry.get_theme_node?.();
+
+        console.log('[WACK DEBUG] BEFORE vibrancy', {
+            entryAllocation: entry.get_allocation_box(),
+            entryPreferred: entry.get_preferred_size(),
+            parentAllocation: parent?.get_allocation_box(),
+            parentPreferred: parent?.get_preferred_size(),
+            style: entry.get_style(),
+        });
+
+
+        console.log('[WACK DEBUG] BEFORE', {
+            preferred: entry.get_preferred_size(),
+            style: entry.get_style(),
+            border: themeNode ? [
+                themeNode.get_border_width?.(0),
+                themeNode.get_border_width?.(1),
+                themeNode.get_border_width?.(2),
+                themeNode.get_border_width?.(3),
+            ] : null,
+            padding: themeNode ? [
+                themeNode.get_padding?.(0),
+                themeNode.get_padding?.(1),
+                themeNode.get_padding?.(2),
+                themeNode.get_padding?.(3),
+            ] : null,
+        });
 
         entry.set_style(`${entry._wackOriginalStyle}${bgStyle}${shadowStyle}`);
+
+        console.log('[WACK DEBUG] AFTER vibrancy', {
+            entryAllocation: entry.get_allocation_box(),
+            entryPreferred: entry.get_preferred_size(),
+            parentAllocation: parent?.get_allocation_box(),
+            parentPreferred: parent?.get_preferred_size(),
+            style: entry.get_style(),
+        });
+
+        console.log('[WACK DEBUG] AFTER', {
+            preferred: entry.get_preferred_size(),
+            style: entry.get_style(),
+            border: themeNode ? [
+                themeNode.get_border_width?.(0),
+                themeNode.get_border_width?.(1),
+                themeNode.get_border_width?.(2),
+                themeNode.get_border_width?.(3),
+            ] : null,
+            padding: themeNode ? [
+                themeNode.get_padding?.(0),
+                themeNode.get_padding?.(1),
+                themeNode.get_padding?.(2),
+                themeNode.get_padding?.(3),
+            ] : null,
+        });
+
+
+
     }
 
     applyCancelButtonBackground(button, color) {
@@ -231,30 +293,30 @@ export class GdmPromptStyling {
             } else {
                 button.set_style(null);
             }
-            delete button._wackColor;
+            delete button._wackAppliedR;
+            delete button._wackAppliedG;
+            delete button._wackAppliedB;
             return;
         }
 
-        button._wackColor = color;
+        const colorObj = color.a11yColor ?? (color.r !== undefined ? color : null);
+        if (!colorObj || colorObj.r == null || colorObj.g == null || colorObj.b == null)
+            return;
 
         if (button._wackOriginalStyle === undefined)
             button._wackOriginalStyle = button.get_style() ?? '';
 
-        this.updateA11yButtonStyle(button);
-    }
-
-    updateA11yButtonStyle(button) {
-        const color = button._wackColor;
-        if (!color)
+        if (button._wackAppliedR === colorObj.r &&
+            button._wackAppliedG === colorObj.g &&
+            button._wackAppliedB === colorObj.b) {
             return;
+        }
 
-        const colorObj = color.a11yColor ?? color;
-        const { r, g, b } = colorObj;
+        button._wackAppliedR = colorObj.r;
+        button._wackAppliedG = colorObj.g;
+        button._wackAppliedB = colorObj.b;
 
-        // Flat sampled color only — hover/focus/active are owned entirely by
-        // the existing stylesheet :hover/:focus/:active rules, same "sampled
-        // circle + CSS overlay" model as the vibrancy avatar.
-        const bgStyle = ` background-image: none !important; background-gradient-direction: none !important; background-color: rgb(${r}, ${g}, ${b}) !important;`;
+        const bgStyle = ` background-image: none !important; background-gradient-direction: none !important; background-color: rgb(${colorObj.r}, ${colorObj.g}, ${colorObj.b}) !important;`;
         button.set_style(`${button._wackOriginalStyle}${bgStyle}`);
     }
 
@@ -269,99 +331,62 @@ export class GdmPromptStyling {
             } else {
                 button.set_style(null);
             }
-            delete button._wackColor;
+            delete button._wackAppliedR;
+            delete button._wackAppliedG;
+            delete button._wackAppliedB;
             return;
         }
 
-        button._wackColor = color;
+        const colorObj = color.sessionColor ?? (color.r !== undefined ? color : null);
+        if (!colorObj || colorObj.r == null || colorObj.g == null || colorObj.b == null)
+            return;
 
         if (button._wackOriginalStyle === undefined)
             button._wackOriginalStyle = button.get_style() ?? '';
 
-        this.updateSessionButtonStyle(button);
-    }
-
-    updateSessionButtonStyle(button) {
-        const color = button._wackColor;
-        if (!color)
+        if (button._wackAppliedR === colorObj.r &&
+            button._wackAppliedG === colorObj.g &&
+            button._wackAppliedB === colorObj.b) {
             return;
+        }
 
-        const colorObj = color.sessionColor ?? color;
-        const { r, g, b } = colorObj;
+        button._wackAppliedR = colorObj.r;
+        button._wackAppliedG = colorObj.g;
+        button._wackAppliedB = colorObj.b;
 
-        // Flat sampled color only — hover/focus/active are owned entirely by
-        // the existing stylesheet :hover/:focus/:active rules, same "sampled
-        // circle + CSS overlay" model as the vibrancy avatar.
-        const bgStyle = ` background-image: none !important; background-gradient-direction: none !important; background-color: rgb(${r}, ${g}, ${b}) !important;`;
+        const bgStyle = ` background-image: none !important; background-gradient-direction: none !important; background-color: rgb(${colorObj.r}, ${colorObj.g}, ${colorObj.b}) !important;`;
         button.set_style(`${button._wackOriginalStyle}${bgStyle}`);
     }
 
     clearCupertinoPromptBackground() {
         const authPrompt = this._gdm._dialog?._authPrompt;
         const entry = this.findPromptEntry(authPrompt);
-        if (entry) {
-            if (entry._wackOriginalStyle !== undefined) {
-                entry.set_style(entry._wackOriginalStyle);
-                delete entry._wackOriginalStyle;
-            } else {
-                entry.set_style(null);
-            }
-            delete entry._wackColor;
-        }
+        if (entry)
+            this.applyPromptEntryBackground(entry, null);
 
         const cancelButton = authPrompt?.cancelButton;
-        if (cancelButton) {
-            cancelButton.disconnectObject(this);
-            if (cancelButton._wackOriginalStyle !== undefined) {
-                cancelButton.set_style(cancelButton._wackOriginalStyle);
-                delete cancelButton._wackOriginalStyle;
-            } else {
-                cancelButton.set_style(null);
-            }
-            delete cancelButton._wackColor;
-            delete cancelButton._wackPressed;
-        }
+        if (cancelButton)
+            this.applyCancelButtonBackground(cancelButton, null);
+    }
 
-        const a11yButton = this._gdm._dialog?._a11yMenuButton
-            ?? this._gdm._dialog?._bottomButtonGroup?._a11yMenuButton
-            ?? this._gdm._dialog?._bottomButtonGroup?.get_children?.().find?.(c => c.has_style_class_name?.('a11y-button'));
-        if (a11yButton) {
-            a11yButton.disconnectObject(this);
-            const menu = a11yButton._menu ?? a11yButton.menu;
-            if (menu)
-                menu.disconnectObject(this);
-            if (a11yButton._wackOriginalStyle !== undefined) {
-                a11yButton.set_style(a11yButton._wackOriginalStyle);
-                delete a11yButton._wackOriginalStyle;
-            } else {
-                a11yButton.set_style(null);
-            }
-            delete a11yButton._wackColor;
-            delete a11yButton._wackPressed;
-        }
+    clearBottomButtonsBackground() {
+        const dialog = this._gdm._dialog;
+        const a11yButton = dialog?._a11yMenuButton
+            ?? dialog?._bottomButtonGroup?._a11yMenuButton
+            ?? dialog?._bottomButtonGroup?.get_children?.().find?.(c => c.has_style_class_name?.('a11y-button'));
+        if (a11yButton)
+            this.applyA11yButtonBackground(a11yButton, null);
 
-        const sessionButton = this._gdm._dialog?._authMenuButton
-            ?? this._gdm._dialog?._sessionMenuButton?._button
-            ?? this._gdm._dialog?._sessionMenuButton?.get_child?.()
-            ?? this._gdm._dialog?._sessionMenuButton
-            ?? this._gdm._dialog?._bottomButtonGroup?._authMenuButton
-            ?? this._gdm._dialog?._bottomButtonGroup?._sessionMenuButton?._button
-            ?? this._gdm._dialog?._bottomButtonGroup?._sessionMenuButton
-            ?? this._gdm._dialog?._bottomButtonGroup?.get_children?.().find?.(c => c.has_style_class_name?.('login-dialog-auth-menu-button') || c.has_style_class_name?.('login-dialog-session-list-button'));
-        if (sessionButton) {
-            sessionButton.disconnectObject(this);
-            const menu = sessionButton._menu ?? sessionButton.menu;
-            if (menu)
-                menu.disconnectObject(this);
-            if (sessionButton._wackOriginalStyle !== undefined) {
-                sessionButton.set_style(sessionButton._wackOriginalStyle);
-                delete sessionButton._wackOriginalStyle;
-            } else {
-                sessionButton.set_style(null);
-            }
-            delete sessionButton._wackColor;
-            delete sessionButton._wackPressed;
-        }
+        const sessionButton = dialog?._authMenuButton
+            ?? dialog?._sessionMenuButton?._button
+            ?? dialog?._sessionMenuButton?.get_child?.()
+            ?? dialog?._sessionMenuButton
+            ?? dialog?._bottomButtonGroup?._authMenuButton
+            ?? dialog?._bottomButtonGroup?._sessionMenuButton?._button
+            ?? dialog?._bottomButtonGroup?._sessionMenuButton
+            ?? dialog?._bottomButtonGroup?.get_children?.().find?.(c => c.has_style_class_name?.('login-dialog-auth-menu-button') || c.has_style_class_name?.('login-dialog-session-list-button'));
+        if (sessionButton)
+            this.applySessionButtonBackground(sessionButton, null);
     }
 
     async updateCupertinoPromptBackground(metadata = null) {
@@ -549,6 +574,9 @@ export class GdmPromptStyling {
                 };
             }
 
+            const a11yColorToApply = this._lastA11yColor ?? promptColor?.a11yColor;
+            const sessionColorToApply = this._lastSessionColor ?? promptColor?.sessionColor;
+
             if (promptColor &&
                 promptColor.r != null &&
                 promptColor.g != null &&
@@ -559,10 +587,10 @@ export class GdmPromptStyling {
                     this.applyCancelButtonBackground(authPrompt.cancelButton, promptColor);
                 if (this._gdm?._avatarManager && avatarColor)
                     this._gdm._avatarManager.updateAvatarVibrancy(avatarColor);
-                if (a11yButton)
-                    this.applyA11yButtonBackground(a11yButton, promptColor);
-                if (sessionButton)
-                    this.applySessionButtonBackground(sessionButton, promptColor);
+                if (a11yButton && a11yColorToApply)
+                    this.applyA11yButtonBackground(a11yButton, a11yColorToApply);
+                if (sessionButton && sessionColorToApply)
+                    this.applySessionButtonBackground(sessionButton, sessionColorToApply);
 
                 if (hasValidCancelImages)
                     return;
@@ -578,9 +606,7 @@ export class GdmPromptStyling {
                 // source_uri points to the user's actual wallpaper file whose mtime
                 // only changes when the wallpaper genuinely changes — same strategy
                 // as GDM's own background system.
-                uri: effectiveMetadata.resolved_slide_path
-                    ? `file://${effectiveMetadata.resolved_slide_path}`
-                    : (effectiveMetadata.source_uri ?? effectiveMetadata.uri),
+                uri: resolveGdmAccessibleUri(effectiveMetadata),
                 isColor: effectiveMetadata.is_color,
                 primaryColor: effectiveMetadata.primary_color,
                 secondaryColor: effectiveMetadata.secondary_color,
@@ -659,10 +685,15 @@ export class GdmPromptStyling {
         if (this._gdm?._avatarManager && finalAvatarColor)
             this._gdm._avatarManager.updateAvatarVibrancy(finalAvatarColor);
 
-        if (a11yButton)
-            this.applyA11yButtonBackground(a11yButton, color);
-        if (sessionButton)
-            this.applySessionButtonBackground(sessionButton, color);
+        if (color.a11yColor)
+            this._lastA11yColor = color.a11yColor;
+        if (color.sessionColor)
+            this._lastSessionColor = color.sessionColor;
+
+        if (a11yButton && color.a11yColor)
+            this.applyA11yButtonBackground(a11yButton, color.a11yColor);
+        if (sessionButton && color.sessionColor)
+            this.applySessionButtonBackground(sessionButton, color.sessionColor);
     }
 
     /**
@@ -704,6 +735,26 @@ export class GdmPromptStyling {
 
         if (!a11yButton && !sessionButton)
             return;
+
+        // Fast path: use live cached color resolved this session, or fallback to cross-session metadata.
+        const a11yColorToApply = this._lastA11yColor ?? effectiveMetadata?.promptColor?.a11yColor;
+        const sessionColorToApply = this._lastSessionColor ?? effectiveMetadata?.promptColor?.sessionColor;
+
+        if (a11yButton && a11yColorToApply)
+            this.applyA11yButtonBackground(a11yButton, a11yColorToApply);
+        if (sessionButton && sessionColorToApply)
+            this.applySessionButtonBackground(sessionButton, sessionColorToApply);
+
+        if (effectiveMetadata?.promptColor) {
+            const promptColor = effectiveMetadata.promptColor;
+            // Push avatar color to the user list tiles immediately.
+            const cachedAvatarColor = promptColor.avatarColor ?? (promptColor.r != null ? {
+                r: promptColor.r, g: promptColor.g, b: promptColor.b,
+                rgba: `rgba(${promptColor.r}, ${promptColor.g}, ${promptColor.b}, 1.0)`,
+            } : null);
+            if (this._gdm?._avatarManager && cachedAvatarColor)
+                this._gdm._avatarManager.updateAvatarVibrancy(cachedAvatarColor);
+        }
 
         // Build minimal bounds for the buttons we found — prompt/cancel/avatar
         // are left null so alphaManager only samples what it needs.
@@ -747,23 +798,10 @@ export class GdmPromptStyling {
             }
         }
 
-        // Fast path: use cached color from cross-session metadata if available.
-        if (effectiveMetadata) {
-            const promptColor = effectiveMetadata.promptColor;
-            if (promptColor && promptColor.r != null) {
-                if (a11yButton) this.applyA11yButtonBackground(a11yButton, promptColor);
-                if (sessionButton) this.applySessionButtonBackground(sessionButton, promptColor);
-                // Also kick off the full async sample in case cached data is stale,
-                // but don't block the fast-path styling above.
-            }
-        }
-
         let wallpaperParams;
         if (effectiveMetadata) {
             wallpaperParams = {
-                uri: effectiveMetadata.resolved_slide_path
-                    ? `file://${effectiveMetadata.resolved_slide_path}`
-                    : (effectiveMetadata.source_uri ?? effectiveMetadata.uri),
+                uri: resolveGdmAccessibleUri(effectiveMetadata),
                 isColor: effectiveMetadata.is_color,
                 primaryColor: effectiveMetadata.primary_color,
                 secondaryColor: effectiveMetadata.secondary_color,
@@ -804,6 +842,11 @@ export class GdmPromptStyling {
         if (!color)
             return;
 
+        if (color.a11yColor)
+            this._lastA11yColor = color.a11yColor;
+        if (color.sessionColor)
+            this._lastSessionColor = color.sessionColor;
+
         // Re-resolve buttons after the await — the dialog may have been replaced.
         const dlg = this._gdm._dialog;
         const freshA11y = dlg?._a11yMenuButton
@@ -818,7 +861,15 @@ export class GdmPromptStyling {
             ?? dlg?._bottomButtonGroup?._sessionMenuButton
             ?? dlg?._bottomButtonGroup?.get_children?.().find?.(c => c.has_style_class_name?.('login-dialog-auth-menu-button') || c.has_style_class_name?.('login-dialog-session-list-button'));
 
-        if (freshA11y) this.applyA11yButtonBackground(freshA11y, color);
-        if (freshSession) this.applySessionButtonBackground(freshSession, color);
+        if (freshA11y && color.a11yColor) this.applyA11yButtonBackground(freshA11y, color.a11yColor);
+        if (freshSession && color.sessionColor) this.applySessionButtonBackground(freshSession, color.sessionColor);
+
+        // Push avatar colour to the user list tiles (visible before account selection).
+        const listAvatarColor = color.avatarColor ?? {
+            r: color.r, g: color.g, b: color.b,
+            rgba: `rgba(${color.r}, ${color.g}, ${color.b}, 1.0)`,
+        };
+        if (this._gdm?._avatarManager && listAvatarColor)
+            this._gdm._avatarManager.updateAvatarVibrancy(listAvatarColor);
     }
 }

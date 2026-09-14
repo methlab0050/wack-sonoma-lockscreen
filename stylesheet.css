@@ -283,6 +283,7 @@
     font-size: 14px !important;
     padding: 0px 9px !important;
     border-radius: 9999px !important;
+    /* border: 1px solid transparent !important; */
 }
 
 /* Sync GDM Cupertino cancel button styling with the prompt entry */
@@ -295,8 +296,8 @@
     width: 34px !important;
     /* margin-left: 2.5px !important;
     margin-right: 2.5px !important; */
-    border: 1px solid transparent !important;
-    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+    /* border: 1px solid transparent !important; */
+    /* box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.05); */
 }
 
 .login-dialog .wack-cupertino-prompt .login-dialog-button.cancel-button:hover {
@@ -356,7 +357,6 @@
 .unlock-dialog .login-dialog-button.login-dialog-session-list-button:hover,
 .unlock-dialog .login-dialog-button.login-dialog-auth-menu-button:hover,
 .login-dialog .login-dialog-button.cancel-button:hover {
-    background-color: rgba(236, 236, 236, 0.1775) !important;
     box-shadow: inset 0 0 8px rgba(255, 255, 255, 0.188) !important;
     color: #ffffff !important;
 }
@@ -368,7 +368,6 @@
 .unlock-dialog .login-dialog-button.login-dialog-session-list-button:focus,
 .unlock-dialog .login-dialog-button.login-dialog-auth-menu-button:focus,
 .login-dialog .login-dialog-button.cancel-button:focus {
-    background-color: rgba(236, 236, 236, 0.1775) !important;
     box-shadow: inset 0 0 8px rgba(255, 255, 255, 0.188) !important;
     color: #ffffff !important;
     border: 1px solid rgba(255, 255, 255, 0.4) !important;
@@ -382,7 +381,6 @@
 .unlock-dialog .login-dialog-button.login-dialog-session-list-button:active,
 .unlock-dialog .login-dialog-button.login-dialog-auth-menu-button:active,
 .login-dialog .login-dialog-button.cancel-button:active {
-    background-color: rgba(236, 236, 236, 0.25) !important;
     box-shadow: inset 0 0 8px rgba(255, 255, 255, 0.088) !important;
 }
 

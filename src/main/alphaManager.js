@@ -287,42 +287,36 @@ export async function getWallpaperPromptColor(params) {
     const monitorWidth = monitor ? monitor.width : 1920;
     const monitorHeight = monitor ? monitor.height : 1080;
 
-    // The prompt chip sits at the bottom of the prompt stack (below the avatar).
-    // While vertical fraction (0.9575) positions the prompt stack as a whole,
-    // the chip itself is located lower on the screen (slightly higher than 0.9575, e.g. ~0.968).
-    const chipVerticalFraction = CUPERTINO_CHIP_VERTICAL_FRACTION ?? 0.968;
-    const yCenter = (yCenterFraction != null && yCenterFraction >= CUPERTINO_PROMPT_VERTICAL_FRACTION)
-        ? yCenterFraction
-        : chipVerticalFraction;
-
     let normX1, normX2, normY1, normY2;
-    const promptBoundsCenterY = (promptBounds?.y1 != null && promptBounds?.y2 != null)
-        ? (promptBounds.y1 + promptBounds.y2) / 2
-        : null;
-
     if (promptBounds &&
         promptBounds.x1 != null &&
         promptBounds.x2 != null &&
         promptBounds.x2 > promptBounds.x1 &&
+        promptBounds.y1 != null &&
+        promptBounds.y2 != null &&
+        promptBounds.y2 > promptBounds.y1 &&
         promptBounds.x1 >= 0 &&
         promptBounds.x2 <= 1 &&
-        promptBoundsCenterY !== null &&
-        promptBoundsCenterY >= CUPERTINO_PROMPT_VERTICAL_FRACTION) {
+        promptBounds.y1 >= 0 &&
+        promptBounds.y2 <= 1) {
         normX1 = promptBounds.x1;
         normX2 = promptBounds.x2;
         normY1 = promptBounds.y1;
         normY2 = promptBounds.y2;
     } else {
         // Cupertino prompt chip: ~170px width on 1080p (approx 8.9% screen width, centered at 0.50)
-        // and ~36px height (approx 3.3% screen height, centered at yCenter)
+        // and ~36px height (approx 3.3% screen height, centered at targetY)
         const halfW = (promptBounds?.x2 && promptBounds?.x1)
             ? (promptBounds.x2 - promptBounds.x1) / 2
             : (170 / monitorWidth) / 2;
         normX1 = Math.max(0, 0.50 - halfW);
         normX2 = Math.min(1, 0.50 + halfW);
         const halfH = 18 / monitorHeight;
-        normY1 = Math.max(0, yCenter - halfH);
-        normY2 = Math.min(1, yCenter + halfH);
+        const targetY = (yCenterFraction != null && yCenterFraction > 0 && yCenterFraction < 1)
+            ? yCenterFraction
+            : (CUPERTINO_CHIP_VERTICAL_FRACTION ?? 0.9025);
+        normY1 = Math.max(0, targetY - halfH);
+        normY2 = Math.min(1, targetY + halfH);
     }
 
     // Cancel button bounds (offset with CANCEL_BUTTON_X_OFFSET / CANCEL_BUTTON_Y_OFFSET)
@@ -374,22 +368,24 @@ export async function getWallpaperPromptColor(params) {
         normAvatarY2 = Math.min(1, ((targetStackY + AVATAR_BUTTON_HEIGHT) / monitorHeight) + avOffsetY);
     }
 
-    // A11y button bounds (offset with A11Y_BUTTON_X_OFFSET / A11Y_BUTTON_Y_OFFSET)
+    // A11y button bounds
     let normA11yX1, normA11yX2, normA11yY1, normA11yY2;
-    const a11yOffsetX = A11Y_BUTTON_X_OFFSET / monitorWidth;
-    const a11yOffsetY = A11Y_BUTTON_Y_OFFSET / monitorHeight;
     const a11yHalfW = (A11Y_BUTTON_WIDTH / 2) / monitorWidth;
     const a11yHalfH = (A11Y_BUTTON_HEIGHT / 2) / monitorHeight;
 
     if (a11yBounds &&
         a11yBounds.x1 != null && a11yBounds.x2 != null &&
-        a11yBounds.x2 > a11yBounds.x1) {
-        normA11yX1 = Math.max(0, Math.min(1, a11yBounds.x1 + a11yOffsetX));
-        normA11yX2 = Math.max(0, Math.min(1, a11yBounds.x2 + a11yOffsetX));
-        normA11yY1 = Math.max(0, Math.min(1, a11yBounds.y1 + a11yOffsetY));
-        normA11yY2 = Math.max(0, Math.min(1, a11yBounds.y2 + a11yOffsetY));
+        a11yBounds.x2 > a11yBounds.x1 &&
+        a11yBounds.y1 != null && a11yBounds.y2 != null &&
+        a11yBounds.y2 > a11yBounds.y1) {
+        normA11yX1 = Math.max(0, Math.min(1, a11yBounds.x1));
+        normA11yX2 = Math.max(0, Math.min(1, a11yBounds.x2));
+        normA11yY1 = Math.max(0, Math.min(1, a11yBounds.y1));
+        normA11yY2 = Math.max(0, Math.min(1, a11yBounds.y2));
     } else {
         // Fallback: bottom right corner of primary monitor (approx 24px margin + half button)
+        const a11yOffsetX = A11Y_BUTTON_X_OFFSET / monitorWidth;
+        const a11yOffsetY = A11Y_BUTTON_Y_OFFSET / monitorHeight;
         const fallbackA11yCenterX = 1.0 - (24 + A11Y_BUTTON_WIDTH / 2) / monitorWidth + a11yOffsetX;
         const fallbackA11yCenterY = 1.0 - (24 + A11Y_BUTTON_HEIGHT / 2) / monitorHeight + a11yOffsetY;
         normA11yX1 = Math.max(0, Math.min(1, fallbackA11yCenterX - a11yHalfW));
@@ -398,22 +394,24 @@ export async function getWallpaperPromptColor(params) {
         normA11yY2 = Math.max(0, Math.min(1, fallbackA11yCenterY + a11yHalfH));
     }
 
-    // Session (DE select) button bounds (offset with SESSION_BUTTON_X_OFFSET / SESSION_BUTTON_Y_OFFSET)
+    // Session (DE select) button bounds
     let normSessionX1, normSessionX2, normSessionY1, normSessionY2;
-    const sessionOffsetX = SESSION_BUTTON_X_OFFSET / monitorWidth;
-    const sessionOffsetY = SESSION_BUTTON_Y_OFFSET / monitorHeight;
     const sessionHalfW = (SESSION_BUTTON_WIDTH / 2) / monitorWidth;
     const sessionHalfH = (SESSION_BUTTON_HEIGHT / 2) / monitorHeight;
 
     if (sessionBounds &&
         sessionBounds.x1 != null && sessionBounds.x2 != null &&
-        sessionBounds.x2 > sessionBounds.x1) {
-        normSessionX1 = Math.max(0, Math.min(1, sessionBounds.x1 + sessionOffsetX));
-        normSessionX2 = Math.max(0, Math.min(1, sessionBounds.x2 + sessionOffsetX));
-        normSessionY1 = Math.max(0, Math.min(1, sessionBounds.y1 + sessionOffsetY));
-        normSessionY2 = Math.max(0, Math.min(1, sessionBounds.y2 + sessionOffsetY));
+        sessionBounds.x2 > sessionBounds.x1 &&
+        sessionBounds.y1 != null && sessionBounds.y2 != null &&
+        sessionBounds.y2 > sessionBounds.y1) {
+        normSessionX1 = Math.max(0, Math.min(1, sessionBounds.x1));
+        normSessionX2 = Math.max(0, Math.min(1, sessionBounds.x2));
+        normSessionY1 = Math.max(0, Math.min(1, sessionBounds.y1));
+        normSessionY2 = Math.max(0, Math.min(1, sessionBounds.y2));
     } else {
         // Fallback: to the left of a11y button (approx 12px gap)
+        const sessionOffsetX = SESSION_BUTTON_X_OFFSET / monitorWidth;
+        const sessionOffsetY = SESSION_BUTTON_Y_OFFSET / monitorHeight;
         const fallbackSessionCenterX = 1.0 - (24 + A11Y_BUTTON_WIDTH + 12 + SESSION_BUTTON_WIDTH / 2) / monitorWidth + sessionOffsetX;
         const fallbackSessionCenterY = 1.0 - (24 + SESSION_BUTTON_HEIGHT / 2) / monitorHeight + sessionOffsetY;
         normSessionX1 = Math.max(0, Math.min(1, fallbackSessionCenterX - sessionHalfW));
@@ -544,8 +542,19 @@ export async function getWallpaperPromptColor(params) {
             };
         }
 
-        sampledA11yColor = applyPromptVisualState(rawA11y, promptVisualState, { preblend: true });
-        sampledSessionColor = applyPromptVisualState(rawSession, promptVisualState, { preblend: true });
+        // Each button resolves its own useInverse decision from its own sampled
+        // region — the bottom corners may be on a completely different brightness
+        // zone than the prompt chip, so they must not inherit promptVisualState.
+        sampledA11yColor = applyPromptVisualState(
+            rawA11y,
+            resolvePromptVisualState(rawA11y, CUPERTINO_PROMPT_WHITE_BLEND_ALPHA),
+            { preblend: true }
+        );
+        sampledSessionColor = applyPromptVisualState(
+            rawSession,
+            resolvePromptVisualState(rawSession, CUPERTINO_PROMPT_WHITE_BLEND_ALPHA),
+            { preblend: true }
+        );
     } else if (targetFilePath) {
         try {
             const fileInfo = await getWallpaperFileInfo(targetFilePath);
@@ -753,7 +762,12 @@ export async function getWallpaperPromptColor(params) {
             };
 
             const rawA11yColor = sampleRegionAverageColor(pixbuf, a11yMappedBounds) || sampledPrimary || { r: 40, g: 40, b: 40 };
-            sampledA11yColor = applyPromptVisualState(rawA11yColor, promptVisualState, { preblend: true });
+            // Each button resolves its own useInverse decision independently.
+            sampledA11yColor = applyPromptVisualState(
+                rawA11yColor,
+                resolvePromptVisualState(rawA11yColor, CUPERTINO_PROMPT_WHITE_BLEND_ALPHA),
+                { preblend: true }
+            );
 
             // Sample dedicated color for session (DE select) button
             const sessionXStart = Math.max(0, Math.min(pbWidth - 1, Math.round(visibleX + visibleW * normSessionX1)));
@@ -769,7 +783,12 @@ export async function getWallpaperPromptColor(params) {
             };
 
             const rawSessionColor = sampleRegionAverageColor(pixbuf, sessionMappedBounds) || sampledPrimary || { r: 40, g: 40, b: 40 };
-            sampledSessionColor = applyPromptVisualState(rawSessionColor, promptVisualState, { preblend: true });
+            // Each button resolves its own useInverse decision independently.
+            sampledSessionColor = applyPromptVisualState(
+                rawSessionColor,
+                resolvePromptVisualState(rawSessionColor, CUPERTINO_PROMPT_WHITE_BLEND_ALPHA),
+                { preblend: true }
+            );
 
             // Clean up older slice PNGs for this user — keep only the current hash
             try {
@@ -822,61 +841,29 @@ export async function getWallpaperPromptColor(params) {
 
     if (!sampledAvatarColor) {
         const raw = sampledPrimary || { r: 40, g: 40, b: 40 };
-        const overlay = getPromptBlendOverlay(raw);
-        sampledAvatarColor = {
-            r: raw.r,
-            g: raw.g,
-            b: raw.b,
-            rgba: `rgba(${raw.r}, ${raw.g}, ${raw.b}, 1.0)`,
-            hex: rgbToHex(raw.r, raw.g, raw.b),
-            overlayR: overlay.overlayR,
-            overlayG: overlay.overlayG,
-            overlayB: overlay.overlayB,
-            overlayAlpha: overlay.blendAlpha,
-            overlayRgba: `rgba(${overlay.overlayR}, ${overlay.overlayG}, ${overlay.overlayB}, ${overlay.blendAlpha.toFixed(4)})`,
-        };
+        sampledAvatarColor = applyPromptVisualState(
+            raw,
+            promptVisualState ?? resolvePromptVisualState(raw, CUPERTINO_PROMPT_WHITE_BLEND_ALPHA),
+            { preblend: true }
+        );
     }
 
     if (!sampledA11yColor) {
         const raw = sampledPrimary || { r: 40, g: 40, b: 40 };
-        const overlay = getPromptBlendOverlay(raw);
-        const blended = blendOverOpaque(raw, { r: overlay.overlayR, g: overlay.overlayG, b: overlay.overlayB }, overlay.blendAlpha);
-        sampledA11yColor = {
-            r: blended.r,
-            g: blended.g,
-            b: blended.b,
-            rawR: raw.r,
-            rawG: raw.g,
-            rawB: raw.b,
-            rgba: `rgba(${blended.r}, ${blended.g}, ${blended.b}, 1.0)`,
-            hex: rgbToHex(blended.r, blended.g, blended.b),
-            overlayR: overlay.overlayR,
-            overlayG: overlay.overlayG,
-            overlayB: overlay.overlayB,
-            overlayAlpha: overlay.blendAlpha,
-            overlayRgba: `rgba(${overlay.overlayR}, ${overlay.overlayG}, ${overlay.overlayB}, ${overlay.blendAlpha.toFixed(4)})`,
-        };
+        sampledA11yColor = applyPromptVisualState(
+            raw,
+            resolvePromptVisualState(raw, CUPERTINO_PROMPT_WHITE_BLEND_ALPHA),
+            { preblend: true }
+        );
     }
 
     if (!sampledSessionColor) {
         const raw = sampledPrimary || { r: 40, g: 40, b: 40 };
-        const overlay = getPromptBlendOverlay(raw);
-        const blended = blendOverOpaque(raw, { r: overlay.overlayR, g: overlay.overlayG, b: overlay.overlayB }, overlay.blendAlpha);
-        sampledSessionColor = {
-            r: blended.r,
-            g: blended.g,
-            b: blended.b,
-            rawR: raw.r,
-            rawG: raw.g,
-            rawB: raw.b,
-            rgba: `rgba(${blended.r}, ${blended.g}, ${blended.b}, 1.0)`,
-            hex: rgbToHex(blended.r, blended.g, blended.b),
-            overlayR: overlay.overlayR,
-            overlayG: overlay.overlayG,
-            overlayB: overlay.overlayB,
-            overlayAlpha: overlay.blendAlpha,
-            overlayRgba: `rgba(${overlay.overlayR}, ${overlay.overlayG}, ${overlay.overlayB}, ${overlay.blendAlpha.toFixed(4)})`,
-        };
+        sampledSessionColor = applyPromptVisualState(
+            raw,
+            resolvePromptVisualState(raw, CUPERTINO_PROMPT_WHITE_BLEND_ALPHA),
+            { preblend: true }
+        );
     }
 
     if (shadowAlpha === undefined) {
@@ -898,6 +885,8 @@ export async function getWallpaperPromptColor(params) {
         a11yColor: sampledA11yColor,
         sessionColor: sampledSessionColor,
         shadowAlpha: shadowAlpha,
+        useInverse: promptVisualState?.useInverse ?? false,
+        visualState: promptVisualState,
     };
 
     console.debug(`[WACK/AlphaManager] cache MISS for key: ${cacheKey}, computed: ${JSON.stringify(result)}`);
