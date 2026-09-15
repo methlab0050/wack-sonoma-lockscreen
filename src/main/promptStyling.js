@@ -102,21 +102,24 @@ export class PromptStyling {
         if (entry._wackOriginalStyle === undefined)
             entry._wackOriginalStyle = entry.get_style() ?? '';
 
+        const vibrancyMode = color.vibrancyMode ?? (this._extension?._settings?.get_string('prompt-vibrancy') ?? 'tonal');
+
         let shadowStyle = '';
         if (color.shadowAlpha !== undefined) {
             shadowStyle = ` box-shadow: 0 2px 24px rgba(0, 0, 0, ${color.shadowAlpha.toFixed(3)}) !important;`;
         }
 
         let bgStyle;
-        if (color.imagePath) {
+        const isSolid = (vibrancyMode === 'tonal' || vibrancyMode === 'less');
+        if (!isSolid && color.imagePath) {
             const imageUri = color.imagePath.startsWith('file://') ? color.imagePath : `file://${color.imagePath}`;
             bgStyle = ` background-color: transparent !important; background-gradient-direction: none !important; background-image: url("${imageUri}") !important; background-size: cover !important; background-position: center !important; background-repeat: no-repeat !important; border: none !important;`;
-        } else if (color.start && color.end && color.direction) {
+        } else if (color.start && color.end && color.direction && color.direction !== 'none') {
             const startStr = `rgb(${color.start.r}, ${color.start.g}, ${color.start.b})`;
             const endStr = `rgb(${color.end.r}, ${color.end.g}, ${color.end.b})`;
             bgStyle = ` background-color: transparent !important; background-gradient-direction: ${color.direction} !important; background-gradient-start: ${startStr} !important; background-gradient-end: ${endStr} !important; background-image: none !important; border: none !important;`;
         } else {
-            bgStyle = ` background-gradient-direction: none !important; background-image: none !important; background-color: rgb(${color.r}, ${color.g}, ${color.b}) !important; border: none !important;`;
+            bgStyle = ` background-image: none !important; background-gradient-direction: none !important; background-color: rgb(${color.r}, ${color.g}, ${color.b}) !important; border: none !important;`;
         }
 
         entry.set_style(`${entry._wackOriginalStyle}${bgStyle}${shadowStyle}`);
@@ -176,16 +179,22 @@ export class PromptStyling {
         const isHovered = button.hover && !button._wackPressed;
         const isPressed = button._wackPressed;
 
-        let bgStyle;
-        let imgPath = color.cancelImagePath;
+        const vibrancyMode = color.vibrancyMode ?? (this._extension?._settings?.get_string('prompt-vibrancy') ?? 'tonal');
 
-        if (isPressed && color.cancelActiveImagePath) {
-            imgPath = color.cancelActiveImagePath;
-        } else if (isHovered && color.cancelHoverImagePath) {
-            imgPath = color.cancelHoverImagePath;
-        }
-        if (!imgPath && color.imagePath) {
-            imgPath = color.imagePath;
+        let bgStyle;
+        let imgPath = null;
+        const isSolid = (vibrancyMode === 'tonal' || vibrancyMode === 'less');
+
+        if (!isSolid) {
+            imgPath = color.cancelImagePath;
+            if (isPressed && color.cancelActiveImagePath) {
+                imgPath = color.cancelActiveImagePath;
+            } else if (isHovered && color.cancelHoverImagePath) {
+                imgPath = color.cancelHoverImagePath;
+            }
+            if (!imgPath && color.imagePath) {
+                imgPath = color.imagePath;
+            }
         }
 
         if (imgPath) {
@@ -200,8 +209,13 @@ export class PromptStyling {
             }
             bgStyle = ` background-color: transparent !important; background-gradient-direction: none !important; background-image: url("${imageUri}") !important; background-size: cover !important; background-position: center !important; background-repeat: no-repeat !important;${overlayStyle}`;
         } else {
-            // Flat sampled color only — CSS :hover/:active own the overlay.
-            bgStyle = ` background-color: rgb(${color.r}, ${color.g}, ${color.b}) !important;`;
+            let overlayStyle = '';
+            if (isPressed) {
+                overlayStyle = ' filter: brightness(1.25);';
+            } else if (isHovered) {
+                overlayStyle = ' filter: brightness(1.12);';
+            }
+            bgStyle = ` background-image: none !important; background-gradient-direction: none !important; background-color: rgb(${color.r}, ${color.g}, ${color.b}) !important;${overlayStyle}`;
         }
 
         button.set_style(`${button._wackOriginalStyle}${bgStyle}`);

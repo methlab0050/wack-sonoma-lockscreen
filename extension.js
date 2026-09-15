@@ -348,12 +348,6 @@ export default class WackLockscreenClockExtension extends Extension {
         };
         syncCrossfadeSpeed();
 
-        const syncPromptVibrancy = () => {
-            this._promptVibrancy = this._settings?.get_boolean('prompt-vibrancy') ?? true;
-            this._updateClockAlphaAndPromptColor();
-        };
-        syncPromptVibrancy();
-
         const syncCursorBlink = () => {
             this._cursorBlink = this._settings.get_boolean('cursor-blink') ?? true;
             if (this._promptActive) {
@@ -384,7 +378,7 @@ export default class WackLockscreenClockExtension extends Extension {
             'changed::esc-to-sleep', syncEscToSleep,
             'changed::cupertino-unlock-fade', syncCupertinoUnlockFade,
             'changed::cupertino-crossfade-speed', syncCrossfadeSpeed,
-            'changed::prompt-vibrancy', syncPromptVibrancy,
+            'changed::prompt-vibrancy', () => this._updateClockAlphaAndPromptColor(),
             'changed::cursor-blink', syncCursorBlink,
             'changed::cupertino-lockscreen-message-enable', () => this._updateLockscreenMessage(),
             'changed::cupertino-lockscreen-message-text', () => this._updateLockscreenMessage(),
@@ -425,8 +419,6 @@ export default class WackLockscreenClockExtension extends Extension {
         const primaryColor = this._bgSettings.get_string('primary-color');
         const secondaryColor = this._bgSettings.get_string('secondary-color');
         const shadingType = this._bgSettings.get_enum('color-shading-type');
-
-        const promptVibrancy = this._settings?.get_boolean('prompt-vibrancy') ?? true;
 
         let wellH = 0;
         if (this._cupertinoPromptManager?.restPrompt?._userWell) {
@@ -571,15 +563,14 @@ export default class WackLockscreenClockExtension extends Extension {
             avatarBounds,
             a11yBounds,
             sessionBounds,
+            vibrancyMode: this._settings?.get_string('prompt-vibrancy') ?? 'tonal',
         };
         const textLuminance = dialog?._clock?.getTextLuminance?.() ?? 1.0;
 
         try {
             const [alpha, promptColor] = await Promise.all([
                 getWallpaperAlpha({ ...wallpaperParams, textLuminance }),
-                promptVibrancy
-                    ? getWallpaperPromptColor(wallpaperParams)
-                    : Promise.resolve(null),
+                getWallpaperPromptColor(wallpaperParams),
             ]);
 
             if (seq !== this._wallpaperUpdateSeq)
@@ -599,23 +590,25 @@ export default class WackLockscreenClockExtension extends Extension {
                 this._cupertinoPromptManager.restPrompt.updateAvatarVibrancy(promptColor.avatarColor);
             }
 
-            if (a11yButton && promptVibrancy && promptColor)
+            if (a11yButton && promptColor)
                 this._applyA11yButtonBackground(a11yButton, promptColor);
-            if (sessionButton && promptVibrancy && promptColor)
+            if (sessionButton && promptColor)
                 this._applySessionButtonBackground(sessionButton, promptColor);
 
             this._lastPromptColor = promptColor;
 
+            if (this._notifManager) {
+                const useInverse = promptColor?.useInverse ?? promptColor?.visualState?.useInverse ?? false;
+                this._notifManager.setVibrancyInverse(useInverse);
+            }
+
             const currentAuthPrompt = this._dialog?._authPrompt ?? this._dialog?._promptBox?._authPrompt;
-            if (promptVibrancy && promptColor) {
+            if (promptColor) {
                 const entry = this._findPromptEntry(currentAuthPrompt);
                 if (entry)
                     this._applyPromptEntryBackground(entry, promptColor);
                 if (currentAuthPrompt?.cancelButton)
                     this._applyCancelButtonBackground(currentAuthPrompt.cancelButton, promptColor);
-            } else if (!promptVibrancy) {
-                this._clearCupertinoPromptBackground();
-                this._clearBottomButtonsBackground();
             }
         } catch (e) {
             _logError(`[WACK/Extension] _updateClockAlphaAndPromptColor error: ${e}`);
@@ -642,7 +635,11 @@ export default class WackLockscreenClockExtension extends Extension {
             this._promptActor?.add_style_class_name('wack-cupertino-prompt');
             this._cupertinoToPrompt = true;
             this._setupCupertinoAvatarOverride();
-            if (this._lastPromptColor && this._promptVibrancy) {
+            if (this._lastPromptColor) {
+                if (this._notifManager) {
+                    const useInverse = this._lastPromptColor?.useInverse ?? this._lastPromptColor?.visualState?.useInverse ?? false;
+                    this._notifManager.setVibrancyInverse(useInverse);
+                }
                 const currentAuthPrompt = this._dialog?._authPrompt ?? this._dialog?._promptBox?._authPrompt;
                 const entry = this._findPromptEntry(currentAuthPrompt);
                 if (entry && entry._wackColor !== this._lastPromptColor)

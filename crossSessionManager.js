@@ -26,6 +26,7 @@ export class CrossSessionManager {
             if (!c1 || !c2) return false;
             if (c1.r !== c2.r || c1.g !== c2.g || c1.b !== c2.b) return false;
             if (c1.useInverse !== c2.useInverse) return false;
+            if (c1.vibrancyMode !== c2.vibrancyMode) return false;
             if (c1.start && c2.start) {
                 if (c1.start.r !== c2.start.r || c1.start.g !== c2.start.g || c1.start.b !== c2.start.b) return false;
                 if (c1.end.r !== c2.end.r || c1.end.g !== c2.end.g || c1.end.b !== c2.end.b) return false;
@@ -349,7 +350,8 @@ export class CrossSessionManager {
                 clockFormat: this._interfaceSettings.get_string('clock-format'),
                 clockAlpha: this._clockAlpha ?? 0.6,
                 promptColor: this._promptColor,
-                promptVibrancy: this._settings ? this._settings.get_boolean('prompt-vibrancy') : true,
+                promptVibrancy: true,
+                promptVibrancyMode: this._settings ? (this._settings.get_string('prompt-vibrancy') || 'tonal') : 'tonal',
                 cursorBlink: this._settings ? this._settings.get_boolean('cursor-blink') : true,
                 lockscreenMode: this._settings ? this._settings.get_string('lockscreen-mode') : 'cupertino',
                 lockscreenMessageText: this._settings ? this._settings.get_string('cupertino-lockscreen-message-text') : '',

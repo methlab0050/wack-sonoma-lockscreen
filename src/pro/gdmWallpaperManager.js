@@ -265,20 +265,51 @@ export class GdmWallpaperManager {
      * Called from _beginVerificationForItem (the moment a user tile is
      * clicked, before _showPrompt / onUserSelected / applyWallpaper).
      */
+    async prewarmAllWallpaperColors() {
+        try {
+            const dir = Gio.File.new_for_path('/var/tmp');
+            if (!dir.query_exists(null))
+                return;
+
+            const enumerator = dir.enumerate_children(
+                'standard::name',
+                Gio.FileQueryInfoFlags.NONE,
+                null
+            );
+            const userNames = [];
+            let info;
+            while ((info = enumerator.next_file(null)) !== null) {
+                const name = info.get_name();
+                if (name.startsWith('wack-shared-wallpaper-') && name.endsWith('.json')) {
+                    const rawName = name.replace('wack-shared-wallpaper-', '').replace('.json', '');
+                    userNames.push(rawName);
+                }
+            }
+            enumerator.close(null);
+
+            for (const name of userNames) {
+                await this.prewarmUserWallpaperColor(name);
+            }
+        } catch (e) {
+            _log('[WACK/GdmManager] prewarmAllWallpaperColors error: ' + e);
+        }
+    }
+
     async prewarmUserWallpaperColor(userName) {
         if (!userName) return;
 
         let metadata = null;
-        try {
-            let metaFile = Gio.File.new_for_path(`/var/tmp/wack-shared-wallpaper-${userName}.json`);
-            if (!metaFile.query_exists(null))
-                metaFile = Gio.File.new_for_path('/var/tmp/wack-shared-wallpaper-gdm.json');
+        let metaFile = Gio.File.new_for_path(`/var/tmp/wack-shared-wallpaper-${userName}.json`);
+        if (!metaFile.query_exists(null) && userName === 'gdm')
+            metaFile = Gio.File.new_for_path('/var/tmp/wack-shared-wallpaper-gdm.json');
 
-            if (metaFile.query_exists(null)) {
-                const [ok, contents] = metaFile.load_contents(null);
-                if (ok)
-                    metadata = JSON.parse(new TextDecoder().decode(contents));
-            }
+        if (!metaFile.query_exists(null))
+            return;
+
+        try {
+            const [ok, contents] = metaFile.load_contents(null);
+            if (ok)
+                metadata = JSON.parse(new TextDecoder().decode(contents));
         } catch (e) {
             _log('[WACK/GdmManager] prewarmUserWallpaperColor: failed to read metadata: ' + e);
             return;
@@ -286,19 +317,33 @@ export class GdmWallpaperManager {
 
         if (!metadata) return;
 
-        // If cached promptColor already exists and has valid r/g/b, nothing
-        // needs pre-warming — updateCupertinoPromptBackground will take the
-        // synchronous fast-path anyway.
+        const currentVibrancyMode = this._gdm._extension?.getSettings().get_string('prompt-vibrancy') ?? 'tonal';
         const promptColor = metadata.promptColor;
-        if (promptColor && promptColor.r != null && promptColor.g != null && promptColor.b != null)
+
+        const isPromptImageValid = promptColor?.imagePath &&
+            Gio.File.new_for_path(promptColor.imagePath).query_exists(null);
+        const isCancelImageValid = promptColor?.cancelImagePath &&
+            Gio.File.new_for_path(promptColor.cancelImagePath).query_exists(null) &&
+            promptColor?.cancelHoverImagePath &&
+            Gio.File.new_for_path(promptColor.cancelHoverImagePath).query_exists(null) &&
+            promptColor?.cancelActiveImagePath &&
+            Gio.File.new_for_path(promptColor.cancelActiveImagePath).query_exists(null);
+
+        const isSolid = (currentVibrancyMode === 'tonal' || currentVibrancyMode === 'less');
+
+        const isColorValid = promptColor &&
+            promptColor.r != null &&
+            promptColor.g != null &&
+            promptColor.b != null &&
+            (promptColor.vibrancyMode === currentVibrancyMode || !promptColor.vibrancyMode) &&
+            (isSolid || (isPromptImageValid && isCancelImageValid));
+
+        if (isColorValid)
             return;
 
         const uri = resolveGdmAccessibleUri(metadata);
         if (!uri) return;
 
-        // Fire the sampler with no position-sensitive bounds — we just need
-        // the primary colour cached so the prompt entry derivation is instant.
-        // Bounds will be recalculated correctly by updateCupertinoPromptBackground.
         try {
             const color = await getWallpaperPromptColor({
                 uri,
@@ -313,12 +358,23 @@ export class GdmWallpaperManager {
                 avatarBounds: null,
                 a11yBounds: null,
                 sessionBounds: null,
+                vibrancyMode: currentVibrancyMode,
             });
 
             if (color) {
                 metadata.promptColor = color;
-                if (metadata.username === 'gdm' || !metadata.username) {
+                metadata.promptVibrancyMode = currentVibrancyMode;
+                if (userName === 'gdm' || !metadata.username) {
                     this.saveGdmWallpaperMetadata(metadata);
+                } else {
+                    metaFile.replace_contents(
+                        JSON.stringify(metadata),
+                        null,
+                        false,
+                        Gio.FileCreateFlags.REPLACE_DESTINATION,
+                        null
+                    );
+                    metaFile.set_attribute_uint32('unix::mode', 0o644, Gio.FileQueryInfoFlags.NONE, null);
                 }
             }
         } catch (e) {
@@ -328,6 +384,7 @@ export class GdmWallpaperManager {
 
     applyWallpaper(requestedUserName = null) {
         try {
+            this.prewarmAllWallpaperColors().catch(() => {});
             if (!this.backgroundGroup) {
                 this.backgroundGroup = new Clutter.Actor();
                 this._gdm._dialogParent.add_child(this.backgroundGroup);

@@ -67,10 +67,10 @@
       <summary>Escape to Sleep</summary>
       <description>Pressing Escape on the lock screen immediately blanks/sleeps the display (or suspends the system if Keep Screen On is disabled).</description>
     </key>
-    <key name="prompt-vibrancy" type="b">
-      <default>true</default>
+    <key name="prompt-vibrancy" type="s">
+      <default>'tonal'</default>
       <summary>Prompt Vibrancy</summary>
-      <description>Applies dynamic color to the password field based on wallpaper colors.</description>
+      <description>Adaptive color and depth enhancements for the password field.</description>
     </key>
 
     <key name="cursor-blink" type="b">

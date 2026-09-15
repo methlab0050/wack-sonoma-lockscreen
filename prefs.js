@@ -409,20 +409,81 @@ export default class WackLockscreenClockPreferences extends ExtensionPreferences
 
         const promptVibrancyRow = new Adw.ActionRow({
             title: _('Prompt Vibrancy'),
-            subtitle: _('Applies a frosted glass effect to the password field (Static Blur).'),
+            subtitle: _('Adaptive color and depth enhancements for the password field.'),
         });
-        const promptVibrancySwitch = new Gtk.Switch({
+
+        const promptVibrancyBox = new Gtk.Box({ valign: Gtk.Align.CENTER });
+
+        const promptVibrancyLinkedBox = new Gtk.Box({ css_classes: ['linked'] });
+        const btnVibrancyTonal = new Gtk.ToggleButton({ label: _('Tonal') });
+        const btnVibrancyAcrylic = new Gtk.ToggleButton({ label: _('Acrylic'), group: btnVibrancyTonal, active: true });
+        promptVibrancyLinkedBox.append(btnVibrancyTonal);
+        promptVibrancyLinkedBox.append(btnVibrancyAcrylic);
+
+        const promptVibrancyDropdown = new Gtk.DropDown({
             valign: Gtk.Align.CENTER,
-            active: settings.get_boolean('prompt-vibrancy'),
+            model: Gtk.StringList.new([_('Tonal'), _('Acrylic')]),
+            selected: 0,
         });
-        promptVibrancySwitch.connect('notify::active', () => {
-            settings.set_boolean('prompt-vibrancy', promptVibrancySwitch.active);
+
+        promptVibrancyBox.append(promptVibrancyLinkedBox);
+        promptVibrancyBox.append(promptVibrancyDropdown);
+        promptVibrancyRow.add_suffix(promptVibrancyBox);
+
+        let selfChangeVibrancy = false;
+        const baseSubtitle = _('Adaptive color and depth enhancements for the password field.');
+        const updateVibrancySubtitle = (val) => {
+            const isTonal = (val === 'tonal' || val === 'less');
+            const detail = isTonal
+                ? _('Lightweight, color-based mode.')
+                : _('Advanced, blur-based mode.');
+            promptVibrancyRow.subtitle = `${baseSubtitle} ${detail}`;
+        };
+
+        const syncVibrancyButtons = () => {
+            const val = settings.get_string('prompt-vibrancy') || 'tonal';
+            selfChangeVibrancy = true;
+            btnVibrancyTonal.active = (val === 'tonal' || val === 'less');
+            btnVibrancyAcrylic.active = (val !== 'tonal' && val !== 'less');
+            promptVibrancyDropdown.selected = (val === 'tonal' || val === 'less') ? 0 : 1;
+            updateVibrancySubtitle(val);
+            selfChangeVibrancy = false;
+        };
+        syncVibrancyButtons();
+
+        btnVibrancyTonal.connect('toggled', () => {
+            if (selfChangeVibrancy || !btnVibrancyTonal.active) return;
+            selfChangeVibrancy = true;
+            settings.set_string('prompt-vibrancy', 'tonal');
+            promptVibrancyDropdown.selected = 0;
+            updateVibrancySubtitle('tonal');
+            selfChangeVibrancy = false;
         });
+        btnVibrancyAcrylic.connect('toggled', () => {
+            if (selfChangeVibrancy || !btnVibrancyAcrylic.active) return;
+            selfChangeVibrancy = true;
+            settings.set_string('prompt-vibrancy', 'acrylic');
+            promptVibrancyDropdown.selected = 1;
+            updateVibrancySubtitle('acrylic');
+            selfChangeVibrancy = false;
+        });
+        promptVibrancyDropdown.connect('notify::selected', () => {
+            if (selfChangeVibrancy) return;
+            selfChangeVibrancy = true;
+            const val = promptVibrancyDropdown.selected === 0 ? 'tonal' : 'acrylic';
+            settings.set_string('prompt-vibrancy', val);
+            btnVibrancyTonal.active = (val === 'tonal' || val === 'less');
+            btnVibrancyAcrylic.active = (val !== 'tonal' && val !== 'less');
+            updateVibrancySubtitle(val);
+            selfChangeVibrancy = false;
+        });
+
         settingsSignalIds.push(settings.connect('changed::prompt-vibrancy', () => {
-            promptVibrancySwitch.active = settings.get_boolean('prompt-vibrancy');
+            if (!selfChangeVibrancy) syncVibrancyButtons();
         }));
-        promptVibrancyRow.add_suffix(promptVibrancySwitch);
-        promptVibrancyRow.activatable_widget = promptVibrancySwitch;
+
+        promptVibrancyDropdown.visible = false;
+        promptVibrancyLinkedBox.visible = true;
         promptVibrancyRow.sensitive = settings.get_string('lockscreen-mode') === 'cupertino';
 
         modeRow.add_row(promptVibrancyRow);

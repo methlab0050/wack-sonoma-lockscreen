@@ -9,10 +9,10 @@ export const CUPERTINO_PROMPT_WHITE_BLEND_ALPHA = 0.16;
 // Bright colorful samples should become a darker version of themselves, rather
 // than getting muddied by blending toward black. This tunes the target lightness
 // for that hue-preserving darken step.
-export const PROMPT_BRIGHT_HUE_LIGHTNESS_FACTOR = 0.925;
+export const PROMPT_BRIGHT_HUE_LIGHTNESS_FACTOR = 0.88;
 export const PROMPT_BRIGHT_HUE_MIN_CHROMA = 0.08;
-export const PROMPT_BRIGHT_HUE_LIGHTNESS_THRESHOLD = 0.8075;
-export const PROMPT_INVERSE_ALPHA_CEILING = 0.125;
+export const PROMPT_BRIGHT_HUE_LIGHTNESS_THRESHOLD = 0.72;
+export const PROMPT_INVERSE_ALPHA_CEILING = 0.18;
 
 // Tuning range for the dynamic password prompt box-shadow alpha.
 //   At FLOOR (0.0175): subtle shadow on very dark wallpapers.
@@ -20,9 +20,7 @@ export const PROMPT_INVERSE_ALPHA_CEILING = 0.125;
 export const PROMPT_SHADOW_FLOOR = 0.0175;
 export const PROMPT_SHADOW_ROOF = 0.1175;
 
-// Bump this when the prompt visual-state algorithm changes so persistent cache
-// entries computed with a previous decision pipeline are discarded automatically.
-export const PROMPT_VISUAL_ALGORITHM_VERSION = 12;
+export const PROMPT_VISUAL_ALGORITHM_VERSION = 17;
 
 export function rgbToHsl(r, g, b) {
     const rNorm = r / 255;
@@ -256,13 +254,12 @@ export function resolvePromptVisualState(sampledColor, whiteBlendAlpha = null) {
     const baseAlpha = hasWhiteBlendOverride ? whiteBlendAlpha : adaptiveAlpha;
 
     let overlayR, overlayG, overlayB, blendAlpha;
+    const darkenedHue = isBrightHue ? getPromptDarkenedHueColor(sourceColor) : null;
     if (isBrightHue) {
-        overlayR = 0;
-        overlayG = 0;
-        overlayB = 0;
-        blendAlpha = hasWhiteBlendOverride
-            ? whiteBlendAlpha
-            : (1 - PROMPT_BRIGHT_HUE_LIGHTNESS_FACTOR);
+        overlayR = darkenedHue.r;
+        overlayG = darkenedHue.g;
+        overlayB = darkenedHue.b;
+        blendAlpha = 0.55;
     } else if (isBrightSample) {
         overlayR = 0;
         overlayG = 0;
@@ -288,7 +285,7 @@ export function resolvePromptVisualState(sampledColor, whiteBlendAlpha = null) {
         rgba: `rgba(${overlayR}, ${overlayG}, ${overlayB}, ${blendAlpha.toFixed(4)})`,
     };
 
-    const finalColor = isBrightHue && !hasWhiteBlendOverride
+    const finalColor = isBrightHue
         ? getPromptDarkenedHueColor(sourceColor)
         : blendOverOpaque(sourceColor, { r: overlayR, g: overlayG, b: overlayB }, blendAlpha);
 
@@ -337,11 +334,22 @@ export function ensurePromptVisualState(color, whiteBlendAlpha = CUPERTINO_PROMP
  */
 export function applyPromptVisualState(sourceColor, visualState, options = {}) {
     const overlay = visualState.overlay;
-    const blended = blendOverOpaque(
-        sourceColor,
-        { r: overlay.r, g: overlay.g, b: overlay.b },
-        overlay.alpha
-    );
+    const isSameColor = sourceColor.r === visualState.sourceColor?.r &&
+        sourceColor.g === visualState.sourceColor?.g &&
+        sourceColor.b === visualState.sourceColor?.b;
+
+    let blended;
+    if (isSameColor && visualState.finalColor) {
+        blended = visualState.finalColor;
+    } else if (visualState.isBrightHue) {
+        blended = getPromptDarkenedHueColor(sourceColor);
+    } else {
+        blended = blendOverOpaque(
+            sourceColor,
+            { r: overlay.r, g: overlay.g, b: overlay.b },
+            overlay.alpha
+        );
+    }
     const display = options.preblend ? blended : sourceColor;
 
     return {
@@ -358,6 +366,7 @@ export function applyPromptVisualState(sourceColor, visualState, options = {}) {
         overlayB: overlay.b,
         overlayAlpha: overlay.alpha,
         overlayRgba: overlay.rgba,
+        shadowAlpha: visualState.shadowAlpha,
         useInverse: visualState.useInverse,
         isBrightSample: visualState.isBrightSample,
         isBrightHue: visualState.isBrightHue,

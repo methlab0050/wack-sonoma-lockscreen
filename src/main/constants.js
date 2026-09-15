@@ -15,7 +15,7 @@ export const DATE_LABEL_HEIGHT = 25;
 export const TIME_LABEL_HEIGHT_FALLBACK = 128; // Fallback natural height for the time label in logical px
 
 // Background blur settings when entering the password prompt
-export const PROMPT_BLUR_RADIUS = 80;
+export const PROMPT_BLUR_RADIUS = 30;
 export const PROMPT_BLUR_BRIGHTNESS = 1.0;
 export const PROMPT_BLUR_DURATION = 300;
 

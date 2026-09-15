@@ -9,6 +9,10 @@ import {
     rgbToHsl,
     hslToRgb,
     PROMPT_SHADOW_FLOOR,
+    PROMPT_SHADOW_ROOF,
+    PROMPT_BRIGHT_HUE_LIGHTNESS_THRESHOLD,
+    getRelativeLuminance,
+    getPerceptualLightness,
     resolvePromptVisualState,
     applyPromptVisualState,
     CUPERTINO_PROMPT_WHITE_BLEND_ALPHA,
@@ -275,6 +279,7 @@ export async function getWallpaperPromptColor(params) {
         avatarBounds = null,
         a11yBounds = null,
         sessionBounds = null,
+        vibrancyMode = 'tonal',
     } = params;
 
     await initCache();
@@ -427,20 +432,25 @@ export async function getWallpaperPromptColor(params) {
     const avatarBoundsKey = `${normAvatarX1.toFixed(4)}_${normAvatarX2.toFixed(4)}_${normAvatarY1.toFixed(4)}_${normAvatarY2.toFixed(4)}`;
     const a11yBoundsKey = `${normA11yX1.toFixed(4)}_${normA11yX2.toFixed(4)}_${normA11yY1.toFixed(4)}_${normA11yY2.toFixed(4)}`;
     const sessionBoundsKey = `${normSessionX1.toFixed(4)}_${normSessionX2.toFixed(4)}_${normSessionY1.toFixed(4)}_${normSessionY2.toFixed(4)}`;
-    const cacheKey = `prompt_grad_${targetUri}_${mtime}_${size}_${isColor}_${primaryColor}_${secondaryColor}_${shadingType}_${pictureOptions}_${monitorWidth}x${monitorHeight}_${boundsKey}_cb${cancelBoundsKey}_av${avatarBoundsKey}_a11y${a11yBoundsKey}_sess${sessionBoundsKey}_b${PROMPT_BLUR_RADIUS}_pbr${PROMPT_BLUR_BRIGHTNESS}_cr${CANCEL_BUTTON_BLUR_RADIUS}_cbr${CANCEL_BUTTON_BLUR_BRIGHTNESS}_chov${CANCEL_BUTTON_HOVER_OVERLAY_ALPHA}_cact${CANCEL_BUTTON_ACTIVE_OVERLAY_ALPHA}_cover_vis${PROMPT_VISUAL_ALGORITHM_VERSION}`;
+    const cacheKey = `prompt_grad_${targetUri}_${mtime}_${size}_${isColor}_${primaryColor}_${secondaryColor}_${shadingType}_${pictureOptions}_${monitorWidth}x${monitorHeight}_${boundsKey}_cb${cancelBoundsKey}_av${avatarBoundsKey}_a11y${a11yBoundsKey}_sess${sessionBoundsKey}_b${PROMPT_BLUR_RADIUS}_pbr${PROMPT_BLUR_BRIGHTNESS}_cr${CANCEL_BUTTON_BLUR_RADIUS}_cbr${CANCEL_BUTTON_BLUR_BRIGHTNESS}_chov${CANCEL_BUTTON_HOVER_OVERLAY_ALPHA}_cact${CANCEL_BUTTON_ACTIVE_OVERLAY_ALPHA}_cover_vis${PROMPT_VISUAL_ALGORITHM_VERSION}_vm${vibrancyMode}`;
     if (hasCache(cacheKey)) {
         const cached = getCache(cacheKey);
         if (cached && cached.start && cached.end && cached.visualState?.overlay) {
-            const hasPromptImg = cached.imagePath && Gio.File.new_for_path(cached.imagePath).query_exists(null);
-            const hasCancelImg = cached.cancelImagePath && Gio.File.new_for_path(cached.cancelImagePath).query_exists(null);
-            const hasHoverImg = cached.cancelHoverImagePath && Gio.File.new_for_path(cached.cancelHoverImagePath).query_exists(null);
-            const hasActiveImg = cached.cancelActiveImagePath && Gio.File.new_for_path(cached.cancelActiveImagePath).query_exists(null);
             const hasAvatar = !!cached.avatarColor;
             const hasA11y = !!cached.a11yColor;
             const hasSession = !!cached.sessionColor;
-            if (hasPromptImg && hasCancelImg && hasHoverImg && hasActiveImg &&
-                hasAvatar && hasA11y && hasSession) {
-                return cached;
+            if (vibrancyMode === 'tonal' || vibrancyMode === 'less') {
+                if (cached.r != null && hasAvatar && hasA11y && hasSession)
+                    return cached;
+            } else {
+                const hasPromptImg = cached.imagePath && Gio.File.new_for_path(cached.imagePath).query_exists(null);
+                const hasCancelImg = cached.cancelImagePath && Gio.File.new_for_path(cached.cancelImagePath).query_exists(null);
+                const hasHoverImg = cached.cancelHoverImagePath && Gio.File.new_for_path(cached.cancelHoverImagePath).query_exists(null);
+                const hasActiveImg = cached.cancelActiveImagePath && Gio.File.new_for_path(cached.cancelActiveImagePath).query_exists(null);
+                if (hasPromptImg && hasCancelImg && hasHoverImg && hasActiveImg &&
+                    hasAvatar && hasA11y && hasSession) {
+                    return cached;
+                }
             }
         }
     }
@@ -500,6 +510,7 @@ export async function getWallpaperPromptColor(params) {
         }
 
         promptVisualState = resolvePromptVisualState(sampledPrimary, CUPERTINO_PROMPT_WHITE_BLEND_ALPHA);
+        shadowAlpha = promptVisualState.shadowAlpha;
         sampledStart = applyPromptVisualState(sampledStart, promptVisualState, { preblend: true });
         sampledEnd = applyPromptVisualState(sampledEnd, promptVisualState, { preblend: true });
         sampledPrimary = applyPromptVisualState(sampledPrimary, promptVisualState, { preblend: true });
@@ -618,115 +629,163 @@ export async function getWallpaperPromptColor(params) {
                 y2: yEnd / pbHeight,
             };
 
-            const userName = GLib.get_user_name();
-            const hash = GLib.compute_checksum_for_string(GLib.ChecksumType.MD5, cacheKey, -1).substring(0, 8);
+            if (vibrancyMode === 'tonal' || vibrancyMode === 'less') {
+                const sampled = sampleRegionAverageColor(pixbuf, mappedBounds) || { r: 40, g: 40, b: 40 };
+                promptVisualState = resolvePromptVisualState(sampled, CUPERTINO_PROMPT_WHITE_BLEND_ALPHA);
+                sampledPrimary = applyPromptVisualState(sampled, promptVisualState, { preblend: true });
+                sampledStart = sampledPrimary;
+                sampledEnd = sampledPrimary;
+                direction = 'none';
 
-            const sliceResult = createBlurredPromptSlice(pixbuf, mappedBounds, 320, 40, PROMPT_BLUR_RADIUS, PROMPT_BLUR_BRIGHTNESS);
-            if (sliceResult?.pixbuf) {
-                const filePath = `/var/tmp/wack-prompt-blur-${userName}-${hash}.png`;
+                shadowAlpha = promptVisualState.shadowAlpha ?? PROMPT_SHADOW_FLOOR;
+            } else {
+                const userName = GLib.get_user_name();
+                const hash = GLib.compute_checksum_for_string(GLib.ChecksumType.MD5, cacheKey, -1).substring(0, 8);
+
+                const sliceResult = createBlurredPromptSlice(pixbuf, mappedBounds, 320, 40, PROMPT_BLUR_RADIUS, PROMPT_BLUR_BRIGHTNESS);
+                if (sliceResult?.pixbuf) {
+                    const filePath = `/var/tmp/wack-prompt-blur-${userName}-${hash}.png`;
+                    try {
+                        sliceResult.pixbuf.savev(filePath, 'png', [], []);
+                        const pFile = Gio.File.new_for_path(filePath);
+                        pFile.set_attribute_uint32('unix::mode', 0o644, Gio.FileQueryInfoFlags.NONE, null);
+                        imagePath = filePath;
+                        shadowAlpha = sliceResult.shadowAlpha;
+                        sampledPrimary = sliceResult.avgColor;
+                        sampledStart = sliceResult.avgColor;
+                        sampledEnd = sliceResult.avgColor;
+                        direction = 'none';
+                        promptVisualState = sliceResult.visualState
+                            ?? resolvePromptVisualState(sliceResult.avgColor, CUPERTINO_PROMPT_WHITE_BLEND_ALPHA);
+                    } catch (saveErr) {
+                        _logError(`[WACK/AlphaManager] Failed to save blurred prompt slice: ${saveErr}`);
+                    }
+                }
+
+                // Sample dedicated slice for cancel button
+                const cxStart = Math.max(0, Math.min(pbWidth - 1, Math.round(visibleX + visibleW * normCancelX1)));
+                const cxEnd = Math.max(1, Math.min(pbWidth, Math.round(visibleX + visibleW * normCancelX2)));
+                const cyStart = Math.max(0, Math.min(pbHeight - 1, Math.round(visibleY + visibleH * normCancelY1)));
+                const cyEnd = Math.max(1, Math.min(pbHeight, Math.round(visibleY + visibleH * normCancelY2)));
+
+                const cancelMappedBounds = {
+                    x1: cxStart / pbWidth,
+                    x2: cxEnd / pbWidth,
+                    y1: cyStart / pbHeight,
+                    y2: cyEnd / pbHeight,
+                };
+
+                const cancelSliceResult = createBlurredPromptSlice(
+                    pixbuf,
+                    cancelMappedBounds,
+                    CANCEL_BUTTON_WIDTH,
+                    CANCEL_BUTTON_HEIGHT,
+                    CANCEL_BUTTON_BLUR_RADIUS,
+                    CANCEL_BUTTON_BLUR_BRIGHTNESS,
+                    0.0,
+                    CUPERTINO_PROMPT_WHITE_BLEND_ALPHA,
+                    promptVisualState
+                );
+
+                const cancelHoverSliceResult = createBlurredPromptSlice(
+                    pixbuf,
+                    cancelMappedBounds,
+                    CANCEL_BUTTON_WIDTH,
+                    CANCEL_BUTTON_HEIGHT,
+                    CANCEL_BUTTON_BLUR_RADIUS,
+                    CANCEL_BUTTON_BLUR_BRIGHTNESS,
+                    CANCEL_BUTTON_HOVER_OVERLAY_ALPHA,
+                    CUPERTINO_PROMPT_WHITE_BLEND_ALPHA,
+                    promptVisualState
+                );
+
+                const cancelActiveSliceResult = createBlurredPromptSlice(
+                    pixbuf,
+                    cancelMappedBounds,
+                    CANCEL_BUTTON_WIDTH,
+                    CANCEL_BUTTON_HEIGHT,
+                    CANCEL_BUTTON_BLUR_RADIUS,
+                    CANCEL_BUTTON_BLUR_BRIGHTNESS,
+                    CANCEL_BUTTON_ACTIVE_OVERLAY_ALPHA,
+                    CUPERTINO_PROMPT_WHITE_BLEND_ALPHA,
+                    promptVisualState
+                );
+
+                if (cancelSliceResult?.pixbuf) {
+                    const cancelFilePath = `/var/tmp/wack-cancel-blur-${userName}-${hash}.png`;
+                    try {
+                        cancelSliceResult.pixbuf.savev(cancelFilePath, 'png', [], []);
+                        const cFile = Gio.File.new_for_path(cancelFilePath);
+                        cFile.set_attribute_uint32('unix::mode', 0o644, Gio.FileQueryInfoFlags.NONE, null);
+                        cancelImagePath = cancelFilePath;
+                    } catch (saveErr) {
+                        _logError(`[WACK/AlphaManager] Failed to save cancel slice: ${saveErr}`);
+                    }
+                }
+
+                if (cancelHoverSliceResult?.pixbuf) {
+                    const cancelHoverFilePath = `/var/tmp/wack-cancel-blur-hover-${userName}-${hash}.png`;
+                    try {
+                        cancelHoverSliceResult.pixbuf.savev(cancelHoverFilePath, 'png', [], []);
+                        const chFile = Gio.File.new_for_path(cancelHoverFilePath);
+                        chFile.set_attribute_uint32('unix::mode', 0o644, Gio.FileQueryInfoFlags.NONE, null);
+                        cancelHoverImagePath = cancelHoverFilePath;
+                    } catch (saveErr) {
+                        _logError(`[WACK/AlphaManager] Failed to save cancel hover slice: ${saveErr}`);
+                    }
+                }
+
+                if (cancelActiveSliceResult?.pixbuf) {
+                    const cancelActiveFilePath = `/var/tmp/wack-cancel-blur-active-${userName}-${hash}.png`;
+                    try {
+                        cancelActiveSliceResult.pixbuf.savev(cancelActiveFilePath, 'png', [], []);
+                        const caFile = Gio.File.new_for_path(cancelActiveFilePath);
+                        caFile.set_attribute_uint32('unix::mode', 0o644, Gio.FileQueryInfoFlags.NONE, null);
+                        cancelActiveImagePath = cancelActiveFilePath;
+                    } catch (saveErr) {
+                        _logError(`[WACK/AlphaManager] Failed to save cancel active slice: ${saveErr}`);
+                    }
+                }
+
+                // Clean up older slice PNGs for this user — keep only the current hash
                 try {
-                    sliceResult.pixbuf.savev(filePath, 'png', [], []);
-                    const pFile = Gio.File.new_for_path(filePath);
-                    pFile.set_attribute_uint32('unix::mode', 0o644, Gio.FileQueryInfoFlags.NONE, null);
-                    imagePath = filePath;
-                    shadowAlpha = sliceResult.shadowAlpha;
-                    sampledPrimary = sliceResult.avgColor;
-                    sampledStart = sliceResult.avgColor;
-                    sampledEnd = sliceResult.avgColor;
-                    direction = 'none';
-                    promptVisualState = sliceResult.visualState
-                        ?? resolvePromptVisualState(sliceResult.avgColor, CUPERTINO_PROMPT_WHITE_BLEND_ALPHA);
-                } catch (saveErr) {
-                    _logError(`[WACK/AlphaManager] Failed to save blurred prompt slice: ${saveErr}`);
+                    const tmpDir = Gio.File.new_for_path('/var/tmp');
+                    if (tmpDir.query_exists(null)) {
+                        const enumerator = tmpDir.enumerate_children('standard::name', Gio.FileQueryInfoFlags.NONE, null);
+                        const toDelete = [];
+                        let fileInfo;
+                        while ((fileInfo = enumerator.next_file(null)) !== null) {
+                            const fileName = fileInfo.get_name();
+                            const currentSuffix = `-${hash}.png`;
+                            if (fileName.startsWith(`wack-a11y-blur-`) || fileName.startsWith(`wack-session-blur-`)) {
+                                toDelete.push(`/var/tmp/${fileName}`);
+                                continue;
+                            }
+                            const isUserSlice = (
+                                fileName.startsWith(`wack-prompt-blur-${userName}-`) ||
+                                fileName.startsWith(`wack-cancel-blur-active-${userName}-`) ||
+                                fileName.startsWith(`wack-cancel-blur-hover-${userName}-`) ||
+                                (fileName.startsWith(`wack-cancel-blur-${userName}-`) &&
+                                    !fileName.startsWith(`wack-cancel-blur-hover-${userName}-`) &&
+                                    !fileName.startsWith(`wack-cancel-blur-active-${userName}-`))
+                            );
+                            if (isUserSlice && !fileName.endsWith(currentSuffix)) {
+                                toDelete.push(`/var/tmp/${fileName}`);
+                            }
+                        }
+                        enumerator.close(null);
+                        for (const path of toDelete) {
+                            try {
+                                Gio.File.new_for_path(path).delete(null);
+                            } catch (_) { }
+                        }
+                    }
+                } catch (cleanupErr) {
+                    _logError(`[WACK/AlphaManager] Failed to clean old slice cache: ${cleanupErr}`);
                 }
             }
 
-            // Sample dedicated slice for cancel button
-            const cxStart = Math.max(0, Math.min(pbWidth - 1, Math.round(visibleX + visibleW * normCancelX1)));
-            const cxEnd = Math.max(1, Math.min(pbWidth, Math.round(visibleX + visibleW * normCancelX2)));
-            const cyStart = Math.max(0, Math.min(pbHeight - 1, Math.round(visibleY + visibleH * normCancelY1)));
-            const cyEnd = Math.max(1, Math.min(pbHeight, Math.round(visibleY + visibleH * normCancelY2)));
-
-            const cancelMappedBounds = {
-                x1: cxStart / pbWidth,
-                x2: cxEnd / pbWidth,
-                y1: cyStart / pbHeight,
-                y2: cyEnd / pbHeight,
-            };
-
-            const cancelSliceResult = createBlurredPromptSlice(
-                pixbuf,
-                cancelMappedBounds,
-                CANCEL_BUTTON_WIDTH,
-                CANCEL_BUTTON_HEIGHT,
-                CANCEL_BUTTON_BLUR_RADIUS,
-                CANCEL_BUTTON_BLUR_BRIGHTNESS,
-                0.0,
-                CUPERTINO_PROMPT_WHITE_BLEND_ALPHA,
-                promptVisualState
-            );
-
-            const cancelHoverSliceResult = createBlurredPromptSlice(
-                pixbuf,
-                cancelMappedBounds,
-                CANCEL_BUTTON_WIDTH,
-                CANCEL_BUTTON_HEIGHT,
-                CANCEL_BUTTON_BLUR_RADIUS,
-                CANCEL_BUTTON_BLUR_BRIGHTNESS,
-                CANCEL_BUTTON_HOVER_OVERLAY_ALPHA,
-                CUPERTINO_PROMPT_WHITE_BLEND_ALPHA,
-                promptVisualState
-            );
-
-            const cancelActiveSliceResult = createBlurredPromptSlice(
-                pixbuf,
-                cancelMappedBounds,
-                CANCEL_BUTTON_WIDTH,
-                CANCEL_BUTTON_HEIGHT,
-                CANCEL_BUTTON_BLUR_RADIUS,
-                CANCEL_BUTTON_BLUR_BRIGHTNESS,
-                CANCEL_BUTTON_ACTIVE_OVERLAY_ALPHA,
-                CUPERTINO_PROMPT_WHITE_BLEND_ALPHA,
-                promptVisualState
-            );
-
-            if (cancelSliceResult?.pixbuf) {
-                const cancelFilePath = `/var/tmp/wack-cancel-blur-${userName}-${hash}.png`;
-                try {
-                    cancelSliceResult.pixbuf.savev(cancelFilePath, 'png', [], []);
-                    const cFile = Gio.File.new_for_path(cancelFilePath);
-                    cFile.set_attribute_uint32('unix::mode', 0o644, Gio.FileQueryInfoFlags.NONE, null);
-                    cancelImagePath = cancelFilePath;
-                } catch (saveErr) {
-                    _logError(`[WACK/AlphaManager] Failed to save cancel slice: ${saveErr}`);
-                }
-            }
-
-            if (cancelHoverSliceResult?.pixbuf) {
-                const cancelHoverFilePath = `/var/tmp/wack-cancel-blur-hover-${userName}-${hash}.png`;
-                try {
-                    cancelHoverSliceResult.pixbuf.savev(cancelHoverFilePath, 'png', [], []);
-                    const chFile = Gio.File.new_for_path(cancelHoverFilePath);
-                    chFile.set_attribute_uint32('unix::mode', 0o644, Gio.FileQueryInfoFlags.NONE, null);
-                    cancelHoverImagePath = cancelHoverFilePath;
-                } catch (saveErr) {
-                    _logError(`[WACK/AlphaManager] Failed to save cancel hover slice: ${saveErr}`);
-                }
-            }
-
-            if (cancelActiveSliceResult?.pixbuf) {
-                const cancelActiveFilePath = `/var/tmp/wack-cancel-blur-active-${userName}-${hash}.png`;
-                try {
-                    cancelActiveSliceResult.pixbuf.savev(cancelActiveFilePath, 'png', [], []);
-                    const caFile = Gio.File.new_for_path(cancelActiveFilePath);
-                    caFile.set_attribute_uint32('unix::mode', 0o644, Gio.FileQueryInfoFlags.NONE, null);
-                    cancelActiveImagePath = cancelActiveFilePath;
-                } catch (saveErr) {
-                    _logError(`[WACK/AlphaManager] Failed to save cancel active slice: ${saveErr}`);
-                }
-            }
-
-            // Sample dedicated color for empty avatar placeholder
+            // Decoupled chrome sampling (avatar, a11y, session) — ALWAYS runs for color-based vibrancy
             const avXStart = Math.max(0, Math.min(pbWidth - 1, Math.round(visibleX + visibleW * normAvatarX1)));
             const avXEnd = Math.max(1, Math.min(pbWidth, Math.round(visibleX + visibleW * normAvatarX2)));
             const avYStart = Math.max(0, Math.min(pbHeight - 1, Math.round(visibleY + visibleH * normAvatarY1)));
@@ -762,7 +821,6 @@ export async function getWallpaperPromptColor(params) {
             };
 
             const rawA11yColor = sampleRegionAverageColor(pixbuf, a11yMappedBounds) || sampledPrimary || { r: 40, g: 40, b: 40 };
-            // Each button resolves its own useInverse decision independently.
             sampledA11yColor = applyPromptVisualState(
                 rawA11yColor,
                 resolvePromptVisualState(rawA11yColor, CUPERTINO_PROMPT_WHITE_BLEND_ALPHA),
@@ -783,50 +841,11 @@ export async function getWallpaperPromptColor(params) {
             };
 
             const rawSessionColor = sampleRegionAverageColor(pixbuf, sessionMappedBounds) || sampledPrimary || { r: 40, g: 40, b: 40 };
-            // Each button resolves its own useInverse decision independently.
             sampledSessionColor = applyPromptVisualState(
                 rawSessionColor,
                 resolvePromptVisualState(rawSessionColor, CUPERTINO_PROMPT_WHITE_BLEND_ALPHA),
                 { preblend: true }
             );
-
-            // Clean up older slice PNGs for this user — keep only the current hash
-            try {
-                const tmpDir = Gio.File.new_for_path('/var/tmp');
-                if (tmpDir.query_exists(null)) {
-                    const enumerator = tmpDir.enumerate_children('standard::name', Gio.FileQueryInfoFlags.NONE, null);
-                    const toDelete = [];
-                    let fileInfo;
-                    while ((fileInfo = enumerator.next_file(null)) !== null) {
-                        const fileName = fileInfo.get_name();
-                        const currentSuffix = `-${hash}.png`;
-                        // Remove any old a11y or session blur slices completely
-                        if (fileName.startsWith(`wack-a11y-blur-`) || fileName.startsWith(`wack-session-blur-`)) {
-                            toDelete.push(`/var/tmp/${fileName}`);
-                            continue;
-                        }
-                        const isUserSlice = (
-                            fileName.startsWith(`wack-prompt-blur-${userName}-`) ||
-                            fileName.startsWith(`wack-cancel-blur-active-${userName}-`) ||
-                            fileName.startsWith(`wack-cancel-blur-hover-${userName}-`) ||
-                            (fileName.startsWith(`wack-cancel-blur-${userName}-`) &&
-                                !fileName.startsWith(`wack-cancel-blur-hover-${userName}-`) &&
-                                !fileName.startsWith(`wack-cancel-blur-active-${userName}-`))
-                        );
-                        if (isUserSlice && !fileName.endsWith(currentSuffix)) {
-                            toDelete.push(`/var/tmp/${fileName}`);
-                        }
-                    }
-                    enumerator.close(null);
-                    for (const path of toDelete) {
-                        try {
-                            Gio.File.new_for_path(path).delete(null);
-                        } catch (_) { }
-                    }
-                }
-            } catch (cleanupErr) {
-                _logError(`[WACK/AlphaManager] Failed to clean old slice cache: ${cleanupErr}`);
-            }
         } catch (e) {
             _logError(`[WACK/AlphaManager] Failed to sample wallpaper for prompt color: ${e}`);
         }
@@ -867,7 +886,7 @@ export async function getWallpaperPromptColor(params) {
     }
 
     if (shadowAlpha === undefined) {
-        shadowAlpha = PROMPT_SHADOW_FLOOR;
+        shadowAlpha = promptVisualState?.shadowAlpha ?? PROMPT_SHADOW_FLOOR;
     }
 
     const result = {
@@ -877,6 +896,7 @@ export async function getWallpaperPromptColor(params) {
         start: { r: sampledStart.r, g: sampledStart.g, b: sampledStart.b },
         end: { r: sampledEnd.r, g: sampledEnd.g, b: sampledEnd.b },
         direction: direction,
+        vibrancyMode: vibrancyMode,
         imagePath: imagePath,
         cancelImagePath: cancelImagePath,
         cancelHoverImagePath: cancelHoverImagePath,

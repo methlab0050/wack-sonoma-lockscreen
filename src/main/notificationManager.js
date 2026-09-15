@@ -31,6 +31,7 @@ export class NotificationManager {
         this._cardVisSignalIds = new Map();
         this._notifBox = null;
         this._origUpdateVisibility = null;
+        this._useInverse = false;
     }
 
     _makeCardBlur() {
@@ -57,11 +58,16 @@ export class NotificationManager {
             actor.add_effect(this._makeCardBlur());
             actor.set_style(`border-radius: ${NOTIF_CARD_RADIUS}px;`);
         }
+        if (this._useInverse)
+            actor.add_style_class_name('wack-vibrancy-inverted');
+        else
+            actor.remove_style_class_name('wack-vibrancy-inverted');
     }
 
     _removeCardBlur(actor) {
         const effect = actor.get_effect(NOTIF_BLUR_NAME);
         if (effect) actor.remove_effect(effect);
+        actor.remove_style_class_name('wack-vibrancy-inverted');
         actor.set_style(null);
     }
 
@@ -75,6 +81,26 @@ export class NotificationManager {
         for (const msg of nb._players.values()) {
             const effect = msg.get_effect(NOTIF_BLUR_NAME);
             if (effect) effect.set_enabled(enabled);
+        }
+    }
+
+    setVibrancyInverse(useInverse) {
+        this._useInverse = !!useInverse;
+        const nb = this._notifBox;
+        if (!nb) return;
+
+        for (const child of nb._notificationBox.get_children()) {
+            if (this._useInverse)
+                child.add_style_class_name('wack-vibrancy-inverted');
+            else
+                child.remove_style_class_name('wack-vibrancy-inverted');
+        }
+
+        for (const msg of nb._players.values()) {
+            if (this._useInverse)
+                msg.add_style_class_name('wack-vibrancy-inverted');
+            else
+                msg.remove_style_class_name('wack-vibrancy-inverted');
         }
     }
 
@@ -94,6 +120,11 @@ export class NotificationManager {
 
     _trackMediaPlayer(nb, player, actor) {
         if (!player || !actor) return;
+
+        if (this._useInverse)
+            actor.add_style_class_name('wack-vibrancy-inverted');
+        else
+            actor.remove_style_class_name('wack-vibrancy-inverted');
 
         this._playerActorIds.set(actor, player);
 
@@ -463,8 +494,10 @@ export class NotificationManager {
             child.visible = true;
             this._removeCardBlur(child);
         }
-        for (const msg of nb._players.values())
+        for (const msg of nb._players.values()) {
             msg.visible = true;
+            msg.remove_style_class_name('wack-vibrancy-inverted');
+        }
 
         this._notifBox = null;
         this._lastPlayingPlayer = null;
