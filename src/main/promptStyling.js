@@ -110,13 +110,13 @@ export class PromptStyling {
         let bgStyle;
         if (color.imagePath) {
             const imageUri = color.imagePath.startsWith('file://') ? color.imagePath : `file://${color.imagePath}`;
-            bgStyle = ` background-color: transparent !important; background-gradient-direction: none !important; background-image: url("${imageUri}") !important; background-size: cover !important; background-position: center !important; background-repeat: no-repeat !important;`;
+            bgStyle = ` background-color: transparent !important; background-gradient-direction: none !important; background-image: url("${imageUri}") !important; background-size: cover !important; background-position: center !important; background-repeat: no-repeat !important; border: none !important;`;
         } else if (color.start && color.end && color.direction) {
             const startStr = `rgb(${color.start.r}, ${color.start.g}, ${color.start.b})`;
             const endStr = `rgb(${color.end.r}, ${color.end.g}, ${color.end.b})`;
-            bgStyle = ` background-color: transparent !important; background-gradient-direction: ${color.direction} !important; background-gradient-start: ${startStr} !important; background-gradient-end: ${endStr} !important; background-image: none !important;`;
+            bgStyle = ` background-color: transparent !important; background-gradient-direction: ${color.direction} !important; background-gradient-start: ${startStr} !important; background-gradient-end: ${endStr} !important; background-image: none !important; border: none !important;`;
         } else {
-            bgStyle = ` background-gradient-direction: none !important; background-image: none !important; background-color: rgb(${color.r}, ${color.g}, ${color.b}) !important;`;
+            bgStyle = ` background-gradient-direction: none !important; background-image: none !important; background-color: rgb(${color.r}, ${color.g}, ${color.b}) !important; border: none !important;`;
         }
 
         entry.set_style(`${entry._wackOriginalStyle}${bgStyle}${shadowStyle}`);

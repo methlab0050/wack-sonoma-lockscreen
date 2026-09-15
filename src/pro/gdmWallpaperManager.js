@@ -240,12 +240,40 @@ export class GdmWallpaperManager {
      * Called from _beginVerificationForItem (the moment a user tile is
      * clicked, before _showPrompt / onUserSelected / applyWallpaper).
      */
+    saveGdmWallpaperMetadata(metadata) {
+        if (!metadata) return;
+        try {
+            const metaFile = Gio.File.new_for_path('/var/tmp/wack-shared-wallpaper-gdm.json');
+            metaFile.replace_contents(
+                JSON.stringify(metadata),
+                null,
+                false,
+                Gio.FileCreateFlags.REPLACE_DESTINATION,
+                null
+            );
+            metaFile.set_attribute_uint32('unix::mode', 0o644, Gio.FileQueryInfoFlags.NONE, null);
+        } catch (e) {
+            _log('[WACK/GdmManager] Failed to save GDM wallpaper metadata: ' + e);
+        }
+    }
+
+    /**
+     * Pre-warm the wallpaper pixel cache for the given user so that when
+     * applyWallpaper() fires the colour is already resolved and the prompt
+     * vibrancy update is instant — no mid-crossfade snap.
+     *
+     * Called from _beginVerificationForItem (the moment a user tile is
+     * clicked, before _showPrompt / onUserSelected / applyWallpaper).
+     */
     async prewarmUserWallpaperColor(userName) {
         if (!userName) return;
 
         let metadata = null;
         try {
-            const metaFile = Gio.File.new_for_path(`/var/tmp/wack-shared-wallpaper-${userName}.json`);
+            let metaFile = Gio.File.new_for_path(`/var/tmp/wack-shared-wallpaper-${userName}.json`);
+            if (!metaFile.query_exists(null))
+                metaFile = Gio.File.new_for_path('/var/tmp/wack-shared-wallpaper-gdm.json');
+
             if (metaFile.query_exists(null)) {
                 const [ok, contents] = metaFile.load_contents(null);
                 if (ok)
@@ -272,7 +300,7 @@ export class GdmWallpaperManager {
         // the primary colour cached so the prompt entry derivation is instant.
         // Bounds will be recalculated correctly by updateCupertinoPromptBackground.
         try {
-            await getWallpaperPromptColor({
+            const color = await getWallpaperPromptColor({
                 uri,
                 isColor: metadata.is_color,
                 primaryColor: metadata.primary_color,
@@ -286,6 +314,13 @@ export class GdmWallpaperManager {
                 a11yBounds: null,
                 sessionBounds: null,
             });
+
+            if (color) {
+                metadata.promptColor = color;
+                if (metadata.username === 'gdm' || !metadata.username) {
+                    this.saveGdmWallpaperMetadata(metadata);
+                }
+            }
         } catch (e) {
             _log('[WACK/GdmManager] prewarmUserWallpaperColor: sample failed: ' + e);
         }
@@ -323,7 +358,7 @@ export class GdmWallpaperManager {
                         let info;
                         while ((info = enumerator.next_file(null)) !== null) {
                             const name = info.get_name();
-                            if (name.startsWith('wack-shared-wallpaper-') && name.endsWith('.json')) {
+                            if (name.startsWith('wack-shared-wallpaper-') && name.endsWith('.json') && name !== 'wack-shared-wallpaper-gdm.json') {
                                 const mtime = info.get_attribute_uint64('time::modified');
                                 if (mtime > maxMtime) {
                                     maxMtime = mtime;
@@ -349,6 +384,70 @@ export class GdmWallpaperManager {
                     resolvedUserName = metadata.username;
                 }
             }
+
+            if (!metadata) {
+                const gdmMetaFile = Gio.File.new_for_path('/var/tmp/wack-shared-wallpaper-gdm.json');
+                if (gdmMetaFile.query_exists(null)) {
+                    try {
+                        const [loadSuccess, contents] = gdmMetaFile.load_contents(null);
+                        if (loadSuccess) {
+                            const cachedGdmMeta = JSON.parse(new TextDecoder().decode(contents));
+                            const bgSettings = new Gio.Settings({ schema_id: 'org.gnome.desktop.background' });
+                            const interfaceSettings = new Gio.Settings({ schema_id: 'org.gnome.desktop.interface' });
+                            const colorScheme = interfaceSettings.get_enum('color-scheme');
+                            const currentUri = bgSettings.get_string(colorScheme === 1 ? 'picture-uri-dark' : 'picture-uri');
+                            const currentStyle = bgSettings.get_enum('picture-options');
+                            const currentPrimary = bgSettings.get_string('primary-color');
+
+                            if (cachedGdmMeta &&
+                                cachedGdmMeta.source_uri === currentUri &&
+                                cachedGdmMeta.style === currentStyle &&
+                                cachedGdmMeta.primary_color === currentPrimary) {
+                                metadata = cachedGdmMeta;
+                            }
+                        }
+                    } catch (e) {
+                        _log('[WACK/GdmManager] Failed to read GDM wallpaper metadata fallback: ' + e);
+                    }
+                }
+            }
+
+            if (!metadata) {
+                try {
+                    const bgSettings = new Gio.Settings({ schema_id: 'org.gnome.desktop.background' });
+                    const interfaceSettings = new Gio.Settings({ schema_id: 'org.gnome.desktop.interface' });
+                    const colorScheme = interfaceSettings.get_enum('color-scheme');
+                    const style = bgSettings.get_enum('picture-options');
+                    const uri = bgSettings.get_string(colorScheme === 1 ? 'picture-uri-dark' : 'picture-uri');
+                    const primaryColor = bgSettings.get_string('primary-color');
+                    const secondaryColor = bgSettings.get_string('secondary-color');
+                    const shadingType = bgSettings.get_enum('color-shading-type');
+                    const isColor = (style === 0);
+
+                    metadata = {
+                        username: 'gdm',
+                        source_uri: uri,
+                        uri: uri,
+                        style: style,
+                        primary_color: primaryColor,
+                        secondary_color: secondaryColor,
+                        shading_type: shadingType,
+                        is_color: isColor,
+                        clockFormat: interfaceSettings.get_string('clock-format'),
+                        clockAlpha: 0.6,
+                        promptColor: null,
+                        promptVibrancy: true,
+                        cursorBlink: true,
+                        lockscreenMode: 'cupertino',
+                        lockscreenMessageText: '',
+                        lockscreenMessageEnable: false,
+                    };
+                    this.saveGdmWallpaperMetadata(metadata);
+                } catch (e) {
+                    _log('[WACK/GdmManager] Failed to cook initial GDM metadata: ' + e);
+                }
+            }
+
             this.currentWallpaperMetadata = metadata;
             this._gdm._currentWallpaperMetadata = metadata;
             this._gdm._updateLockscreenMessage(metadata);

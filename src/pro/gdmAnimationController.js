@@ -401,6 +401,9 @@ export class GdmAnimationController {
         this._gdm._updateCupertinoPromptBackground().catch(e => {
             _log('[WACK/GdmManager] Failed to apply Cupertino prompt color: ' + e);
         });
+        this._gdm._updateBottomButtonsBackground().catch(e => {
+            _log('[WACK/GdmManager] Failed to apply bottom buttons color: ' + e);
+        });
 
         this._gdm._updateLockscreenMessage();
         this._gdm._positionAuthPrompt();

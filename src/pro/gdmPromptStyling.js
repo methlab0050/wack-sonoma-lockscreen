@@ -133,72 +133,16 @@ export class GdmPromptStyling {
         let bgStyle;
         if (color.imagePath) {
             const imageUri = color.imagePath.startsWith('file://') ? color.imagePath : `file://${color.imagePath}`;
-            bgStyle = ` background-color: transparent !important; background-gradient-direction: none !important; background-image: url("${imageUri}") !important; background-size: cover !important; background-position: center !important; background-repeat: no-repeat !important;`;
+            bgStyle = ` background-color: transparent !important; background-gradient-direction: none !important; background-image: url("${imageUri}") !important; background-size: cover !important; background-position: center !important; background-repeat: no-repeat !important; border: none !important;`;
         } else if (color.start && color.end && color.direction) {
             const startStr = `rgb(${color.start.r}, ${color.start.g}, ${color.start.b})`;
             const endStr = `rgb(${color.end.r}, ${color.end.g}, ${color.end.b})`;
-            bgStyle = ` background-color: transparent !important; background-gradient-direction: ${color.direction} !important; background-gradient-start: ${startStr} !important; background-gradient-end: ${endStr} !important; background-image: none !important;`;
+            bgStyle = ` background-color: transparent !important; background-gradient-direction: ${color.direction} !important; background-gradient-start: ${startStr} !important; background-gradient-end: ${endStr} !important; background-image: none !important; border: none !important;`;
         } else {
-            bgStyle = ` background-gradient-direction: none !important; background-image: none !important; background-color: rgb(${color.r}, ${color.g}, ${color.b}) !important;`;
+            bgStyle = ` background-gradient-direction: none !important; background-image: none !important; background-color: rgb(${color.r}, ${color.g}, ${color.b}) !important; border: none !important;`;
         }
-        const parent = entry.get_parent();
-        const themeNode = entry.get_theme_node?.();
-
-        console.log('[WACK DEBUG] BEFORE vibrancy', {
-            entryAllocation: entry.get_allocation_box(),
-            entryPreferred: entry.get_preferred_size(),
-            parentAllocation: parent?.get_allocation_box(),
-            parentPreferred: parent?.get_preferred_size(),
-            style: entry.get_style(),
-        });
-
-
-        console.log('[WACK DEBUG] BEFORE', {
-            preferred: entry.get_preferred_size(),
-            style: entry.get_style(),
-            border: themeNode ? [
-                themeNode.get_border_width?.(0),
-                themeNode.get_border_width?.(1),
-                themeNode.get_border_width?.(2),
-                themeNode.get_border_width?.(3),
-            ] : null,
-            padding: themeNode ? [
-                themeNode.get_padding?.(0),
-                themeNode.get_padding?.(1),
-                themeNode.get_padding?.(2),
-                themeNode.get_padding?.(3),
-            ] : null,
-        });
 
         entry.set_style(`${entry._wackOriginalStyle}${bgStyle}${shadowStyle}`);
-
-        console.log('[WACK DEBUG] AFTER vibrancy', {
-            entryAllocation: entry.get_allocation_box(),
-            entryPreferred: entry.get_preferred_size(),
-            parentAllocation: parent?.get_allocation_box(),
-            parentPreferred: parent?.get_preferred_size(),
-            style: entry.get_style(),
-        });
-
-        console.log('[WACK DEBUG] AFTER', {
-            preferred: entry.get_preferred_size(),
-            style: entry.get_style(),
-            border: themeNode ? [
-                themeNode.get_border_width?.(0),
-                themeNode.get_border_width?.(1),
-                themeNode.get_border_width?.(2),
-                themeNode.get_border_width?.(3),
-            ] : null,
-            padding: themeNode ? [
-                themeNode.get_padding?.(0),
-                themeNode.get_padding?.(1),
-                themeNode.get_padding?.(2),
-                themeNode.get_padding?.(3),
-            ] : null,
-        });
-
-
-
     }
 
     applyCancelButtonBackground(button, color) {
@@ -574,8 +518,13 @@ export class GdmPromptStyling {
                 };
             }
 
-            const a11yColorToApply = this._lastA11yColor ?? promptColor?.a11yColor;
-            const sessionColorToApply = this._lastSessionColor ?? promptColor?.sessionColor;
+            const a11yColorToApply = promptColor?.a11yColor ?? this._lastA11yColor;
+            const sessionColorToApply = promptColor?.sessionColor ?? this._lastSessionColor;
+
+            if (promptColor?.a11yColor)
+                this._lastA11yColor = promptColor.a11yColor;
+            if (promptColor?.sessionColor)
+                this._lastSessionColor = promptColor.sessionColor;
 
             if (promptColor &&
                 promptColor.r != null &&
@@ -652,6 +601,16 @@ export class GdmPromptStyling {
 
         if (requestId !== this.promptColorRequestId)
             return;
+
+        if (color && effectiveMetadata) {
+            effectiveMetadata.promptColor = color;
+            if (this._gdm._currentWallpaperMetadata)
+                this._gdm._currentWallpaperMetadata.promptColor = color;
+
+            if (effectiveMetadata.username === 'gdm' || !effectiveMetadata.username) {
+                this._gdm._wallpaperManager?.saveGdmWallpaperMetadata(effectiveMetadata);
+            }
+        }
 
         const currentPrompt = this._gdm._dialog?._authPrompt;
         const currentEntry = this.findPromptEntry(currentPrompt);
@@ -736,25 +695,36 @@ export class GdmPromptStyling {
         if (!a11yButton && !sessionButton)
             return;
 
-        // Fast path: use live cached color resolved this session, or fallback to cross-session metadata.
-        const a11yColorToApply = this._lastA11yColor ?? effectiveMetadata?.promptColor?.a11yColor;
-        const sessionColorToApply = this._lastSessionColor ?? effectiveMetadata?.promptColor?.sessionColor;
+        // Fast path: use metadata promptColor first, or fallback to live cached color.
+        const promptColor = effectiveMetadata?.promptColor;
+
+        if (promptColor) {
+            if (promptColor.a11yColor)
+                this._lastA11yColor = promptColor.a11yColor;
+            if (promptColor.sessionColor)
+                this._lastSessionColor = promptColor.sessionColor;
+
+            // Push avatar color to the user list tiles immediately.
+            const cachedAvatarColor = promptColor.avatarColor ?? (promptColor.r != null ? {
+                r: promptColor.r,
+                g: promptColor.g,
+                b: promptColor.b,
+                rgba: promptColor.rgba ?? `rgba(${promptColor.r}, ${promptColor.g}, ${promptColor.b}, 1.0)`,
+            } : null);
+            if (this._gdm?._avatarManager && cachedAvatarColor)
+                this._gdm._avatarManager.updateAvatarVibrancy(cachedAvatarColor);
+        }
+
+        const a11yColorToApply = promptColor?.a11yColor ?? this._lastA11yColor;
+        const sessionColorToApply = promptColor?.sessionColor ?? this._lastSessionColor;
 
         if (a11yButton && a11yColorToApply)
             this.applyA11yButtonBackground(a11yButton, a11yColorToApply);
         if (sessionButton && sessionColorToApply)
             this.applySessionButtonBackground(sessionButton, sessionColorToApply);
 
-        if (effectiveMetadata?.promptColor) {
-            const promptColor = effectiveMetadata.promptColor;
-            // Push avatar color to the user list tiles immediately.
-            const cachedAvatarColor = promptColor.avatarColor ?? (promptColor.r != null ? {
-                r: promptColor.r, g: promptColor.g, b: promptColor.b,
-                rgba: `rgba(${promptColor.r}, ${promptColor.g}, ${promptColor.b}, 1.0)`,
-            } : null);
-            if (this._gdm?._avatarManager && cachedAvatarColor)
-                this._gdm._avatarManager.updateAvatarVibrancy(cachedAvatarColor);
-        }
+        if (promptColor?.a11yColor && promptColor?.sessionColor)
+            return;
 
         // Build minimal bounds for the buttons we found — prompt/cancel/avatar
         // are left null so alphaManager only samples what it needs.
