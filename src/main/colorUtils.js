@@ -552,7 +552,7 @@ export function getHintTextStyle(visualStateOrLightness, wallpaperAlpha = null) 
 }
 
 /**
- * Calculates adaptive white chrome alpha for GDM / Lockscreen interactive controls
+ * Calculates adaptive white chrome alpha for Lockscreen interactive controls
  * (Cancel, Accessibility, Session selector) based on the resolved visual state.
  *
  * Fundamental invariant:

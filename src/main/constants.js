@@ -21,7 +21,7 @@ export const TIME_LABEL_HEIGHT_FALLBACK = 128; // Fallback natural height for th
 export const PROMPT_BLUR_RADIUS = 50;
 export const PROMPT_BLUR_BRIGHTNESS = 1.0;
 
-// Cancel button sampling constants (for GDM / lockscreen)
+// Cancel button sampling constants (for lockscreen)
 export const CANCEL_BUTTON_BLUR_RADIUS = 50;
 export const CANCEL_BUTTON_BLUR_BRIGHTNESS = 1.0;
 export const CANCEL_BUTTON_HOVER_OVERLAY_ALPHA = 0.12;
@@ -31,19 +31,19 @@ export const CANCEL_BUTTON_HEIGHT = 34; // px
 export const CANCEL_BUTTON_X_OFFSET = 0; // px
 export const CANCEL_BUTTON_Y_OFFSET = 0; // px
 
-// Avatar button sampling constants (for GDM / lockscreen)
+// Avatar button sampling constants (for lockscreen)
 export const AVATAR_BUTTON_WIDTH = 56; // px
 export const AVATAR_BUTTON_HEIGHT = 56; // px
 export const AVATAR_BUTTON_X_OFFSET = 0; // px
 export const AVATAR_BUTTON_Y_OFFSET = 0; // px
 
-// Accessibility button sampling constants (for GDM / lockscreen)
+// Accessibility button sampling constants (for lockscreen)
 export const A11Y_BUTTON_WIDTH = 34; // px
 export const A11Y_BUTTON_HEIGHT = 34; // px
 export const A11Y_BUTTON_X_OFFSET = 0; // px
 export const A11Y_BUTTON_Y_OFFSET = 0; // px
 
-// Desktop Environment / Session select button sampling constants (for GDM / lockscreen)
+// Desktop Environment / Session select button sampling constants (for lockscreen)
 export const SESSION_BUTTON_WIDTH = 34; // px
 export const SESSION_BUTTON_HEIGHT = 34; // px
 export const SESSION_BUTTON_X_OFFSET = 0; // px
