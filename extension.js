@@ -168,6 +168,7 @@ export default class WackLockscreenClockExtension extends Extension {
         // Clock replacement & setup
         dialog._stack.remove_child(dialog._clock);
         dialog._clock = new WackClock();
+        dialog._clock.setDateStyle(this._dateStyle ?? 'full');
         lockDialogGroup.add_child(dialog._clock);
 
         this._clockLayoutManager.setup(dialog, lockDialogGroup);
@@ -364,6 +365,12 @@ export default class WackLockscreenClockExtension extends Extension {
         };
         syncCustomWallpaper();
 
+        const syncDateStyle = () => {
+            this._dateStyle = this._settings.get_string('date-style') ?? 'full';
+            this._dialog?._clock?.setDateStyle?.(this._dateStyle);
+        };
+        syncDateStyle();
+
         this._wackShellStateChangedId = Main.extensionManager.connect('extension-state-changed', (_obj, ext) => {
             if (ext.uuid === 'wack-shell@rinzler69-wastaken.github.com') {
                 syncCupertinoUnlockFade();
@@ -384,6 +391,7 @@ export default class WackLockscreenClockExtension extends Extension {
             'changed::cupertino-lockscreen-message-text', () => this._updateLockscreenMessage(),
             'changed::lockscreen-wallpaper-enable', syncCustomWallpaper,
             'changed::lockscreen-wallpaper-path', syncCustomWallpaper,
+            'changed::date-style', syncDateStyle,
             this
         );
     }
@@ -579,14 +587,19 @@ export default class WackLockscreenClockExtension extends Extension {
             _log(`[WACK/Extension] _updateClockAlphaAndPromptColor - uri: ${uri}, promptColor: ${JSON.stringify(promptColor)}, alpha: ${alpha}, yCenterFraction: ${yCenterFraction}`);
 
             if (dialog?._clock)
-                dialog._clock.setWallpaperAlpha(alpha);
+                dialog._clock.setWallpaperAlpha(alpha, promptColor);
+
+            if (this._clockLayoutManager?.updateHintStyle)
+                this._clockLayoutManager.updateHintStyle(promptColor, alpha);
 
             // <GDM_EXCLUDE>
             if (this._crossSessionManager)
                 this._crossSessionManager.setClockAlphaAndPromptColor(alpha, promptColor);
             // </GDM_EXCLUDE>
 
-            if (this._cupertinoPromptManager?.restPrompt?.updateAvatarVibrancy && promptColor?.avatarColor) {
+            if (this._cupertinoPromptManager?.restPrompt?.updateVisuals) {
+                this._cupertinoPromptManager.restPrompt.updateVisuals(promptColor, alpha);
+            } else if (this._cupertinoPromptManager?.restPrompt?.updateAvatarVibrancy && promptColor?.avatarColor) {
                 this._cupertinoPromptManager.restPrompt.updateAvatarVibrancy(promptColor.avatarColor);
             }
 
@@ -596,10 +609,10 @@ export default class WackLockscreenClockExtension extends Extension {
                 this._applySessionButtonBackground(sessionButton, promptColor);
 
             this._lastPromptColor = promptColor;
+            this._lastClockAlpha = alpha;
 
             if (this._notifManager) {
-                const useInverse = promptColor?.useInverse ?? promptColor?.visualState?.useInverse ?? false;
-                this._notifManager.setVibrancyInverse(useInverse);
+                this._notifManager.setVibrancyInverse(promptColor);
             }
 
             const currentAuthPrompt = this._dialog?._authPrompt ?? this._dialog?._promptBox?._authPrompt;
@@ -637,8 +650,7 @@ export default class WackLockscreenClockExtension extends Extension {
             this._setupCupertinoAvatarOverride();
             if (this._lastPromptColor) {
                 if (this._notifManager) {
-                    const useInverse = this._lastPromptColor?.useInverse ?? this._lastPromptColor?.visualState?.useInverse ?? false;
-                    this._notifManager.setVibrancyInverse(useInverse);
+                    this._notifManager.setVibrancyInverse(this._lastPromptColor);
                 }
                 const currentAuthPrompt = this._dialog?._authPrompt ?? this._dialog?._promptBox?._authPrompt;
                 const entry = this._findPromptEntry(currentAuthPrompt);

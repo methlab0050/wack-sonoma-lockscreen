@@ -36,8 +36,13 @@ export class CrossSessionManager {
             }
             if (c1.imagePath !== c2.imagePath) return false;
             if (c1.cancelImagePath !== c2.cancelImagePath) return false;
-            if (c1.cancelHoverImagePath !== c2.cancelHoverImagePath) return false;
-            if (c1.cancelActiveImagePath !== c2.cancelActiveImagePath) return false;
+            if (c1.cancelColor && c2.cancelColor) {
+                if (c1.cancelColor.r !== c2.cancelColor.r || c1.cancelColor.g !== c2.cancelColor.g || c1.cancelColor.b !== c2.cancelColor.b) return false;
+                if (c1.cancelColor.rgba !== c2.cancelColor.rgba) return false;
+                if (c1.cancelColor.useInverse !== c2.cancelColor.useInverse) return false;
+            } else if (c1.cancelColor || c2.cancelColor) {
+                return false;
+            }
             if (c1.avatarColor && c2.avatarColor) {
                 if (c1.avatarColor.r !== c2.avatarColor.r || c1.avatarColor.g !== c2.avatarColor.g || c1.avatarColor.b !== c2.avatarColor.b) return false;
                 if (c1.avatarColor.rgba !== c2.avatarColor.rgba) return false;
@@ -89,6 +94,7 @@ export class CrossSessionManager {
             'changed::cupertino-lockscreen-message-text', save,
             'changed::lockscreen-wallpaper-enable', save,
             'changed::lockscreen-wallpaper-path', save,
+            'changed::date-style', save,
             this
         );
         this._bgSettings.connectObject(
@@ -348,6 +354,7 @@ export class CrossSessionManager {
                 shading_type: this._bgSettings.get_enum('color-shading-type'),
                 is_color: isColor,
                 clockFormat: this._interfaceSettings.get_string('clock-format'),
+                dateStyle: this._settings ? (this._settings.get_string('date-style') || 'full') : 'full',
                 clockAlpha: this._clockAlpha ?? 0.6,
                 promptColor: this._promptColor,
                 promptVibrancy: true,

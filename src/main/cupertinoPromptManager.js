@@ -53,6 +53,9 @@ export class CupertinoPromptManager {
         });
 
         this.restPrompt = new WackCupertinoRestPrompt(this._extension._dialog._user, this._extension);
+        if (this._extension._lastPromptColor || this._extension._lastClockAlpha != null) {
+            this.restPrompt.updateVisuals(this._extension._lastPromptColor, this._extension._lastClockAlpha);
+        }
         this.restPromptContainer.add_child(this.restPrompt);
         this._extension._dialog._stack.add_child(this.restPromptContainer);
         this._extension._updateLockscreenMessage();

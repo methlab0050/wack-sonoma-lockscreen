@@ -99,5 +99,14 @@
       <summary>Custom Lockscreen Wallpaper Path</summary>
       <description>File path to the custom lock screen wallpaper image.</description>
     </key>
+    <key name="date-style" type="s">
+      <choices>
+        <choice value="short"/>
+        <choice value="full"/>
+      </choices>
+      <default>'full'</default>
+      <summary>Date Style</summary>
+      <description>Choose between shortened and full date names on the lockscreen.</description>
+    </key>
   </schema>
 </schemalist>

@@ -7,6 +7,7 @@ import St from 'gi://St';
 import Gettext from 'gettext';
 
 import { HINT_TIMEOUT, CROSSFADE_TIME, getPrettyDate } from './constants.js';
+import { getHintTextStyle } from './colorUtils.js';
 
 const shellGettext = Gettext.domain('gnome-shell').gettext.bind(Gettext.domain('gnome-shell'));
 
@@ -77,6 +78,8 @@ export const WackClock = GObject.registerClass(
             this._dateTimeoutId = GLib.timeout_add_seconds(GLib.PRIORITY_DEFAULT, 60,
                 () => { this._updateDate(); return GLib.SOURCE_CONTINUE; });
 
+            this._dateStyle = 'full';
+
             this._updateTime();
             this._updateDate();
             this._updateHint();
@@ -90,6 +93,17 @@ export const WackClock = GObject.registerClass(
         setClockFormat(format) {
             this._clockFormatOverride = format;
             this._updateTime();
+        }
+
+        /**
+         * Set the date style ('short' or 'full').
+         * @param {'short'|'full'} style
+         */
+        setDateStyle(style) {
+            if (this._dateStyle === style)
+                return;
+            this._dateStyle = style ?? 'full';
+            this._updateDate();
         }
 
         _updateTime() {
@@ -107,7 +121,7 @@ export const WackClock = GObject.registerClass(
         }
 
         _updateDate() {
-            this._dateOutput.text = getPrettyDate();
+            this._dateOutput.text = getPrettyDate(this._dateStyle, this._wallClock);
         }
 
         /**
@@ -127,9 +141,11 @@ export const WackClock = GObject.registerClass(
             return 1.0; // Statically white text
         }
 
-        setWallpaperAlpha(alpha) {
+        setWallpaperAlpha(alpha, promptColor = null) {
             this._time.set_style(`color: rgba(255, 255, 255, ${alpha});`);
             this._dateOutput.set_style(`color: rgba(255, 255, 255, ${alpha});`);
+            if (this._hint)
+                this._hint.set_style(getHintTextStyle(promptColor, alpha));
         }
 
 

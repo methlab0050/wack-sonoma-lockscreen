@@ -5,7 +5,7 @@ import GObject from 'gi://GObject';
 import Pango from 'gi://Pango';
 import St from 'gi://St';
 import * as UserWidget from 'resource:///org/gnome/shell/ui/userWidget.js';
-import { getPromptBlendOverlay } from './colorUtils.js';
+import { getPromptBlendOverlay, getUserLabelStyle, getHintTextStyle } from './colorUtils.js';
 
 export const WackCupertinoRestPrompt = GObject.registerClass(
     class WackCupertinoRestPrompt extends St.BoxLayout {
@@ -23,6 +23,8 @@ export const WackCupertinoRestPrompt = GObject.registerClass(
             this._currentText = '';
             this._currentCount = 0;
             this._lastAvatarColor = null;
+            this._lastVisualState = null;
+            this._lastClockAlpha = null;
 
             this._userWell = new St.Bin({
                 x_expand: true,
@@ -133,7 +135,39 @@ export const WackCupertinoRestPrompt = GObject.registerClass(
             }
 
             this._userWell.set_child(userWidget);
+            this._applyUserLabelStyle();
+            this._applyHintLabelStyle();
             this.updateAvatarVibrancy();
+        }
+
+        _applyUserLabelStyle() {
+            const userWidget = this._userWell?.get_child();
+            const label = userWidget?._label;
+            if (!label) return;
+            if (this._lastVisualState || this._lastClockAlpha != null) {
+                label.set_style(getUserLabelStyle(this._lastVisualState ?? this._lastClockAlpha));
+            }
+        }
+
+        _applyHintLabelStyle() {
+            if (!this._hintLabel) return;
+            if (this._lastVisualState || this._lastClockAlpha != null) {
+                this._hintLabel.set_style(getHintTextStyle(this._lastVisualState, this._lastClockAlpha));
+            }
+        }
+
+        updateVisuals(promptColor, alpha = null) {
+            if (promptColor)
+                this._lastVisualState = promptColor;
+            if (alpha != null)
+                this._lastClockAlpha = alpha;
+
+            this._applyUserLabelStyle();
+            this._applyHintLabelStyle();
+
+            const avColor = promptColor?.avatarColor ?? promptColor;
+            if (avColor)
+                this.updateAvatarVibrancy(avColor);
         }
 
         _hasImageAvatar(avatar) {
@@ -178,11 +212,23 @@ export const WackCupertinoRestPrompt = GObject.registerClass(
                     const avOverlayStyle = `background-color: ${overlayRgba} !important; border-radius: 999px !important;`;
                     if (avatar && avatar.get_style() !== avOverlayStyle)
                         avatar.set_style(avOverlayStyle);
+                    if (avatar)
+                        avatar.clip_to_allocation = true;
+                    if (this._avatarButton)
+                        this._avatarButton.clip_to_allocation = true;
+                    const child = avatar?.get_child?.();
+                    if (child) {
+                        const iconStyle = 'background-color: transparent !important; border-radius: 999px !important;';
+                        if (child.get_style?.() !== iconStyle)
+                            child.set_style(iconStyle);
+                    }
                 }
             } finally {
                 this._updatingVibrancy = false;
             }
         }
+
+
 
         setHintText(text) {
             this._currentText = text ?? '';

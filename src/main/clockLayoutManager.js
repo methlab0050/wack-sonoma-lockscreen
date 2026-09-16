@@ -10,6 +10,7 @@ import {
     TIME_LABEL_HEIGHT_FALLBACK,
     centerClockLabel,
 } from './constants.js';
+import { getHintTextStyle } from './colorUtils.js';
 
 export class ClockLayoutManager {
     constructor(extension) {
@@ -78,8 +79,20 @@ export class ClockLayoutManager {
             opacity: 255,
             visible: false,
         });
+        if (this._extension?._lastPromptColor || this._extension?._lastClockAlpha != null) {
+            this.overflowLabel.set_style(getHintTextStyle(this._extension._lastPromptColor, this._extension._lastClockAlpha));
+        }
         this.overflowActive = false;
         this.hintContainer.add_child(this.overflowLabel);
+    }
+
+    updateHintStyle(promptColor, alpha) {
+        if (this.overflowLabel) {
+            this.overflowLabel.set_style(getHintTextStyle(promptColor, alpha));
+        }
+        if (this.hint) {
+            this.hint.set_style(getHintTextStyle(promptColor, alpha));
+        }
     }
 
     positionClock() {

@@ -32,6 +32,7 @@ export class NotificationManager {
         this._notifBox = null;
         this._origUpdateVisibility = null;
         this._useInverse = false;
+        this._promptColor = null;
     }
 
     _makeCardBlur() {
@@ -53,15 +54,30 @@ export class NotificationManager {
         }
     }
 
+    _applyCardStyle(actor) {
+        if (!actor) return;
+        const color = this._promptColor;
+        const isInverse = this._useInverse;
+        const isBrightHue = color?.isBrightHue ?? color?.visualState?.isBrightHue ?? false;
+        const darkened = color?.visualState?.finalColor ?? color?.start ?? (color?.r != null ? color : null);
+
+        if (isInverse && isBrightHue && darkened && darkened.r != null) {
+            actor.remove_style_class_name('wack-vibrancy-inverted');
+            actor.set_style(`border-radius: ${NOTIF_CARD_RADIUS}px; background-color: rgba(${darkened.r}, ${darkened.g}, ${darkened.b}, 0.50) !important;`);
+        } else if (isInverse) {
+            actor.add_style_class_name('wack-vibrancy-inverted');
+            actor.set_style(`border-radius: ${NOTIF_CARD_RADIUS}px;`);
+        } else {
+            actor.remove_style_class_name('wack-vibrancy-inverted');
+            actor.set_style(`border-radius: ${NOTIF_CARD_RADIUS}px;`);
+        }
+    }
+
     _addCardBlur(actor) {
         if (!actor.get_effect(NOTIF_BLUR_NAME)) {
             actor.add_effect(this._makeCardBlur());
-            actor.set_style(`border-radius: ${NOTIF_CARD_RADIUS}px;`);
         }
-        if (this._useInverse)
-            actor.add_style_class_name('wack-vibrancy-inverted');
-        else
-            actor.remove_style_class_name('wack-vibrancy-inverted');
+        this._applyCardStyle(actor);
     }
 
     _removeCardBlur(actor) {
@@ -84,23 +100,25 @@ export class NotificationManager {
         }
     }
 
-    setVibrancyInverse(useInverse) {
-        this._useInverse = !!useInverse;
+    setVibrancyInverse(useInverse, promptColor = null) {
+        if (typeof useInverse === 'object' && useInverse !== null) {
+            this._promptColor = useInverse;
+            this._useInverse = useInverse.useInverse ?? useInverse.visualState?.useInverse ?? false;
+        } else {
+            this._useInverse = !!useInverse;
+            if (promptColor)
+                this._promptColor = promptColor;
+        }
+
         const nb = this._notifBox;
         if (!nb) return;
 
         for (const child of nb._notificationBox.get_children()) {
-            if (this._useInverse)
-                child.add_style_class_name('wack-vibrancy-inverted');
-            else
-                child.remove_style_class_name('wack-vibrancy-inverted');
+            this._applyCardStyle(child);
         }
 
         for (const msg of nb._players.values()) {
-            if (this._useInverse)
-                msg.add_style_class_name('wack-vibrancy-inverted');
-            else
-                msg.remove_style_class_name('wack-vibrancy-inverted');
+            this._applyCardStyle(msg);
         }
     }
 
@@ -121,10 +139,7 @@ export class NotificationManager {
     _trackMediaPlayer(nb, player, actor) {
         if (!player || !actor) return;
 
-        if (this._useInverse)
-            actor.add_style_class_name('wack-vibrancy-inverted');
-        else
-            actor.remove_style_class_name('wack-vibrancy-inverted');
+        this._applyCardStyle(actor);
 
         this._playerActorIds.set(actor, player);
 

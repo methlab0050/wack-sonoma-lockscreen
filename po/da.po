@@ -3,10 +3,14 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: wack-lockscreen-clock@rinzler69-wastaken.github.com\n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: 2026-09-16 00:00+0000\n"
+"Last-Translator: rinzler69-wastaken\n"
+"Language-Team: WACK Project\n"
+"Language: da\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: da\n"
 
 msgid "more"
 msgstr "mere"
@@ -17,242 +21,311 @@ msgstr "Tryk på Shift + N for at se notifikationer"
 msgid "Sleep prevented by an active process"
 msgstr "Hviletilstand forhindres af en aktiv proces"
 
-msgid "1 minute"
-msgstr "1 minut"
-
-msgid "10 minutes"
-msgstr "10 minutter"
-
-msgid "15 minutes"
-msgstr "15 minutter"
-
-msgid "2 hours"
-msgstr "2 timer"
-
-msgid "30 minutes"
-msgstr "30 minutter"
-
-msgid "5 minutes"
-msgstr "5 minutter"
-
-msgid "60 minutes"
-msgstr "60 minutter"
-
-msgid "Always Show User Widget (Cupertino)"
-msgstr "Vis altid brugerwidget (Cupertino)"
-
-msgid "Always shows user widget, hides notifications by default. Press Shift+N to show notifications."
-msgstr "Viser altid brugerwidgetten, skjuler notifikationer som standard. Tryk på Shift+N for at vise notifikationer."
-
-msgid "Animations"
-msgstr "Animationer"
-
-msgid "Applied to the authentication prompt while it appears"
-msgstr "Anvendt på godkendelsesprompten, mens den vises"
-
-msgid "Applied to the date and time while opening the password prompt"
-msgstr "Anvendes på dato og tid, når adgangskodefeltet åbnes"
-
-msgid "Blank Timeout"
-msgstr "Tidsgrænse for skærmsluk"
-
-msgid "A complete macOS Sonoma-inspired lockscreen layout (Click user-icon to switch users)."
-msgstr "Et komplet macOS Sonoma-inspireret låseskærms-layout (klik på brugerikonet for at skifte bruger)."
-
-msgid "macOS Sonoma-style clock over the classic, GNOME-compliant layout and flow."
-msgstr "Ur i macOS Sonoma-stil over det traditionelle GNOME-kompatible layout og flow."
-
-msgid "Unlock Crossfade"
-msgstr "Udtoning ved oplåsning"
-
-msgid "Crossfade the lockscreen with desktop when unlocking (automatically disabled in Power Saver mode)."
-msgstr "Tone låseskærmen ud med skrivebordet under oplåsning (deaktiveres automatisk i strømsparetilstand)."
-
-msgid "Crossfade Speed"
-msgstr "Udtoningshastighed"
-
-msgid "Cupertino Unlock Fade"
-msgstr "Cupertino-udtoning ved oplåsning"
-
-msgid "Fade out the lock screen with a panel slide-in when unlocking."
-msgstr "Tone låseskærmen ud med et indglidende panel under oplåsning."
-
-msgid "Choose between Legacy and Cupertino styles"
-msgstr "Vælg mellem klassisk stil og Cupertino"
-
-msgid "Choose how the lock screen clock leaves and how the password prompt enters."
-msgstr "Vælg, hvordan låseskærmens ur forsvinder, og adgangskodefeltet vises."
-
-msgid "Clock Animation"
-msgstr "Ur animation"
-
-msgid "Configuration"
-msgstr "Konfiguration"
-
-msgid "Consider supporting its development!"
-msgstr "Overvej at støtte dens udvikling!"
-
-msgid "Control when the screen turns off or blanks on the lock screen."
-msgstr "Styr, hvornår skærmen slukker eller slukkes på låseskærmen."
-
-msgid "Cupertino"
-msgstr "Cupertino"
-
-msgid "Enjoying this extension?"
-msgstr "Glad for denne udvidelse?"
-
-msgid "Escape to Sleep / Suspend"
-msgstr "Esc for at slukke skærmen / hviletilstand"
-
-msgid "Extension Repo"
-msgstr "Udvidelse Repo"
-
 msgid "Home"
 msgstr "Hjem"
 
-msgid "Keep Screen On"
-msgstr "Hold skærmen tændt"
+msgid "Resources"
+msgstr "Ressourcer"
+
+msgid "Extension Repo"
+msgstr "Udvidelsesarkiv"
+
+msgid "Open on GitHub"
+msgstr "Åbn på GitHub"
+
+msgid "Enjoying this extension?"
+msgstr "Kan du lide denne udvidelse?"
+
+msgid "Consider supporting its development!"
+msgstr "Overvej at støtte udviklingen!"
 
 msgid "Ko-fi"
 msgstr "Ko-fi"
 
+msgid "Open Ko-fi"
+msgstr "Åbn Ko-fi"
+
+msgid "Saweria"
+msgstr "Saweria"
+
+msgid "Open Saweria"
+msgstr "Åbn Saweria"
+
+msgid "Configuration"
+msgstr "Konfiguration"
+
+msgid "General"
+msgstr "Generelt"
+
+msgid "Date Style"
+msgstr "Datostil"
+
+msgid "Choose between shortened and full date names."
+msgstr "Vælg mellem forkortede og fulde datonavne."
+
+msgid "Short"
+msgstr "Kort"
+
+msgid "Full"
+msgstr "Fuld"
+
+msgid "Cursor Blinking"
+msgstr "Markørblink"
+
+msgid "Enable or disable text cursor blinking in the password field."
+msgstr "Aktivér eller deaktivér markørblink i adgangskodefeltet."
+
+msgid "Custom Lockscreen Wallpaper"
+msgstr "Brugerdefineret baggrundsbillede for låseskærm"
+
+msgid "Use a custom image overlay for the lockscreen background."
+msgstr "Brug et brugerdefineret billede som baggrund på låseskærmen."
+
+msgid "Wallpaper Image Path"
+msgstr "Sti til baggrundsbillede"
+
+msgid "No image selected"
+msgstr "Intet billede valgt"
+
+msgid "Select Image File"
+msgstr "Vælg billedfil"
+
+msgid "Select Lockscreen Wallpaper"
+msgstr "Vælg baggrundsbillede for låseskærm"
+
+msgid "Select"
+msgstr "Vælg"
+
+msgid "Cancel"
+msgstr "Annuller"
+
+msgid "Image Files"
+msgstr "Billedfiler"
+
+msgid "Lockscreen Mode"
+msgstr "Låseskærmstilstand"
+
+msgid "Mode"
+msgstr "Tilstand"
+
 msgid "Legacy"
 msgstr "Klassisk"
 
-msgid "Lockscreen Mode"
-msgstr "Låseskærmtilstand"
+msgid "Cupertino"
+msgstr "Cupertino"
+
+msgid "A complete macOS Sonoma-inspired lockscreen layout (Click user-icon to switch users)."
+msgstr "Et komplet macOS Sonoma-inspireret låseskærmslayout (klik på brugerikonet for at skifte bruger)."
+
+msgid "macOS Sonoma-style clock over the classic, GNOME-compliant layout and flow."
+msgstr "macOS Sonoma-lignende ur over det klassiske, GNOME-kompatible layout."
+
+msgid "Always Show User Widget"
+msgstr "Vis altid brugerwidgetten"
+
+msgid "Hides notifications by default. Press Shift+N to show notifications."
+msgstr "Skjuler notifikationer som standard. Tryk på Shift+N for at vise dem."
+
+msgid "Prompt Vibrancy"
+msgstr "Visuel effekt for adgangskodefeltet"
+
+msgid "Adaptive color and depth enhancements for the password field."
+msgstr "Adaptive farve- og dybdeforbedringer for adgangskodefeltet."
+
+msgid "Tonal"
+msgstr "Tonal"
+
+msgid "Acrylic"
+msgstr "Akryl"
+
+msgid "Lightweight, color-based mode."
+msgstr "Letvægts-, farvebaseret tilstand."
+
+msgid "Advanced, blur-based mode."
+msgstr "Avanceret, sløringsbaseret tilstand."
 
 msgid "Show message when locked"
 msgstr "Vis besked ved låsning"
 
 msgid "Set..."
-msgstr "Indstil..."
+msgstr "Indstil…"
 
 msgid "Set a message to appear on the lockscreen"
 msgstr "Indstil en besked, der skal vises på låseskærmen"
 
-msgid "Cancel"
-msgstr "Annuller"
-
 msgid "OK"
 msgstr "OK"
 
-msgid "Mode"
-msgstr "Mode"
+msgid "Unlock Crossfade"
+msgstr "Krydsudtoning ved oplåsning"
 
-msgid "Never"
-msgstr "Aldrig"
+msgid "Crossfade the lockscreen with desktop when unlocking (automatically disabled in Power Saver mode)."
+msgstr "Krydsudtoning mellem låseskærm og skrivebord ved oplåsning (deaktiveres automatisk i strømsparetilstand)."
 
-msgid "Only keep the screen on if the system is plugged in"
-msgstr "Hold kun skærmen tændt ved netstrøm"
+msgid "Requires WACK Shell to be installed and enabled."
+msgstr "Kræver, at WACK Shell er installeret og aktiveret."
 
-msgid "Only on AC Power"
-msgstr "Kun ved netstrøm"
+msgid "Requires WACK Shell to be enabled."
+msgstr "Kræver, at WACK Shell er aktiveret."
 
-msgid "Open Ko-fi"
-msgstr "Åbn Ko-fi"
+msgid "Crossfade Speed"
+msgstr "Overgangshastighed"
 
-msgid "Open Saweria"
-msgstr "Åbn Saweria"
+msgid "Slower"
+msgstr "Langsommere"
 
-msgid "Open on GitHub"
-msgstr "Åbn på GitHub"
+msgid "Faster"
+msgstr "Hurtigere"
 
-msgid "Press Escape on the lock screen to sleep display (or suspend)"
-msgstr "Tryk på Esc på låseskærmen for at slukke skærmen (eller gå i hviletilstand)"
+msgid "Clock Animation"
+msgstr "Uranimation"
 
-msgid "Prevent the screen from immediately turning off when locked. The screen will still turn off after the normal timeout duration set in system settings."
-msgstr "Forhindrer skærmen i at slukke med det samme, når den er låst. Skærmen vil stadig slukke efter det normale tidsrum, der er angivet i systemindstillingerne."
+msgid "Applied to the date and time while opening the password prompt"
+msgstr "Anvendes på dato og klokkeslæt, når adgangskodefeltet åbnes"
 
 msgid "Prompt Animation"
-msgstr "Adgangskodeprompt-animation"
+msgstr "Godkendelsesanimation"
+
+msgid "Applied to the authentication prompt while it appears"
+msgstr "Anvendes på godkendelsesfeltet, når det vises"
 
 msgid "Reset Animations"
 msgstr "Nulstil animationer"
 
-msgid "Reset animations"
-msgstr "Nulstil animationer"
-
-msgid "Resources"
-msgstr "Ressourcer"
-
 msgid "Restore defaults"
 msgstr "Gendan standardindstillinger"
 
-msgid "Saweria"
-msgstr "Saweria"
+msgid "Reset animations"
+msgstr "Nulstil animationer"
 
-msgid "Show a custom message above the user prompt stack."
-msgstr "Viser en brugerdefineret besked over brugerens loginfelt."
+msgid "Scale Down"
+msgstr "Formindsk"
+
+msgid "Zoom Up"
+msgstr "Forstør"
+
+msgid "Slide Up"
+msgstr "Skub opad"
+
+msgid "Fade"
+msgstr "Tone"
+
+msgid "GNOME Default"
+msgstr "GNOME-standard"
+
+msgid "Rise"
+msgstr "Løft"
+
+msgid "Zoom"
+msgstr "Zoom"
 
 msgid "Screen Timeout"
-msgstr "Skærm timeout"
+msgstr "Skærmtimeout"
 
-msgid "Time to wait before turning off the screen"
-msgstr "Vendetid før skærmen slukkes"
+msgid "Keep Screen On"
+msgstr "Hold skærmen tændt"
+
+msgid "Prevent the screen from immediately turning off when locked. The screen will still turn off after the normal timeout duration set in system settings."
+msgstr "Forhindrer, at skærmen slukker med det samme ved låsning. Skærmen slukker efter den normale tidsgrænse angivet i systemindstillingerne."
+
+msgid "Only on AC Power"
+msgstr "Kun ved tilsluttet strøm"
+
+msgid "Only keep the screen on if the system is plugged in"
+msgstr "Hold kun skærmen tændt, hvis computeren er tilsluttet strøm"
+
+msgid "Escape to Sleep / Suspend"
+msgstr "Escape for at slukke skærm / hviletilstand"
+
+msgid "Press Escape on the lock screen to sleep display (or suspend)"
+msgstr "Tryk på Escape på låseskærmen for at slukke skærmen (eller gå i hviletilstand)"
 
 msgid "Extras"
 msgstr "Ekstra"
 
 msgid "[PRO] GDM Expansion"
-msgstr "[PRO] GDM-udvidelse"
+msgstr "[PRO] GDM Expansion"
 
-msgid "Enabled. Custom layout is active on GDM."
-msgstr "Aktiveret. Brugerdefineret layout er aktivt på GDM."
+msgid "Status: Enabled. Custom layout is active on GDM."
+msgstr "Status: Aktiveret. Det brugerdefinerede layout er aktivt på GDM."
 
 msgid "Enabled"
 msgstr "Aktiveret"
 
-msgid "Disabled"
-msgstr "Deaktiveret"
+msgid "GDM Expansion - Remove"
+msgstr "GDM-udvidelse - Fjern"
 
-msgid "Disabled."
-msgstr "Deaktiveret."
+msgid "Revert GDM login screen layout to GNOME Default. To uninstall, run copied command in a terminal."
+msgstr "Nulstil GDM-loginskærmen til GNOME-standard. Kør den kopierede kommando i en terminal for at afinstallere."
 
-msgid "GDM and Cross Session Module are missing."
-msgstr "GDM- og Cross Session-moduler mangler."
+msgid "Copy uninstall command to clipboard"
+msgstr "Kopier afinstallationskommando til udklipsholder"
 
-msgid "GDM dconf override configuration is missing."
-msgstr "GDM dconf-tilsidesættelseskonfiguration mangler."
+msgid "Copied uninstall command to clipboard!"
+msgstr "Afinstallationskommando kopieret til udklipsholder!"
+
+msgid "Extension is not installed system-wide in /usr/share."
+msgstr "Udvidelsen er ikke installeret systemdækkende i /usr/share."
+
+msgid "GDM expansion modules (src/pro) are missing system-wide."
+msgstr "GDM-udvidelsesmoduler (src/pro) mangler systemdækkende."
+
+msgid "GDM session mode is not enabled in system-wide metadata."
+msgstr "GDM-sessionstilstand er ikke aktiveret i systemmetadata."
+
+msgid "GDM dconf override configuration (/etc/dconf/db/gdm.d) is missing."
+msgstr "GDM dconf-tilsidesættelseskonfiguration (/etc/dconf/db/gdm.d) mangler."
 
 msgid "GDM integration is not configured."
 msgstr "GDM-integration er ikke konfigureret."
 
-msgid "Upgrade to Pro"
-msgstr "Opgrader till Pro"
+msgid "Status: Disabled."
+msgstr "Status: Deaktiveret."
 
-msgid "Get a Sonoma-inspired GDM login screen layout and automatically synchronize your wallpapers from the active user session. To upgrade, run copied command in a terminal."
-msgstr "Få et Sonoma-inspireret GDM-loginskærmslayout, og synkroniser automatisk dine tapeter fra den aktive brugersession. For at opgradere skal du køre den kopierede kommando i en terminal."
+msgid "Disabled"
+msgstr "Deaktiveret"
 
-msgid "Copy upgrade command to clipboard"
-msgstr "Kopier opgraderingskommando til udklipsholder"
+msgid "Enable GDM DLC Support"
+msgstr "Aktivér GDM DLC-understøttelse"
 
-msgid "Copied upgrade command to clipboard!"
-msgstr "Opgraderingskommando kopieret til udklipsholder!"
+msgid "Click icon to copy installer command, then run it in a terminal."
+msgstr "Klik på ikonet for at kopiere installationskommandoen, og kør den derefter i en terminal."
 
-msgid "Uninstall GDM Expansion"
-msgstr "Afinstaller GDM-udvidelse"
+msgid "Copy install command to clipboard"
+msgstr "Kopier installationskommando til udklipsholder"
 
-msgid "Revert GDM login screen layout to GNOME Default. To uninstall, run copied command in a terminal."
-msgstr "Gendan GDM-loginskærmslayout til GNOME-standard. For at afinstallere skal du køre den kopierede kommando i een terminal."
-
-msgid "Copy uninstall command to clipboard"
-msgstr "Kopier afinstalleringskommando til udklipsholder"
-
-msgid "Copied uninstall command to clipboard!"
-msgstr "Afinstalleringskommando kopieret til udklipsholder!"
-
-msgid "[BETA] WACK Shell Integration"
-msgstr "[BETA] WACK Shell-integration"
-
-msgid "Installed. Enables crossfade transitions and Cupertino-inspired shell customisations."
-msgstr "Installeret. Muliggør crossfade-overgange og Cupertino-inspirerede shell-tilpasninger."
+msgid "Copied install command to clipboard!"
+msgstr "Installationskommando kopieret til udklipsholder!"
 
 msgid "Upgrade to [PRO]"
 msgstr "Opgrader til [PRO]"
 
+msgid "Check PRO features of this extension on this extension's GitHub repo."
+msgstr "Se PRO-funktionerne for denne udvidelse i dens GitHub-arkiv."
+
+msgid "Visit documentation on GitHub"
+msgstr "Se dokumentation på GitHub"
+
+msgid "[BETA] WACK Shell Integration"
+msgstr "[BETA] WACK Shell Integration"
+
+msgid "Installed. Enables crossfade transitions and Cupertino-inspired shell customisations."
+msgstr "Installeret. Aktiverer udtoningsovergange og Cupertino-inspirerede shell-tilpasninger."
+
 msgid "Installed"
 msgstr "Installeret"
+
+msgid "WACK Shell - Check for Updates"
+msgstr "WACK Shell - Søg efter opdateringer"
+
+msgid "Copy check command to verify if a newer version of WACK Shell is available."
+msgstr "Kopier kommandoen for at kontrollere, om en nyere version af WACK Shell er tilgængelig."
+
+msgid "Copy update-check command to clipboard"
+msgstr "Kopier opdateringstjek-kommando"
+
+msgid "Copied WACK Shell update-check command to clipboard!"
+msgstr "WACK Shell-opdateringstjekkommando kopieret til udklipsholder!"
 
 msgid "Not installed. Install WACK Shell to unlock transition effects."
 msgstr "Ikke installeret. Installer WACK Shell for at låse op for overgangseffekter."
@@ -260,57 +333,15 @@ msgstr "Ikke installeret. Installer WACK Shell for at låse op for overgangseffe
 msgid "Not Installed"
 msgstr "Ikke installeret"
 
-msgid "Install WACK Shell"
-msgstr "Installer WACK Shell"
-
-msgid "Get advanced desktop crossfade transitions and Cupertino-inspired shell customisations. May contain bugs, report if found."
-msgstr "Få avancerede desktop-crossfade-overgange og Cupertino-inspirerede shell-tilpasninger. Kan indeholde fejl, rapporter hvis fundet."
-
-msgid "Copy install command to clipboard"
-msgstr "Kopier installationskommando til udklipsholder"
-
-msgid "Copied WACK Shell install command to clipboard!"
-msgstr "WACK Shell installationskommando kopieret til udklipsholder!"
-
-msgid "Open WACK Shell repository"
-msgstr "Åben WACK Shell repository"
-
-msgid "Check for Updates"
-msgstr "Søg efter opdateringer"
-
-msgid "Copy check command to verify if a newer version of WACK Shell is available."
-msgstr "Kopier kontrolkommandoen for at bekræfte, om en nyere version af WACK Shell er tilgængelig."
-
-msgid "Copy update-check command to clipboard"
-msgstr "Kopier opdateringskontrolkommando til udklipsholder"
-
-msgid "Copied WACK Shell update-check command to clipboard!"
-msgstr "Kopierede WACK Shell-opdateringskontrolkommando til udklipsholder!"
-
-msgid "Extras - Status"
-msgstr "Ekstra - Status"
-
-msgid "Extras - Actions"
-msgstr "Ekstra - Handlinger"
-
-msgid "GDM Expansion - Remove"
-msgstr "GDM-udvidelse - Fjern"
-
-msgid "WACK Shell - Check for Updates"
-msgstr "WACK Shell - Søg efter opdateringer"
-
 msgid "WACK Shell - Install"
 msgstr "WACK Shell - Installer"
 
-msgid "Upcoming Features"
-msgstr "Kommende funktioner"
+msgid "Get advanced desktop crossfade transitions and Cupertino-inspired shell customisations. May contain bugs, report if found."
+msgstr "Få avancerede udtoningsovergange på skrivebordet og Cupertino-inspirerede shell-tilpasninger. Kan indeholde fejl; rapportér hvis fundet."
 
-msgid "Check PRO features of this extension on this extension's GitHub repo."
-msgstr "Tjek PRO-funktionerne for denne udvidelse i dens GitHub-arkiv."
+msgid "Copied WACK Shell install command to clipboard!"
+msgstr "WACK Shell-installationskommando kopieret til udklipsholder!"
 
-msgid "Prompt Vibrancy"
-msgstr "Frostet glaseffekt for adgangskodefeltet"
-
-msgid "Applies a frosted glass effect to the password field (Static Blur)."
-msgstr "Anvender en frostet glaseffekt på adgangskodefeltet (statisk sløring)."
+msgid "Open WACK Shell repository"
+msgstr "Åbn WACK Shell-arkiv"
 

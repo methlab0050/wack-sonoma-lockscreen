@@ -3,10 +3,14 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: wack-lockscreen-clock@rinzler69-wastaken.github.com\n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: 2026-09-16 00:00+0000\n"
+"Last-Translator: rinzler69-wastaken\n"
+"Language-Team: WACK Project\n"
+"Language: hi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: hi\n"
 
 msgid "more"
 msgstr "अधिक"
@@ -15,223 +19,241 @@ msgid "Press Shift + N to view notifications"
 msgstr "सूचनाएं देखने के लिए Shift + N दबाएं"
 
 msgid "Sleep prevented by an active process"
-msgstr "एक सक्रिय प्रक्रिया द्वारा निलंबن रोका गया"
+msgstr "सक्रिय प्रक्रिया द्वारा सस्पेंड रोका गया"
 
-msgid "1 minute"
-msgstr "1 मिनट"
+msgid "Home"
+msgstr "होम"
 
-msgid "10 minutes"
-msgstr "10 मिनटों"
+msgid "Resources"
+msgstr "संसाधन"
 
-msgid "15 minutes"
-msgstr "15 मिनटों"
+msgid "Extension Repo"
+msgstr "एक्सटेंशन रिपॉजिटरी"
 
-msgid "2 hours"
-msgstr "2 घंटे"
+msgid "Open on GitHub"
+msgstr "GitHub पर खोलें"
 
-msgid "30 minutes"
-msgstr "30 मिनट"
-
-msgid "5 minutes"
-msgstr "5 मिनट"
-
-msgid "60 minutes"
-msgstr "60 मिनट"
-
-msgid "Always Show User Widget (Cupertino)"
-msgstr "हमेशा उपयोगकर्ता विजेट दिखाएँ (क्यूपर्टिनो)"
-
-msgid "Always shows user widget, hides notifications by default. Press Shift+N to show notifications."
-msgstr "हमेशा उपयोगकर्ता विजेट दिखाता है, डिफ़ॉल्ट रूप से सूचनाएं छुपाता है। सूचनाएं दिखाने के लिए Shift+N दबाएं।"
-
-msgid "Animations"
-msgstr "एनिमेशन"
-
-msgid "Applied to the authentication prompt while it appears"
-msgstr "प्रमाणीकरण संकेत प्रकट होने पर उस पर लागू किया गया"
-
-msgid "Applied to the date and time while opening the password prompt"
-msgstr "पासवर्ड संकेत खोलते समय दिनांक और समय पर लागू होता है"
-
-msgid "Blank Timeout"
-msgstr "स्क्रीन बंद होने का समय"
-
-msgid "A complete macOS Sonoma-inspired lockscreen layout (Click user-icon to switch users)."
-msgstr "एक पूर्ण macOS सोनोमा-प्रेरित लॉकस्क्रीन लेआउट (उपयोगकर्ताओं को बदलने के लिए उपयोगकर्ता-आइकन पर क्लिक करें)।"
-
-msgid "macOS Sonoma-style clock over the classic, GNOME-compliant layout and flow."
-msgstr "क्लासिक, जीनोम-अनुरूप लेआउट और फ्लो पर macOS सोनोमा-शैली की घड़ी।"
-
-msgid "Unlock Crossfade"
-msgstr "अनलॉक क्रॉसफ़ेड"
-
-msgid "Crossfade the lockscreen with desktop when unlocking (automatically disabled in Power Saver mode)."
-msgstr "अनलॉक करते समय डेस्कटॉप के साथ锁屏 को क्रॉसफ़ेड करें (बैटरी सेवर मोड में स्वचालित रूप से अक्षम)।"
-
-msgid "Crossfade Speed"
-msgstr "क्रॉसफ़ेड गति"
-
-msgid "Cupertino Unlock Fade"
-msgstr "क्यूपर्टिनो अनलॉक फ़ेड"
-
-msgid "Fade out the lock screen with a panel slide-in when unlocking."
-msgstr "अनलॉक करते समय पैनल के स्लाइड-इन के साथ लॉक स्क्रीन को फ़ेड आउट करें।"
-
-msgid "Choose between Legacy and Cupertino styles"
-msgstr "क्लासिक और क्यूपर्टिनो शैलियों के बीच चयन करें"
-
-msgid "Choose how the lock screen clock leaves and how the password prompt enters."
-msgstr "चुनें कि लॉक स्क्रीन घड़ी कैसे गायब होती है और पासवर्ड प्रॉम्प्ट कैसे प्रवेश करता है।"
-
-msgid "Clock Animation"
-msgstr "घड़ी एनीमेशन"
-
-msgid "Configuration"
-msgstr "विन्यास"
+msgid "Enjoying this extension?"
+msgstr "क्या आपको यह एक्सटेंशन पसंद आ रहा है?"
 
 msgid "Consider supporting its development!"
 msgstr "इसके विकास का समर्थन करने पर विचार करें!"
 
-msgid "Control when the screen turns off or blanks on the lock screen."
-msgstr "नियंत्रित करें कि लॉक स्क्रीन पर स्क्रीन कब बंद या धुंधली होती है।"
-
-msgid "Cupertino"
-msgstr "क्यूपर्टिनो"
-
-msgid "Enjoying this extension?"
-msgstr "इस विस्तार का आनंद ले रहे हैं?"
-
-msgid "Escape to Sleep / Suspend"
-msgstr "स्क्रीन बंद / निलंबित करने के लिए Esc"
-
-msgid "Extension Repo"
-msgstr "एक्सटेंशन रेपो"
-
-msgid "Home"
-msgstr "मुख्य पृष्ठ"
-
-msgid "Keep Screen On"
-msgstr "स्क्रीन चालू रखें"
-
 msgid "Ko-fi"
-msgstr "को-फाई"
+msgstr "Ko-fi"
+
+msgid "Open Ko-fi"
+msgstr "Ko-fi खोलें"
+
+msgid "Saweria"
+msgstr "Saweria"
+
+msgid "Open Saweria"
+msgstr "Saweria खोलें"
+
+msgid "Configuration"
+msgstr "कॉन्फ़िगरेशन"
+
+msgid "General"
+msgstr "सामान्य"
+
+msgid "Date Style"
+msgstr "दिनांक शैली"
+
+msgid "Choose between shortened and full date names."
+msgstr "संक्षिप्त और पूर्ण दिनांक नामों के बीच चुनें।"
+
+msgid "Short"
+msgstr "छोटा"
+
+msgid "Full"
+msgstr "पूर्ण"
+
+msgid "Cursor Blinking"
+msgstr "कर्सर ब्लिंक"
+
+msgid "Enable or disable text cursor blinking in the password field."
+msgstr "पासवर्ड फ़ील्ड में टेक्स्ट कर्सर ब्लिंक को सक्षम या अक्षम करें।"
+
+msgid "Custom Lockscreen Wallpaper"
+msgstr "कस्टम लॉक स्क्रीन वॉलपेपर"
+
+msgid "Use a custom image overlay for the lockscreen background."
+msgstr "लॉक स्क्रीन पृष्ठभूमि के लिए एक कस्टम छवि ओवरले का उपयोग करें।"
+
+msgid "Wallpaper Image Path"
+msgstr "वॉलपेपर छवि पथ"
+
+msgid "No image selected"
+msgstr "कोई छवि नहीं चुनी गई"
+
+msgid "Select Image File"
+msgstr "छवि फ़ाइल चुनें"
+
+msgid "Select Lockscreen Wallpaper"
+msgstr "लॉक स्क्रीन वॉलपेपर चुनें"
+
+msgid "Select"
+msgstr "चुनें"
+
+msgid "Cancel"
+msgstr "रद्द करें"
+
+msgid "Image Files"
+msgstr "छवि फ़ाइलें"
+
+msgid "Lockscreen Mode"
+msgstr "लॉक स्क्रीन मोड"
+
+msgid "Mode"
+msgstr "मोड"
 
 msgid "Legacy"
 msgstr "क्लासिक"
 
-msgid "Lockscreen Mode"
-msgstr "लॉकस्क्रीन मोड"
+msgid "Cupertino"
+msgstr "क्यूपर्टिनो"
+
+msgid "A complete macOS Sonoma-inspired lockscreen layout (Click user-icon to switch users)."
+msgstr "macOS Sonoma से प्रेरित एक संपूर्ण लॉक स्क्रीन लेआउट (उपयोगकर्ता बदलने के लिए उपयोगकर्ता आइकन पर क्लिक करें)।"
+
+msgid "macOS Sonoma-style clock over the classic, GNOME-compliant layout and flow."
+msgstr "क्लासिक, GNOME-अनुरूप लेआउट और प्रवाह पर macOS Sonoma-शैली घड़ी।"
+
+msgid "Always Show User Widget"
+msgstr "उपयोगकर्ता विजेट हमेशा दिखाएं"
+
+msgid "Hides notifications by default. Press Shift+N to show notifications."
+msgstr "डिफ़ॉल्ट रूप से सूचनाएं छुपाता है। सूचनाएं देखने के लिए Shift+N दबाएं।"
+
+msgid "Prompt Vibrancy"
+msgstr "पासवर्ड फ़ील्ड का विज़ुअल प्रभाव"
+
+msgid "Adaptive color and depth enhancements for the password field."
+msgstr "पासवर्ड फ़ील्ड के लिए अनुकूली रंग और गहराई सुधार।"
+
+msgid "Tonal"
+msgstr "टोनल"
+
+msgid "Acrylic"
+msgstr "ऐक्रेलिक"
+
+msgid "Lightweight, color-based mode."
+msgstr "हल्का, रंग-आधारित मोड।"
+
+msgid "Advanced, blur-based mode."
+msgstr "उन्नत, धुंधलापन-आधारित मोड।"
 
 msgid "Show message when locked"
 msgstr "लॉक होने पर संदेश दिखाएं"
 
 msgid "Set..."
-msgstr "सेट करें..."
+msgstr "सेट करें…"
 
 msgid "Set a message to appear on the lockscreen"
-msgstr "लॉकस्क्रीन पर दिखने के लिए एक संदेश सेट करें"
-
-msgid "Cancel"
-msgstr "रद्द करें"
+msgstr "लॉक स्क्रीन पर दिखने वाला संदेश सेट करें"
 
 msgid "OK"
 msgstr "ठीक है"
 
-msgid "Mode"
-msgstr "तरीका"
+msgid "Unlock Crossfade"
+msgstr "अनलॉक क्रॉसफ़ेड"
 
-msgid "Never"
-msgstr "कभी नहीं"
+msgid "Crossfade the lockscreen with desktop when unlocking (automatically disabled in Power Saver mode)."
+msgstr "अनलॉक करते समय लॉक स्क्रीन और डेस्कटॉप के बीच क्रॉसफ़ेड करें (पावर सेवर मोड में स्वतः अक्षम)।"
 
-msgid "Only keep the screen on if the system is plugged in"
-msgstr "स्क्रीन केवल तब चालू रखें जब सिस्टम प्लग इन हो"
+msgid "Requires WACK Shell to be installed and enabled."
+msgstr "WACK Shell स्थापित और सक्षम होना आवश्यक है।"
 
-msgid "Only on AC Power"
-msgstr "केवल एसी पावर पर"
+msgid "Requires WACK Shell to be enabled."
+msgstr "WACK Shell सक्षम होना आवश्यक है।"
 
-msgid "Open Ko-fi"
-msgstr "Ko-fi खोलें"
+msgid "Crossfade Speed"
+msgstr "क्रॉसफ़ेड गति"
 
-msgid "Open Saweria"
-msgstr "Saweria खोलें"
+msgid "Slower"
+msgstr "धीमा"
 
-msgid "Open on GitHub"
-msgstr "GitHub पर खोलें"
+msgid "Faster"
+msgstr "तेज़"
 
-msgid "Press Escape on the lock screen to sleep display (or suspend)"
-msgstr "स्क्रीन बंद करने (या निलंबित करने) के लिए लॉक स्क्रीन पर Esc दबाएं"
+msgid "Clock Animation"
+msgstr "घड़ी एनीमेशन"
 
-msgid "Prevent the screen from immediately turning off when locked. The screen will still turn off after the normal timeout duration set in system settings."
-msgstr "लॉक होने पर स्क्रीन को तुरंत बंद होने से रोकें. स्क्रीन अभी भी सिस्टम सेटिंग्स में निर्धारित सामान्य समय के बाद बंद हो जाएगी."
+msgid "Applied to the date and time while opening the password prompt"
+msgstr "पासवर्ड प्रॉम्प्ट खोलते समय दिनांक और समय पर लागू"
 
 msgid "Prompt Animation"
-msgstr "पासवर्ड संकेत एनीमेशन"
+msgstr "प्रॉम्प्ट एनीमेशन"
+
+msgid "Applied to the authentication prompt while it appears"
+msgstr "प्रमाणीकरण प्रॉम्प्ट प्रकट होते समय लागू"
 
 msgid "Reset Animations"
-msgstr "एनिमेशन रीसेट करें"
-
-msgid "Reset animations"
-msgstr "एनिमेशन रीसेट करें"
-
-msgid "Resources"
-msgstr "संसाधन"
+msgstr "एनीमेशन रीसेट करें"
 
 msgid "Restore defaults"
-msgstr "डिफॉल्ट्स का पुनःस्थापन"
+msgstr "डिफ़ॉल्ट पुनर्स्थापित करें"
 
-msgid "Saweria"
-msgstr "सवेरिया"
+msgid "Reset animations"
+msgstr "एनीमेशन रीसेट करें"
 
-msgid "Show a custom message above the user prompt stack."
-msgstr "उपयोगकर्ता संकेत के ऊपर एक कस्टम संदेश दिखाएं।"
+msgid "Scale Down"
+msgstr "स्केल डाउन"
+
+msgid "Zoom Up"
+msgstr "ज़ूम अप"
+
+msgid "Slide Up"
+msgstr "ऊपर स्लाइड करें"
+
+msgid "Fade"
+msgstr "फ़ेड"
+
+msgid "GNOME Default"
+msgstr "GNOME डिफ़ॉल्ट"
+
+msgid "Rise"
+msgstr "उठना"
+
+msgid "Zoom"
+msgstr "ज़ूम"
 
 msgid "Screen Timeout"
-msgstr "स्क्रीन काल समापन"
+msgstr "स्क्रीन टाइमआउट"
 
-msgid "Time to wait before turning off the screen"
-msgstr "स्क्रीन बंद करने से पहले प्रतीक्षा समय"
+msgid "Keep Screen On"
+msgstr "स्क्रीन को चालू रखें"
+
+msgid "Prevent the screen from immediately turning off when locked. The screen will still turn off after the normal timeout duration set in system settings."
+msgstr "लॉक होने पर स्क्रीन को तुरंत बंद होने से रोकता है। सिस्टम सेटिंग्स में निर्धारित सामान्य समय के बाद स्क्रीन बंद हो जाएगी।"
+
+msgid "Only on AC Power"
+msgstr "केवल AC पावर पर"
+
+msgid "Only keep the screen on if the system is plugged in"
+msgstr "केवल तभी स्क्रीन को चालू रखें जब सिस्टम पावर से जुड़ा हो"
+
+msgid "Escape to Sleep / Suspend"
+msgstr "स्क्रीन बंद / सस्पेंड करने के लिए Escape"
+
+msgid "Press Escape on the lock screen to sleep display (or suspend)"
+msgstr "डिस्प्ले को बंद (या सस्पेंड) करने के लिए लॉक स्क्रीन पर Escape दबाएं"
 
 msgid "Extras"
 msgstr "अतिरिक्त"
 
 msgid "[PRO] GDM Expansion"
-msgstr "[PRO] GDM विस्तार"
+msgstr "[PRO] GDM Expansion"
 
-msgid "Enabled. Custom layout is active on GDM."
-msgstr "सक्षम। कस्टम लेआउट GDM पर सक्रिय है।"
+msgid "Status: Enabled. Custom layout is active on GDM."
+msgstr "स्थिति: सक्षम। GDM पर कस्टम लेआउट सक्रिय है।"
 
 msgid "Enabled"
 msgstr "सक्षम"
 
-msgid "Disabled"
-msgstr "अक्षम"
-
-msgid "Disabled."
-msgstr "अक्षम।"
-
-msgid "GDM and Cross Session Module are missing."
-msgstr "GDM और क्रॉस सेशन मॉड्यूल गायब हैं।"
-
-msgid "GDM dconf override configuration is missing."
-msgstr "GDM dconf ओवरराइड कॉन्फ़िगरेशन गायब है।"
-
-msgid "GDM integration is not configured."
-msgstr "GDM एकीकरण कॉन्फ़िगर नहीं है।"
-
-msgid "Upgrade to Pro"
-msgstr "प्रो में अपग्रेड करें"
-
-msgid "Get a Sonoma-inspired GDM login screen layout and automatically synchronize your wallpapers from the active user session. To upgrade, run copied command in a terminal."
-msgstr "Sonoma-प्रेरित GDM लॉगिन स्क्रीन लेआउट प्राप्त करें और सक्रिय उपयोगकर्ता सत्र से अपने वॉलपेपर को स्वचालित रूप से सिंक्रनाइज़ करें। अपग्रेड करने के लिए, कॉपी किए गए कमांड को टर्मिनल में चलाएं।"
-
-msgid "Copy upgrade command to clipboard"
-msgstr "अपग्रेड कमांड को क्लिपबोर्ड पर कॉपी करें"
-
-msgid "Copied upgrade command to clipboard!"
-msgstr "अपग्रेड कमांड क्लिपबोर्ड पर कॉपी किया गया!"
-
-msgid "Uninstall GDM Expansion"
-msgstr "GDM विस्तार अनइंस्टॉल करें"
+msgid "GDM Expansion - Remove"
+msgstr "GDM विस्तार - हटाएं"
 
 msgid "Revert GDM login screen layout to GNOME Default. To uninstall, run copied command in a terminal."
 msgstr "GDM लॉगिन स्क्रीन लेआउट को GNOME डिफ़ॉल्ट पर वापस लाएं। अनइंस्टॉल करने के लिए, कॉपी किए गए कमांड को टर्मिनल में चलाएं।"
@@ -240,19 +262,70 @@ msgid "Copy uninstall command to clipboard"
 msgstr "अनइंस्टॉल कमांड को क्लिपबोर्ड पर कॉपी करें"
 
 msgid "Copied uninstall command to clipboard!"
-msgstr "अनइंstॉल कमांड क्लिपबोर्ड पर कॉपी किया गया!"
+msgstr "अनइंस्टॉल कमांड क्लिपबोर्ड पर कॉपी किया गया!"
 
-msgid "[BETA] WACK Shell Integration"
-msgstr "[BETA] WACK Shell एकीकरण"
+msgid "Extension is not installed system-wide in /usr/share."
+msgstr "एक्सटेंशन /usr/share में सिस्टम-व्यापी स्थापित नहीं है।"
 
-msgid "Installed. Enables crossfade transitions and Cupertino-inspired shell customisations."
-msgstr "स्थापित। क्रॉसफ़ेड संक्रमण और क्यूपर्टिनो-प्रेरित शेल अनुकूलन सक्षम करता है।"
+msgid "GDM expansion modules (src/pro) are missing system-wide."
+msgstr "GDM विस्तार मॉड्यूल (src/pro) सिस्टम-व्यापी गायब हैं।"
+
+msgid "GDM session mode is not enabled in system-wide metadata."
+msgstr "सिस्टम-व्यापी मेटाडेटा में GDM सत्र मोड सक्षम नहीं है।"
+
+msgid "GDM dconf override configuration (/etc/dconf/db/gdm.d) is missing."
+msgstr "GDM dconf ओवरराइड कॉन्फ़िगरेशन (/etc/dconf/db/gdm.d) गायब है।"
+
+msgid "GDM integration is not configured."
+msgstr "GDM एकीकरण कॉन्फ़िगर नहीं है।"
+
+msgid "Status: Disabled."
+msgstr "स्थिति: अक्षम।"
+
+msgid "Disabled"
+msgstr "अक्षम"
+
+msgid "Enable GDM DLC Support"
+msgstr "GDM DLC समर्थन सक्षम करें"
+
+msgid "Click icon to copy installer command, then run it in a terminal."
+msgstr "इंस्टॉलर कमांड को कॉपी करने के लिए आइकन पर क्लिक करें, फिर इसे टर्मिनल में चलाएं।"
+
+msgid "Copy install command to clipboard"
+msgstr "इंस्टॉल कमांड को क्लिपबोर्ड पर कॉपी करें"
+
+msgid "Copied install command to clipboard!"
+msgstr "इंस्टॉल कमांड क्लिपबोर्ड पर कॉपी किया गया!"
 
 msgid "Upgrade to [PRO]"
 msgstr "[PRO] में अपग्रेड करें"
 
+msgid "Check PRO features of this extension on this extension's GitHub repo."
+msgstr "इस एक्सटेंशन के GitHub रेपो पर इसकी PRO सुविधाएं देखें।"
+
+msgid "Visit documentation on GitHub"
+msgstr "GitHub पर दस्तावेज़ देखें"
+
+msgid "[BETA] WACK Shell Integration"
+msgstr "[BETA] WACK Shell Integration"
+
+msgid "Installed. Enables crossfade transitions and Cupertino-inspired shell customisations."
+msgstr "स्थापित। क्रॉसफ़ेड संक्रमण और क्यूपर्टिनो-प्रेरित शेल अनुकूलन सक्षम करता है।"
+
 msgid "Installed"
 msgstr "स्थापित"
+
+msgid "WACK Shell - Check for Updates"
+msgstr "WACK Shell - अपडेट की जांच करें"
+
+msgid "Copy check command to verify if a newer version of WACK Shell is available."
+msgstr "WACK Shell का नया संस्करण उपलब्ध है या नहीं यह जांचने के लिए कमांड कॉपी करें।"
+
+msgid "Copy update-check command to clipboard"
+msgstr "अपडेट जांच कमांड कॉपी करें"
+
+msgid "Copied WACK Shell update-check command to clipboard!"
+msgstr "WACK Shell अपडेट जांच कमांड क्लिपबोर्ड पर कॉपी किया गया!"
 
 msgid "Not installed. Install WACK Shell to unlock transition effects."
 msgstr "स्थापित नहीं है। संक्रमण प्रभावों को अनलॉक करने के लिए WACK Shell स्थापित करें।"
@@ -260,57 +333,15 @@ msgstr "स्थापित नहीं है। संक्रमण प�
 msgid "Not Installed"
 msgstr "स्थापित नहीं"
 
-msgid "Install WACK Shell"
-msgstr "WACK Shell स्थापित करें"
+msgid "WACK Shell - Install"
+msgstr "WACK Shell - स्थापित करें"
 
 msgid "Get advanced desktop crossfade transitions and Cupertino-inspired shell customisations. May contain bugs, report if found."
-msgstr "उन्नत डेस्कटॉप क्रॉसफ़ेड संक्रमण और क्यूपर्टिनो-प्रेरित शेल अनुकूलन प्राप्त करें। इसमें बग हो सकते हैं, मिलने पर रिपोर्ट करें।"
-
-msgid "Copy install command to clipboard"
-msgstr "इंस्टॉल कमांड को क्लिपबोर्ड पर कॉपी करें"
+msgstr "उन्नत डेस्कटॉप क्रॉसफ़ेड संक्रमण और क्यूपर्टिनो-प्रेरित शेल अनुकूलन प्राप्त करें। बग हो सकते हैं, मिलने पर रिपोर्ट करें।"
 
 msgid "Copied WACK Shell install command to clipboard!"
 msgstr "WACK Shell इंस्टॉल कमांड क्लिपबोर्ड पर कॉपी किया गया!"
 
 msgid "Open WACK Shell repository"
-msgstr "WACK Shell रिपोजिटरी खोलें"
-
-msgid "Check for Updates"
-msgstr "अपडेट के लिए जाँच करें"
-
-msgid "Copy check command to verify if a newer version of WACK Shell is available."
-msgstr "WACK Shell का कोई नया संस्करण उपलब्ध है या नहीं, यह जाँचने के लिए जाँच कमांड कॉपी करें।"
-
-msgid "Copy update-check command to clipboard"
-msgstr "अपडेट-जाँच कमांड को क्लिपबोर्ड पर कॉपी करें"
-
-msgid "Copied WACK Shell update-check command to clipboard!"
-msgstr "WACK Shell अपडेट-जाँच कमांड क्लिपबोर्ड पर कॉपी किया गया!"
-
-msgid "Extras - Status"
-msgstr "अतिरिक्त - स्थिति"
-
-msgid "Extras - Actions"
-msgstr "अतिरिक्त - क्रियाएं"
-
-msgid "GDM Expansion - Remove"
-msgstr "GDM विस्तार - हटाएं"
-
-msgid "WACK Shell - Check for Updates"
-msgstr "WACK Shell - अपडेट के लिए जाँच करें"
-
-msgid "WACK Shell - Install"
-msgstr "WACK Shell - स्थापित करें"
-
-msgid "Upcoming Features"
-msgstr "आने वाली विशेषताएँ"
-
-msgid "Check PRO features of this extension on this extension's GitHub repo."
-msgstr "इस एक्सटेंशन के GitHub रिपॉजिटरी पर PRO फीचर्स देखें।"
-
-msgid "Prompt Vibrancy"
-msgstr "पासवर्ड फ़ील्ड का फ्रॉस्टेड ग्लास प्रभाव"
-
-msgid "Applies a frosted glass effect to the password field (Static Blur)."
-msgstr "पासवर्ड फ़ील्ड पर फ्रॉस्टेड ग्लास प्रभाव लागू करता है (स्थिर धुंधलापन)."
+msgstr "WACK Shell रिपॉजिटरी खोलें"
 

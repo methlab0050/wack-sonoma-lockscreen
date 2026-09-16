@@ -260,37 +260,81 @@ export default class WackLockscreenClockPreferences extends ExtensionPreferences
             icon_name: 'system-lock-screen-symbolic',
         });
 
-        // -- Mode selector --------------------------------------------------
-        const modeGroup = new Adw.PreferencesGroup({
-            title: _('Lockscreen Mode'),
+        // -- General group --------------------------------------------------
+        const generalGroup = new Adw.PreferencesGroup({
+            title: _('General'),
         });
 
-        const modeRow = new Adw.ExpanderRow({
-            title: _('Mode'),
-            show_enable_switch: false,
+        // 1. Date Style
+        const dateStyleRow = new Adw.ActionRow({
+            title: _('Date Style'),
+            subtitle: _('Choose between shortened and full date names.'),
         });
-        modeGroup.add(modeRow);
 
-        const modeBox = new Gtk.Box({
+        const dateStyleBox = new Gtk.Box({ valign: Gtk.Align.CENTER });
+
+        // Linked buttons (wide layout)
+        const dateStyleLinkedBox = new Gtk.Box({ css_classes: ['linked'] });
+        const btnDateShort = new Gtk.ToggleButton({ label: _('Short') });
+        const btnDateFull = new Gtk.ToggleButton({ label: _('Full'), group: btnDateShort });
+        dateStyleLinkedBox.append(btnDateShort);
+        dateStyleLinkedBox.append(btnDateFull);
+
+        // Dropdown fallback (narrow layout)
+        const dateStyleDropdown = new Gtk.DropDown({
             valign: Gtk.Align.CENTER,
+            model: Gtk.StringList.new([_('Short'), _('Full')]),
         });
 
-        const linkedBox = new Gtk.Box({ css_classes: ['linked'] });
-        const btnLegacy = new Gtk.ToggleButton({ label: _('Legacy') });
-        const btnCupertino = new Gtk.ToggleButton({ label: _('Cupertino'), group: btnLegacy });
-        linkedBox.append(btnLegacy);
-        linkedBox.append(btnCupertino);
+        dateStyleBox.append(dateStyleLinkedBox);
+        dateStyleBox.append(dateStyleDropdown);
+        dateStyleRow.add_suffix(dateStyleBox);
 
-        const dropdown = new Gtk.DropDown({
-            valign: Gtk.Align.CENTER,
-            model: Gtk.StringList.new([_('Legacy'), _('Cupertino')])
+        let selfChangeDateStyle = false;
+
+        const syncDateStyleButtons = () => {
+            const v = settings.get_string('date-style') || 'full';
+            selfChangeDateStyle = true;
+            btnDateShort.active = (v === 'short');
+            btnDateFull.active = (v !== 'short');
+            dateStyleDropdown.selected = (v === 'short') ? 0 : 1;
+            selfChangeDateStyle = false;
+        };
+        syncDateStyleButtons();
+
+        btnDateShort.connect('toggled', () => {
+            if (selfChangeDateStyle || !btnDateShort.active) return;
+            selfChangeDateStyle = true;
+            settings.set_string('date-style', 'short');
+            dateStyleDropdown.selected = 0;
+            selfChangeDateStyle = false;
         });
+        btnDateFull.connect('toggled', () => {
+            if (selfChangeDateStyle || !btnDateFull.active) return;
+            selfChangeDateStyle = true;
+            settings.set_string('date-style', 'full');
+            dateStyleDropdown.selected = 1;
+            selfChangeDateStyle = false;
+        });
+        dateStyleDropdown.connect('notify::selected', () => {
+            if (selfChangeDateStyle) return;
+            selfChangeDateStyle = true;
+            const val = dateStyleDropdown.selected === 0 ? 'short' : 'full';
+            settings.set_string('date-style', val);
+            btnDateShort.active = (val === 'short');
+            btnDateFull.active = (val !== 'short');
+            selfChangeDateStyle = false;
+        });
+        settingsSignalIds.push(settings.connect('changed::date-style', () => {
+            if (!selfChangeDateStyle) syncDateStyleButtons();
+        }));
 
-        modeBox.append(linkedBox);
-        modeBox.append(dropdown);
-        modeRow.add_suffix(modeBox);
+        dateStyleDropdown.visible = false;
+        dateStyleLinkedBox.visible = true;
 
-        // -- Shared options -------------------------------------------------
+        generalGroup.add(dateStyleRow);
+
+        // 2. Cursor Blinking
         const cursorBlinkRow = new Adw.ActionRow({
             title: _('Cursor Blinking'),
             subtitle: _('Enable or disable text cursor blinking in the password field.'),
@@ -307,8 +351,9 @@ export default class WackLockscreenClockPreferences extends ExtensionPreferences
         }));
         cursorBlinkRow.add_suffix(cursorBlinkSwitch);
         cursorBlinkRow.activatable_widget = cursorBlinkSwitch;
-        modeRow.add_row(cursorBlinkRow);
+        generalGroup.add(cursorBlinkRow);
 
+        // 3. Custom Lockscreen Wallpaper
         const wallpaperEnableRow = new Adw.ActionRow({
             title: _('Custom Lockscreen Wallpaper'),
             subtitle: _('Use a custom image overlay for the lockscreen background.'),
@@ -327,8 +372,9 @@ export default class WackLockscreenClockPreferences extends ExtensionPreferences
         }));
         wallpaperEnableRow.add_suffix(wallpaperEnableSwitch);
         wallpaperEnableRow.activatable_widget = wallpaperEnableSwitch;
-        modeRow.add_row(wallpaperEnableRow);
+        generalGroup.add(wallpaperEnableRow);
 
+        // 4. Wallpaper Image Path
         const wallpaperPathRow = new Adw.ActionRow({
             title: _('Wallpaper Image Path'),
             subtitle: settings.get_string('lockscreen-wallpaper-path') || _('No image selected'),
@@ -386,7 +432,39 @@ export default class WackLockscreenClockPreferences extends ExtensionPreferences
         }));
 
         refreshWallpaperPathSensitivity();
-        modeRow.add_row(wallpaperPathRow);
+        generalGroup.add(wallpaperPathRow);
+
+        animPage.add(generalGroup);
+
+        // -- Mode selector --------------------------------------------------
+        const modeGroup = new Adw.PreferencesGroup({
+            title: _('Lockscreen Mode'),
+        });
+
+        const modeRow = new Adw.ExpanderRow({
+            title: _('Mode'),
+            show_enable_switch: false,
+        });
+        modeGroup.add(modeRow);
+
+        const modeBox = new Gtk.Box({
+            valign: Gtk.Align.CENTER,
+        });
+
+        const linkedBox = new Gtk.Box({ css_classes: ['linked'] });
+        const btnLegacy = new Gtk.ToggleButton({ label: _('Legacy') });
+        const btnCupertino = new Gtk.ToggleButton({ label: _('Cupertino'), group: btnLegacy });
+        linkedBox.append(btnLegacy);
+        linkedBox.append(btnCupertino);
+
+        const dropdown = new Gtk.DropDown({
+            valign: Gtk.Align.CENTER,
+            model: Gtk.StringList.new([_('Legacy'), _('Cupertino')])
+        });
+
+        modeBox.append(linkedBox);
+        modeBox.append(dropdown);
+        modeRow.add_suffix(modeBox);
 
         // -- Cupertino options ----------------------------------------------
         const alwaysShowUserRow = new Adw.ActionRow({
@@ -603,12 +681,15 @@ export default class WackLockscreenClockPreferences extends ExtensionPreferences
             valign: Gtk.Align.CENTER,
             active: settings.get_boolean('cupertino-unlock-fade'),
         });
+
+        let selfChangeUnlockFade = false;
+
         unlockFadeSwitch.connect('notify::active', () => {
+            if (selfChangeUnlockFade) return;
             settings.set_boolean('cupertino-unlock-fade', unlockFadeSwitch.active);
             refreshUnlockFadeAvailability();
         });
         settingsSignalIds.push(settings.connect('changed::cupertino-unlock-fade', () => {
-            unlockFadeSwitch.active = settings.get_boolean('cupertino-unlock-fade');
             refreshUnlockFadeAvailability();
         }));
         unlockFadeRow.add_suffix(unlockFadeSwitch);
@@ -740,7 +821,15 @@ export default class WackLockscreenClockPreferences extends ExtensionPreferences
             unlockFadeRow.subtitle = subtitleText;
             const available = isCup && wackShellInstalled && wackShellEnabled;
             unlockFadeRow.sensitive = available;
-            speedRow.sensitive = available && settings.get_boolean('cupertino-unlock-fade');
+
+            const persistedFade = settings.get_boolean('cupertino-unlock-fade');
+            selfChangeUnlockFade = true;
+            unlockFadeSwitch.active = available ? persistedFade : false;
+            selfChangeUnlockFade = false;
+
+            const showSpeed = isCup && available && persistedFade;
+            speedRow.visible = showSpeed;
+            speedRow.sensitive = showSpeed;
         }
         const syncModeFromSettings = () => {
             const val = settings.get_string('lockscreen-mode');
@@ -772,7 +861,6 @@ export default class WackLockscreenClockPreferences extends ExtensionPreferences
             messageEnableRow.visible = isCup;
             messageEnableRow.sensitive = isCup;
             unlockFadeRow.visible = isCup;
-            speedRow.visible = isCup;
             refreshUnlockFadeAvailability();
 
             // Legacy visibility/sensitivity
@@ -805,6 +893,8 @@ export default class WackLockscreenClockPreferences extends ExtensionPreferences
         const breakpoint = new Adw.Breakpoint({ condition: cond });
         breakpoint.add_setter(linkedBox, 'visible', false);
         breakpoint.add_setter(dropdown, 'visible', true);
+        breakpoint.add_setter(dateStyleLinkedBox, 'visible', false);
+        breakpoint.add_setter(dateStyleDropdown, 'visible', true);
         breakpoint.add_setter(speedLinkedBox, 'visible', false);
         breakpoint.add_setter(speedDropdown, 'visible', true);
         window.add_breakpoint(breakpoint);

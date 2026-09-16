@@ -23,6 +23,8 @@ export class GdmClockManager {
 
     setup(dialog, dialogParent) {
         this.clock = new WackClock();
+        const dateStyle = this._gdm._currentWallpaperMetadata?.dateStyle ?? 'full';
+        this.clock.setDateStyle(dateStyle);
         const dateLabel = this.clock._dateOutput;
         const timeLabel = this.clock._time;
         this.timeLabel = timeLabel;

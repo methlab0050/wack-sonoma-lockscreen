@@ -224,6 +224,8 @@ export class GdmWallpaperManager {
             shading_type: metadata?.shading_type ?? null,
             is_color: metadata?.is_color ?? null,
             clockAlpha: metadata?.clockAlpha ?? null,
+            clockFormat: metadata?.clockFormat ?? null,
+            dateStyle: metadata?.dateStyle ?? null,
             promptColor: metadata?.promptColor ?? null,
             cursorBlink: metadata?.cursorBlink ?? null,
             lockscreenMode: metadata?.lockscreenMode ?? null,
@@ -323,11 +325,7 @@ export class GdmWallpaperManager {
         const isPromptImageValid = promptColor?.imagePath &&
             Gio.File.new_for_path(promptColor.imagePath).query_exists(null);
         const isCancelImageValid = promptColor?.cancelImagePath &&
-            Gio.File.new_for_path(promptColor.cancelImagePath).query_exists(null) &&
-            promptColor?.cancelHoverImagePath &&
-            Gio.File.new_for_path(promptColor.cancelHoverImagePath).query_exists(null) &&
-            promptColor?.cancelActiveImagePath &&
-            Gio.File.new_for_path(promptColor.cancelActiveImagePath).query_exists(null);
+            Gio.File.new_for_path(promptColor.cancelImagePath).query_exists(null);
 
         const isSolid = (currentVibrancyMode === 'tonal' || currentVibrancyMode === 'less');
 
@@ -491,6 +489,7 @@ export class GdmWallpaperManager {
                         shading_type: shadingType,
                         is_color: isColor,
                         clockFormat: interfaceSettings.get_string('clock-format'),
+                        dateStyle: 'full',
                         clockAlpha: 0.6,
                         promptColor: null,
                         promptVibrancy: true,
@@ -513,8 +512,10 @@ export class GdmWallpaperManager {
             _log(`[WACK/GdmManager] _applyWallpaper resolved user: ${resolvedUserName}`);
 
             const clock = this._gdm._clockManager?.clock ?? this._gdm._gdmClock;
-            if (clock)
+            if (clock) {
                 clock.setClockFormat(metadata?.clockFormat ?? null);
+                clock.setDateStyle(metadata?.dateStyle ?? 'full');
+            }
 
             let alphaPromise;
             if (metadata) {

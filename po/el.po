@@ -3,10 +3,14 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: wack-lockscreen-clock@rinzler69-wastaken.github.com\n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: 2026-09-16 00:00+0000\n"
+"Last-Translator: rinzler69-wastaken\n"
+"Language-Team: WACK Project\n"
+"Language: el\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: el\n"
 
 msgid "more"
 msgstr "περισσότερα"
@@ -15,226 +19,244 @@ msgid "Press Shift + N to view notifications"
 msgstr "Πατήστε Shift + N για προβολή ειδοποιήσεων"
 
 msgid "Sleep prevented by an active process"
-msgstr "Η αναστολή λειτουργίας αποτράπηκε από μια ενεργή διεργασία"
+msgstr "Η αναστολή λειτουργίας αποτράπηκε από ενεργή διεργασία"
 
-msgid "1 minute"
-msgstr "1 λεπτό"
+msgid "Home"
+msgstr "Αρχική"
 
-msgid "10 minutes"
-msgstr "10 λεπτά"
+msgid "Resources"
+msgstr "Πόροι"
 
-msgid "15 minutes"
-msgstr "15 λεπτά"
+msgid "Extension Repo"
+msgstr "Αποθετήριο επέκτασης"
 
-msgid "2 hours"
-msgstr "2 ώρες"
+msgid "Open on GitHub"
+msgstr "Άνοιγμα στο GitHub"
 
-msgid "30 minutes"
-msgstr "30 λεπτά"
+msgid "Enjoying this extension?"
+msgstr "Σας αρέσει αυτή η επέκταση;"
 
-msgid "5 minutes"
-msgstr "5 λεπτά"
+msgid "Consider supporting its development!"
+msgstr "Σκεφτείτε να υποστηρίξετε την ανάπτυξή της!"
 
-msgid "60 minutes"
-msgstr "60 λεπτά"
+msgid "Ko-fi"
+msgstr "Ko-fi"
 
-msgid "Always Show User Widget (Cupertino)"
-msgstr "Να εμφανίζεται πάντα το γραφικό στοιχείο χρήστη (Cupertino)"
+msgid "Open Ko-fi"
+msgstr "Άνοιγμα Ko-fi"
 
-msgid "Always shows user widget, hides notifications by default. Press Shift+N to show notifications."
-msgstr "Εμφανίζει πάντα το γραφικό στοιχείο χρήστη, αποκρύπτοντας τις ειδοποιήσεις από προεπιλογή. Πατήστε Shift+N για να εμφανιστούν οι ειδοποιήσεις."
+msgid "Saweria"
+msgstr "Saweria"
 
-msgid "Animations"
-msgstr "Κινούμενα σχέδια"
+msgid "Open Saweria"
+msgstr "Άνοιγμα Saweria"
 
-msgid "Applied to the authentication prompt while it appears"
-msgstr "Εφαρμόζεται στο μήνυμα ελέγχου ταυτότητας ενώ εμφανίζεται"
+msgid "Configuration"
+msgstr "Διαμόρφωση"
 
-msgid "Applied to the date and time while opening the password prompt"
-msgstr "Εφαρμόζεται στην ημερομηνία και την ώρα κατά το άνοιγμα του πλαισίου κωδικού"
+msgid "General"
+msgstr "Γενικά"
 
-msgid "Blank Timeout"
-msgstr "Χρονικό όριο απενεργοποίησης οθόνης"
+msgid "Date Style"
+msgstr "Στυλ ημερομηνίας"
+
+msgid "Choose between shortened and full date names."
+msgstr "Επιλέξτε μεταξύ συντομευμένων και πλήρων ονομάτων ημερομηνιών."
+
+msgid "Short"
+msgstr "Σύντομο"
+
+msgid "Full"
+msgstr "Πλήρες"
+
+msgid "Cursor Blinking"
+msgstr "Αναβοσβήσιμο δρομέα"
+
+msgid "Enable or disable text cursor blinking in the password field."
+msgstr "Ενεργοποίηση ή απενεργοποίηση του αναβοσβήματος του δρομέα στο πεδίο κωδικού πρόσβασης."
+
+msgid "Custom Lockscreen Wallpaper"
+msgstr "Προσαρμοσμένη ταπετσαρία οθόνης κλειδώματος"
+
+msgid "Use a custom image overlay for the lockscreen background."
+msgstr "Χρησιμοποιήστε μια προσαρμοσμένη εικόνα ως φόντο για την οθόνη κλειδώματος."
+
+msgid "Wallpaper Image Path"
+msgstr "Διαδρομή εικόνας ταπετσαρίας"
+
+msgid "No image selected"
+msgstr "Δεν έχει επιλεγεί εικόνα"
+
+msgid "Select Image File"
+msgstr "Επιλογή αρχείου εικόνας"
+
+msgid "Select Lockscreen Wallpaper"
+msgstr "Επιλογή ταπετσαρίας οθόνης κλειδώματος"
+
+msgid "Select"
+msgstr "Επιλογή"
+
+msgid "Cancel"
+msgstr "Ακύρωση"
+
+msgid "Image Files"
+msgstr "Αρχεία εικόνων"
+
+msgid "Lockscreen Mode"
+msgstr "Λειτουργία οθόνης κλειδώματος"
+
+msgid "Mode"
+msgstr "Λειτουργία"
+
+msgid "Legacy"
+msgstr "Κλασικό"
+
+msgid "Cupertino"
+msgstr "Cupertino"
 
 msgid "A complete macOS Sonoma-inspired lockscreen layout (Click user-icon to switch users)."
 msgstr "Μια πλήρης διάταξη οθόνης κλειδώματος εμπνευσμένη από το macOS Sonoma (κάντε κλικ στο εικονίδιο χρήστη για εναλλαγή χρηστών)."
 
 msgid "macOS Sonoma-style clock over the classic, GNOME-compliant layout and flow."
-msgstr "Ρολόι στυλ macOS Sonoma πάνω από την κλασική, συμβατή με το GNOME διάταξη και ροή."
+msgstr "Ρολόι σε στυλ macOS Sonoma πάνω από την κλασική διάταξη του GNOME."
 
-msgid "Unlock Crossfade"
-msgstr "Ξεθώριασμα ξεκλειδώματος"
+msgid "Always Show User Widget"
+msgstr "Πάντα εμφάνιση γραφικού στοιχείου χρήστη"
 
-msgid "Crossfade the lockscreen with desktop when unlocking (automatically disabled in Power Saver mode)."
-msgstr "Ξεθωριάζει την οθόνη κλειδώματος με την επιφάνεια εργασίας κατά το ξεκλείδωμα (απενεργοποιείται αυτόματα στη λειτουργία εξοικονόμησης ενέργειας)."
+msgid "Hides notifications by default. Press Shift+N to show notifications."
+msgstr "Αποκρύπτει τις ειδοποιήσεις από προεπιλογή. Πατήστε Shift+N για εμφάνιση."
 
-msgid "Crossfade Speed"
-msgstr "Ταχύτητα ξεθωριάσματος"
+msgid "Prompt Vibrancy"
+msgstr "Οπτικό εφέ πεδίου κωδικού πρόσβασης"
 
-msgid "Cupertino Unlock Fade"
-msgstr "Ξεθώριασμα ξεκλειδώματος Cupertino"
+msgid "Adaptive color and depth enhancements for the password field."
+msgstr "Προσαρμοστικές βελτιώσεις χρώματος και βάθους για το πεδίο κωδικού πρόσβασης."
 
-msgid "Fade out the lock screen with a panel slide-in when unlocking."
-msgstr "Σταδιακό σβήσιμο της οθόνης κλειδώματος με ολίσθηση του πίνακα κατά το ξεκλείδωμα."
+msgid "Tonal"
+msgstr "Τονικό"
 
-msgid "Choose between Legacy and Cupertino styles"
-msgstr "Επιλογή μεταξύ του κλασικού στυλ και του στυλ Cupertino"
+msgid "Acrylic"
+msgstr "Ακρυλικό"
 
-msgid "Choose how the lock screen clock leaves and how the password prompt enters."
-msgstr "Επιλέξτε πώς εξαφανίζεται το ρολόι της οθόνης κλειδώματος και πώς εμφανίζεται το πλαίσιο κωδικού."
+msgid "Lightweight, color-based mode."
+msgstr "Ελαφριά λειτουργία βασισμένη στο χρώμα."
 
-msgid "Clock Animation"
-msgstr "Κινούμενα σχέδια ρολογιού"
-
-msgid "Configuration"
-msgstr "Διαμόρφωση"
-
-msgid "Consider supporting its development!"
-msgstr "Σκεφτείτε να υποστηρίξετε την ανάπτυξή του!"
-
-msgid "Control when the screen turns off or blanks on the lock screen."
-msgstr "Ελέγχει πότε η οθόνη απενεργοποιείται ή μαυρίζει στην οθόνη κλειδώματος."
-
-msgid "Cupertino"
-msgstr "Κουπερτίνο"
-
-msgid "Enjoying this extension?"
-msgstr "Σας αρέσει αυτή η επέκταση;"
-
-msgid "Escape to Sleep / Suspend"
-msgstr "Esc για απενεργοποίηση οθόνης / αναστολή"
-
-msgid "Extension Repo"
-msgstr "Επέκταση Repo"
-
-msgid "Home"
-msgstr "Αρχική"
-
-msgid "Keep Screen On"
-msgstr "Διατήρηση της οθόνης ενεργής"
-
-msgid "Ko-fi"
-msgstr "Κο-φι"
-
-msgid "Legacy"
-msgstr "Κλασικό"
-
-msgid "Lockscreen Mode"
-msgstr "Λειτουργία οθόνης κλειδώματος"
+msgid "Advanced, blur-based mode."
+msgstr "Προηγμένη λειτουργία βασισμένη στη θόλωση."
 
 msgid "Show message when locked"
 msgstr "Εμφάνιση μηνύματος κατά το κλείδωμα"
 
 msgid "Set..."
-msgstr "Ορισμός..."
+msgstr "Ορισμός…"
 
 msgid "Set a message to appear on the lockscreen"
-msgstr "Ορίστε ένα μήνυμα για εμφάνιση στην οθόνη κλειدودματος"
-
-msgid "Cancel"
-msgstr "Ακύρωση"
+msgstr "Ορίστε ένα μήνυμα που θα εμφανίζεται στην οθόνη κλειδώματος"
 
 msgid "OK"
 msgstr "OK"
 
-msgid "Mode"
-msgstr "Τρόπος"
+msgid "Unlock Crossfade"
+msgstr "Βαθμιαία μετάβαση κατά το ξεκλείδωμα"
 
-msgid "Never"
-msgstr "Ποτέ"
+msgid "Crossfade the lockscreen with desktop when unlocking (automatically disabled in Power Saver mode)."
+msgstr "Βαθμιαία μετάβαση της οθόνης κλειδώματος στην επιφάνεια εργασίας κατά το ξεκλείδωμα (απενεργοποιείται αυτόματα στη λειτουργία εξοικονόμησης ενέργειας)."
 
-msgid "Only keep the screen on if the system is plugged in"
-msgstr "Διατήρηση της οθόνης ενεργής μόνο κατά τη σύνδεση στο ρεύμα"
+msgid "Requires WACK Shell to be installed and enabled."
+msgstr "Απαιτείται η εγκατάσταση και ενεργοποίηση του WACK Shell."
 
-msgid "Only on AC Power"
-msgstr "Μόνο κατά τη σύνδεση στο ρεύμα"
+msgid "Requires WACK Shell to be enabled."
+msgstr "Απαιτείται η ενεργοποίηση του WACK Shell."
 
-msgid "Open Ko-fi"
-msgstr "Άνοιγμα Ko-fi"
+msgid "Crossfade Speed"
+msgstr "Ταχύτητα βαθμιαίας μετάβασης"
 
-msgid "Open Saweria"
-msgstr "Άνοιγμα Saweria"
+msgid "Slower"
+msgstr "Πιο αργά"
 
-msgid "Open on GitHub"
-msgstr "Άνοιγμα στο GitHub"
+msgid "Faster"
+msgstr "Πιο γρήγορα"
 
-msgid "Press Escape on the lock screen to sleep display (or suspend)"
-msgstr "Πατήστε Esc στην οθόνη κλειδώματος για απενεργοποίηση της οθόνης (ή αναστολή)"
+msgid "Clock Animation"
+msgstr "Κίνηση ρολογιού"
 
-msgid "Prevent the screen from immediately turning off when locked. The screen will still turn off after the normal timeout duration set in system settings."
-msgstr "Αποτρέπει την άμεση απενεργοποίηση της οθόνης κατά το κλείδωμα. Η οθόνη θα απενεργοποιηθεί μετά την κανονική διάρκεια που έχει οριστεί στις ρυθμίσεις συστήματος."
+msgid "Applied to the date and time while opening the password prompt"
+msgstr "Εφαρμόζεται στην ημερομηνία και ώρα κατά το άνοιγμα της γραμμής κωδικού πρόσβασης"
 
 msgid "Prompt Animation"
-msgstr "Κινούμενα σχέδια πλαισίου κωδικού"
+msgstr "Κίνηση πεδίου ταυτοποίησης"
+
+msgid "Applied to the authentication prompt while it appears"
+msgstr "Εφαρμόζεται στο πεδίο ταυτοποίησης κατά την εμφάνισή του"
 
 msgid "Reset Animations"
-msgstr "Επαναφορά κινούμενων εικόνων"
-
-msgid "Reset animations"
-msgstr "Επαναφορά κινούμενων εικόνων"
-
-msgid "Resources"
-msgstr "Πόροι"
+msgstr "Επαναφορά κινήσεων"
 
 msgid "Restore defaults"
 msgstr "Επαναφορά προεπιλογών"
 
-msgid "Saweria"
-msgstr "Saweria"
+msgid "Reset animations"
+msgstr "Επαναφορά κινήσεων"
 
-msgid "Show a custom message above the user prompt stack."
-msgstr "Εμφάνιση προσαρμοσμένου μηνύματος πάνω από το πλαίσιο εισόδου του χρήστη."
+msgid "Scale Down"
+msgstr "Σμίκρυνση"
+
+msgid "Zoom Up"
+msgstr "Μεγέθυνση"
+
+msgid "Slide Up"
+msgstr "Ολίσθηση προς τα πάνω"
+
+msgid "Fade"
+msgstr "Απόσβεση"
+
+msgid "GNOME Default"
+msgstr "Προεπιλογή GNOME"
+
+msgid "Rise"
+msgstr "Ανύψωση"
+
+msgid "Zoom"
+msgstr "Ζουμ"
 
 msgid "Screen Timeout"
-msgstr "Λήξη χρονικού ορίου οθόνης"
+msgstr "Χρονικό όριο οθόνης"
 
-msgid "Time to wait before turning off the screen"
-msgstr "Χρόνος αναμονής πριν την απενεργοποίηση της οθόνης"
+msgid "Keep Screen On"
+msgstr "Διατήρηση οθόνης ενεργής"
+
+msgid "Prevent the screen from immediately turning off when locked. The screen will still turn off after the normal timeout duration set in system settings."
+msgstr "Αποτρέπει την άμεση απενεργοποίηση της οθόνης κατά το κλείδωμα. Η οθόνη θα απενεργοποιηθεί μετά το κανονικό χρονικό όριο των ρυθμίσεων συστήματος."
+
+msgid "Only on AC Power"
+msgstr "Μόνο σε τροφοδοσία ρεύματος"
+
+msgid "Only keep the screen on if the system is plugged in"
+msgstr "Διατήρηση της οθόνης ενεργής μόνο εάν η συσκευή είναι συνδεδεμένη στο ρεύμα"
+
+msgid "Escape to Sleep / Suspend"
+msgstr "Escape για απενεργοποίηση οθόνης / αναστολή"
+
+msgid "Press Escape on the lock screen to sleep display (or suspend)"
+msgstr "Πατήστε Escape στην οθόνη κλειδώματος για απενεργοποίηση της οθόνης (ή αναστολή)"
 
 msgid "Extras"
 msgstr "Πρόσθετα"
 
 msgid "[PRO] GDM Expansion"
-msgstr "[PRO] Επέκταση GDM"
+msgstr "[PRO] GDM Expansion"
 
-msgid "Enabled. Custom layout is active on GDM."
-msgstr "Ενεργοποιημένο. Η προσαρμοσμένη διάταξη είναι ενεργή στο GDM."
+msgid "Status: Enabled. Custom layout is active on GDM."
+msgstr "Κατάσταση: Ενεργοποιημένο. Η προσαρμοσμένη διάταξη είναι ενεργή στο GDM."
 
 msgid "Enabled"
 msgstr "Ενεργοποιημένο"
 
-msgid "Disabled"
-msgstr "Απενεργοποιημένο"
-
-msgid "Disabled."
-msgstr "Απενεργοποιημένο."
-
-msgid "GDM and Cross Session Module are missing."
-msgstr "Τα πρόσθετα GDM και Cross Session λείπουν."
-
-msgid "GDM dconf override configuration is missing."
-msgstr "Η παραμετροποίηση παράκαμψης dconf του GDM λείπει."
-
-msgid "GDM integration is not configured."
-msgstr "Η ενσωμάτωση GDM δεν έχει ρυθμιστεί."
-
-msgid "Upgrade to Pro"
-msgstr "Αναβάθμιση σε Pro"
-
-msgid "Get a Sonoma-inspired GDM login screen layout and automatically synchronize your wallpapers from the active user session. To upgrade, run copied command in a terminal."
-msgstr "Αποκτήστε μια διάταξη οθόνης σύνδεσης GDM εμπνευσμένη από το Sonoma και συγχρονίστε αυτόματα τις ταπετσαρίες σας από την ενεργή συνεδρία χρήστη. Για αναβάθμιση, εκτελέστε την αντιγραμμένη εντολή σε ένα τερματικό."
-
-msgid "Copy upgrade command to clipboard"
-msgstr "Αντιγραφή εντολής αναβάθμισης στο πρόχειρο"
-
-msgid "Copied upgrade command to clipboard!"
-msgstr "Η εντολή αναβάθμισης αντιγράφηκε στο πρόχειρο!"
-
-msgid "Uninstall GDM Expansion"
-msgstr "Απεγκατάσταση επέκτασης GDM"
+msgid "GDM Expansion - Remove"
+msgstr "Επέκταση GDM - Κατάργηση"
 
 msgid "Revert GDM login screen layout to GNOME Default. To uninstall, run copied command in a terminal."
-msgstr "Επαναφορά της διάταξης οθόνης σύνδεσης GDM στην προεπιλογή του GNOME. Για απεγκατάσταση, εκτελέστε την αντιγραμμένη εντολή σε ένα τερματικό."
+msgstr "Επαναφορά της οθόνης σύνδεσης GDM στην προεπιλογή του GNOME. Για απεγκατάσταση, εκτελέστε την αντιγραμμένη εντολή σε ένα τερματικό."
 
 msgid "Copy uninstall command to clipboard"
 msgstr "Αντιγραφή εντολής απεγκατάστασης στο πρόχειρο"
@@ -242,75 +264,84 @@ msgstr "Αντιγραφή εντολής απεγκατάστασης στο π
 msgid "Copied uninstall command to clipboard!"
 msgstr "Η εντολή απεγκατάστασης αντιγράφηκε στο πρόχειρο!"
 
-msgid "[BETA] WACK Shell Integration"
-msgstr "[BETA] Ενσωμάτωση WACK Shell"
+msgid "Extension is not installed system-wide in /usr/share."
+msgstr "Η επέκταση δεν είναι εγκατεστημένη σε επίπεδο συστήματος στο /usr/share."
 
-msgid "Installed. Enables crossfade transitions and Cupertino-inspired shell customisations."
-msgstr "Εγκαταστάθηκε. Επιτρέπει μεταβάσεις ξεθωριάσματος και προσαρμογές κελύφους εμπνευσμένες από το Cupertino."
+msgid "GDM expansion modules (src/pro) are missing system-wide."
+msgstr "Τα αρθρώματα επέκτασης GDM (src/pro) λείπουν από το σύστημα."
 
-msgid "Upgrade to [PRO]"
-msgstr "Αναβάθμιση σε [PRO]"
+msgid "GDM session mode is not enabled in system-wide metadata."
+msgstr "Η λειτουργία συνεδρίας GDM δεν είναι ενεργοποιημένη στα μεταδεδομένα συστήματος."
 
-msgid "Installed"
-msgstr "Εγκαταστάθηκε"
+msgid "GDM dconf override configuration (/etc/dconf/db/gdm.d) is missing."
+msgstr "Λείπει η διαμόρφωση παράκαμψης dconf του GDM (/etc/dconf/db/gdm.d)."
 
-msgid "Not installed. Install WACK Shell to unlock transition effects."
-msgstr "Δεν εγκαταστάθηκε. Εγκαταστήστε το WACK Shell για να ξεκλειδώσετε τα εφέ μετάβασης."
+msgid "GDM integration is not configured."
+msgstr "Η ενσωμάτωση GDM δεν έχει ρυθμιστεί."
 
-msgid "Not Installed"
-msgstr "Δεν εγκαταστάθηκε"
+msgid "Status: Disabled."
+msgstr "Κατάσταση: Απενεργοποιημένο."
 
-msgid "Install WACK Shell"
-msgstr "Εγκατάσταση WACK Shell"
+msgid "Disabled"
+msgstr "Απενεργοποιημένο"
 
-msgid "Get advanced desktop crossfade transitions and Cupertino-inspired shell customisations. May contain bugs, report if found."
-msgstr "Αποκτήστε προηγμένες μεταβάσεις ξεθωριάσματος επιφάνειας εργασίας και προσαρμογές κελύφους εμπνευσμένες από το Cupertino. Μπορεί να περιέχει σφάλματα, αναφέρετέ τα εάν βρεθούν."
+msgid "Enable GDM DLC Support"
+msgstr "Ενεργοποίηση υποστήριξης GDM DLC"
+
+msgid "Click icon to copy installer command, then run it in a terminal."
+msgstr "Κάντε κλικ στο εικονίδιο για να αντιγράψετε την εντολή εγκατάστασης και, στη συνέχεια, εκτελέστε την σε ένα τερματικό."
 
 msgid "Copy install command to clipboard"
 msgstr "Αντιγραφή εντολής εγκατάστασης στο πρόχειρο"
 
-msgid "Copied WACK Shell install command to clipboard!"
-msgstr "Η εντολή εγκατάστασης WACK Shell αντιγράφηκε στο πρόχειρο!"
+msgid "Copied install command to clipboard!"
+msgstr "Η εντολή εγκατάστασης αντιγράφηκε στο πρόχειρο!"
 
-msgid "Open WACK Shell repository"
-msgstr "Άνοιγμα αποθετηρίου WACK Shell"
+msgid "Upgrade to [PRO]"
+msgstr "Αναβάθμιση σε [PRO]"
 
-msgid "Check for Updates"
-msgstr "Έλεγχος για ενημερώσεις"
+msgid "Check PRO features of this extension on this extension's GitHub repo."
+msgstr "Δείτε τις λειτουργίες PRO αυτής της επέκτασης στο αποθετήριο GitHub της."
 
-msgid "Copy check command to verify if a newer version of WACK Shell is available."
-msgstr "Αντιγράψτε την εντολή ελέγχου για να επαληθεύσετε εάν είναι διαθέσιμη μια νεότερη έκδοση του WACK Shell."
+msgid "Visit documentation on GitHub"
+msgstr "Δείτε την τεκμηρίωση στο GitHub"
 
-msgid "Copy update-check command to clipboard"
-msgstr "Αντιγραφή εντολής ελέγχου ενημέρωσης στο πρόχειρο"
+msgid "[BETA] WACK Shell Integration"
+msgstr "[BETA] WACK Shell Integration"
 
-msgid "Copied WACK Shell update-check command to clipboard!"
-msgstr "Η εντολή ελέγχου ενημέρωσης του WACK Shell αντιγράφηκε στο πρόχειρο!"
+msgid "Installed. Enables crossfade transitions and Cupertino-inspired shell customisations."
+msgstr "Εγκατεστημένο. Ενεργοποιεί μεταβάσεις βαθμιαίας απόσβεσης και προσαρμογές του κελύφους εμπνευσμένες από το Cupertino."
 
-msgid "Extras - Status"
-msgstr "Πρόσθετα - Κατάσταση"
-
-msgid "Extras - Actions"
-msgstr "Πρόσθετα - Ενέργειες"
-
-msgid "GDM Expansion - Remove"
-msgstr "Επέκταση GDM - Κατάργηση"
+msgid "Installed"
+msgstr "Εγκατεστημένο"
 
 msgid "WACK Shell - Check for Updates"
 msgstr "WACK Shell - Έλεγχος για ενημερώσεις"
 
+msgid "Copy check command to verify if a newer version of WACK Shell is available."
+msgstr "Αντιγράψτε την εντολή για να ελέγξετε εάν είναι διαθέσιμη νεότερη έκδοση του WACK Shell."
+
+msgid "Copy update-check command to clipboard"
+msgstr "Αντιγραφή εντολής ελέγχου ενημερώσεων"
+
+msgid "Copied WACK Shell update-check command to clipboard!"
+msgstr "Η εντολή ελέγχου ενημερώσεων του WACK Shell αντιγράφηκε στο πρόχειρο!"
+
+msgid "Not installed. Install WACK Shell to unlock transition effects."
+msgstr "Δεν είναι εγκατεστημένο. Εγκαταστήστε το WACK Shell για να ξεκλειδώσετε τα εφέ μετάβασης."
+
+msgid "Not Installed"
+msgstr "Μη εγκατεστημένο"
+
 msgid "WACK Shell - Install"
 msgstr "WACK Shell - Εγκατάσταση"
 
-msgid "Upcoming Features"
-msgstr "Επικείμενες λειτουργίες"
+msgid "Get advanced desktop crossfade transitions and Cupertino-inspired shell customisations. May contain bugs, report if found."
+msgstr "Αποκτήστε προηγμένες μεταβάσεις βαθμιαίας απόσβεσης και προσαρμογές του κελύφους εμπνευσμένες από το Cupertino. Ενδέχεται να περιέχει σφάλματα· αναφέρετέ τα εάν βρεθούν."
 
-msgid "Check PRO features of this extension on this extension's GitHub repo."
-msgstr "Ελέγξτε τις λειτουργίες PRO αυτής της επέκτασης στο αποθετήριο GitHub της."
+msgid "Copied WACK Shell install command to clipboard!"
+msgstr "Η εντολή εγκατάστασης του WACK Shell αντιγράφηκε στο πρόχειρο!"
 
-msgid "Prompt Vibrancy"
-msgstr "Εφέ θαμπού γυαλιού πεδίου κωδικού πρόσβασης"
-
-msgid "Applies a frosted glass effect to the password field (Static Blur)."
-msgstr "Εφαρμόζει εφέ θαμπού γυαλιού στο πεδίο κωδικού πρόσβασης (στατική θόλωση)."
+msgid "Open WACK Shell repository"
+msgstr "Άνοιγμα αποθετηρίου WACK Shell"
 

@@ -374,6 +374,9 @@ export class GdmAnimationController {
         });
         this._gdm._cupertinoRestPromptContainer.set_position(-1000, -1000);
         this._gdm._cupertinoRestPrompt = new WackCupertinoRestPrompt(this._gdm._dialog._user, this._gdm._extension);
+        if (this._gdm._avatarManager?._lastAvatarColor) {
+            this._gdm._cupertinoRestPrompt.updateVisuals(this._gdm._avatarManager._lastAvatarColor);
+        }
         this._gdm._cupertinoRestPromptContainer.add_child(this._gdm._cupertinoRestPrompt);
         this._gdm._dialog.add_child(this._gdm._cupertinoRestPromptContainer);
 

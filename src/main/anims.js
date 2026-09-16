@@ -18,11 +18,6 @@ export const PROMPT_ANIMATION_OPTIONS = [
 export const CLOCK_ANIMATIONS = new Set(CLOCK_ANIMATION_OPTIONS.map(([value]) => value));
 export const PROMPT_ANIMATIONS = new Set(PROMPT_ANIMATION_OPTIONS.map(([value]) => value));
 
-function easeOutCubic(value) {
-    const clamped = Math.min(Math.max(value, 0), 1);
-    return 1 - Math.pow(1 - clamped, 3);
-}
-
 function easeInCubic(value) {
     const clamped = Math.min(Math.max(value, 0), 1);
     return clamped * clamped * clamped;
@@ -46,9 +41,7 @@ export function applyClockAnimation(animation, actor, clockActor, progress, para
     if (!actor)
         return;
 
-    const fadeOutScale = params?.fadeOutScale ?? 0.3;
     const slideUpDistance = params?.slideUpDistance ?? 720;
-    const eased = easeOutCubic(progress);
     const easedIn = easeInCubic(progress);
     const direction = progress < (state?.lastProgress ?? progress) ? 'in' : 'out';
 
@@ -105,8 +98,6 @@ export function applyPromptAnimation(animation, actor, progress) {
         return;
     }
 
-    const eased = easeOutCubic(progress);
-    const easedIn = easeInCubic(progress);
     let scale = 1;
     let translationY = 0;
 

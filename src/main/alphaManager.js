@@ -9,15 +9,10 @@ import {
     rgbToHsl,
     hslToRgb,
     PROMPT_SHADOW_FLOOR,
-    PROMPT_SHADOW_ROOF,
-    PROMPT_BRIGHT_HUE_LIGHTNESS_THRESHOLD,
-    getRelativeLuminance,
-    getPerceptualLightness,
     resolvePromptVisualState,
     applyPromptVisualState,
     CUPERTINO_PROMPT_WHITE_BLEND_ALPHA,
     PROMPT_VISUAL_ALGORITHM_VERSION,
-    rgbToHex,
 } from './colorUtils.js';
 import {
     resolveWallpaperSource,
@@ -220,28 +215,27 @@ export async function getWallpaperAlpha(params) {
     // Only need maximum alpha boost (0.875) if contrast Lc is extremely low (<= 20).
     // If Lc >= 60, we have very good legibility and stay at the baseline floor of 0.6.
     // Between 20 and 60, scale smoothly.
-    let factor = Math.max(0, Math.min(1, (60.0 - absLc) / 40.0));
-
-    // Boost the alpha factor on highly textured/noisy backgrounds to help the
-    // clock text stand out from busy patterns (up to maximum boost for noise >= 0.04).
-    // We scale down/discount the noise boost if the background is dark (luminance < 0.35)
-    // because white text naturally has excellent contrast against dark backgrounds.
-    if (bgNoise > 0.0) {
-        const bgLuminance = (0.2126 * bgR + 0.7152 * bgG + 0.0722 * bgB) / 255.0;
-        const noiseScale = Math.min(1.0, bgLuminance / 0.35);
-        const noiseFactor = Math.min(1.0, bgNoise * 25.0) * noiseScale;
-        factor = Math.max(factor, noiseFactor);
-    }
+    const contrastFactor = Math.max(0, Math.min(1, (60.0 - absLc) / 40.0));
 
     // Calculate background chroma/saturation to discount the alpha boost for
     // highly saturated colors (where color/chrominance contrast significantly
     // aids legibility), while keeping the full boost for neutral/desaturated
     // light backgrounds (like white/grey/cyan skies or clouds).
-    // We apply this after noise calculations so chroma discounts apply to noise boosts too.
     const maxVal = Math.max(bgR, bgG, bgB);
     const minVal = Math.min(bgR, bgG, bgB);
     const chroma = (maxVal - minVal) / 255.0; // 0.0 to 1.0
-    factor = factor * (1.0 - 0.5 * chroma);
+    let factor = contrastFactor * (1.0 - 0.5 * chroma);
+
+    // Boost the alpha factor on highly textured/noisy backgrounds to help the
+    // clock and hint text stand out from busy patterns (up to maximum boost for noise >= 0.04).
+    // Note: We do NOT apply the chroma discount to noiseFactor because high-frequency
+    // texture (e.g. green foliage, leaves, grass) degrades legibility regardless of color saturation!
+    if (bgNoise > 0.0) {
+        const bgLuminance = (0.2126 * bgR + 0.7152 * bgG + 0.0722 * bgB) / 255.0;
+        const noiseScale = Math.min(1.0, 0.4 + 0.6 * (bgLuminance / 0.35));
+        const noiseFactor = Math.min(1.0, bgNoise * 25.0) * noiseScale;
+        factor = Math.max(factor, noiseFactor);
+    }
 
     // Alpha ranges between 0.6 (baseline floor) and 0.85 (extremely bright roof)
     const alpha = 0.6 + (0.25 * factor);
@@ -439,16 +433,14 @@ export async function getWallpaperPromptColor(params) {
             const hasAvatar = !!cached.avatarColor;
             const hasA11y = !!cached.a11yColor;
             const hasSession = !!cached.sessionColor;
+            const hasCancel = !!cached.cancelColor;
             if (vibrancyMode === 'tonal' || vibrancyMode === 'less') {
-                if (cached.r != null && hasAvatar && hasA11y && hasSession)
+                if (cached.r != null && hasAvatar && hasA11y && hasSession && hasCancel)
                     return cached;
-            } else {
                 const hasPromptImg = cached.imagePath && Gio.File.new_for_path(cached.imagePath).query_exists(null);
                 const hasCancelImg = cached.cancelImagePath && Gio.File.new_for_path(cached.cancelImagePath).query_exists(null);
-                const hasHoverImg = cached.cancelHoverImagePath && Gio.File.new_for_path(cached.cancelHoverImagePath).query_exists(null);
-                const hasActiveImg = cached.cancelActiveImagePath && Gio.File.new_for_path(cached.cancelActiveImagePath).query_exists(null);
-                if (hasPromptImg && hasCancelImg && hasHoverImg && hasActiveImg &&
-                    hasAvatar && hasA11y && hasSession) {
+                if (hasPromptImg && hasCancelImg &&
+                    hasAvatar && hasA11y && hasSession && hasCancel) {
                     return cached;
                 }
             }
@@ -459,14 +451,13 @@ export async function getWallpaperPromptColor(params) {
     let sampledEnd = null;
     let sampledPrimary = null;
     let promptVisualState = null;
+    let sampledCancelColor = null;
     let sampledAvatarColor = null;
     let sampledA11yColor = null;
     let sampledSessionColor = null;
     let direction = 'vertical';
     let imagePath = null;
     let cancelImagePath = null;
-    let cancelHoverImagePath = null;
-    let cancelActiveImagePath = null;
     let shadowAlpha = undefined;
 
     if (isColor) {
@@ -520,12 +511,20 @@ export async function getWallpaperPromptColor(params) {
             { preblend: true }
         );
 
+        let rawCancel;
         let rawA11y;
         let rawSession;
         if (shadingType === 0) {
+            rawCancel = { ...c1 };
             rawA11y = { ...c1 };
             rawSession = { ...c1 };
         } else if (shadingType === 1) {
+            const ytCancel = (normCancelY1 + normCancelY2) / 2;
+            rawCancel = {
+                r: Math.round(c1.r + (c2.r - c1.r) * ytCancel),
+                g: Math.round(c1.g + (c2.g - c1.g) * ytCancel),
+                b: Math.round(c1.b + (c2.b - c1.b) * ytCancel),
+            };
             const ytA11y = (normA11yY1 + normA11yY2) / 2;
             rawA11y = {
                 r: Math.round(c1.r + (c2.r - c1.r) * ytA11y),
@@ -539,6 +538,12 @@ export async function getWallpaperPromptColor(params) {
                 b: Math.round(c1.b + (c2.b - c1.b) * ytSess),
             };
         } else {
+            const xtCancel = (normCancelX1 + normCancelX2) / 2;
+            rawCancel = {
+                r: Math.round(c1.r + (c2.r - c1.r) * xtCancel),
+                g: Math.round(c1.g + (c2.g - c1.g) * xtCancel),
+                b: Math.round(c1.b + (c2.b - c1.b) * xtCancel),
+            };
             const xtA11y = (normA11yX1 + normA11yX2) / 2;
             rawA11y = {
                 r: Math.round(c1.r + (c2.r - c1.r) * xtA11y),
@@ -553,9 +558,13 @@ export async function getWallpaperPromptColor(params) {
             };
         }
 
-        // Each button resolves its own useInverse decision from its own sampled
-        // region — the bottom corners may be on a completely different brightness
-        // zone than the prompt chip, so they must not inherit promptVisualState.
+        // Each interactive control resolves its own visual decision from its own
+        // sampled spatial region.
+        sampledCancelColor = applyPromptVisualState(
+            rawCancel,
+            resolvePromptVisualState(rawCancel, CUPERTINO_PROMPT_WHITE_BLEND_ALPHA),
+            { preblend: true }
+        );
         sampledA11yColor = applyPromptVisualState(
             rawA11y,
             resolvePromptVisualState(rawA11y, CUPERTINO_PROMPT_WHITE_BLEND_ALPHA),
@@ -638,6 +647,24 @@ export async function getWallpaperPromptColor(params) {
                 direction = 'none';
 
                 shadowAlpha = promptVisualState.shadowAlpha ?? PROMPT_SHADOW_FLOOR;
+
+                // Dedicated sample for cancel button in tonal mode
+                const cxStart = Math.max(0, Math.min(pbWidth - 1, Math.round(visibleX + visibleW * normCancelX1)));
+                const cxEnd = Math.max(1, Math.min(pbWidth, Math.round(visibleX + visibleW * normCancelX2)));
+                const cyStart = Math.max(0, Math.min(pbHeight - 1, Math.round(visibleY + visibleH * normCancelY1)));
+                const cyEnd = Math.max(1, Math.min(pbHeight, Math.round(visibleY + visibleH * normCancelY2)));
+                const cancelMappedBounds = {
+                    x1: cxStart / pbWidth,
+                    x2: cxEnd / pbWidth,
+                    y1: cyStart / pbHeight,
+                    y2: cyEnd / pbHeight,
+                };
+                const rawCancel = sampleRegionAverageColor(pixbuf, cancelMappedBounds) || sampled || { r: 40, g: 40, b: 40 };
+                sampledCancelColor = applyPromptVisualState(
+                    rawCancel,
+                    resolvePromptVisualState(rawCancel, CUPERTINO_PROMPT_WHITE_BLEND_ALPHA),
+                    { preblend: true }
+                );
             } else {
                 const userName = GLib.get_user_name();
                 const hash = GLib.compute_checksum_for_string(GLib.ChecksumType.MD5, cacheKey, -1).substring(0, 8);
@@ -675,6 +702,10 @@ export async function getWallpaperPromptColor(params) {
                     y2: cyEnd / pbHeight,
                 };
 
+                const rawCancelColor = sampleRegionAverageColor(pixbuf, cancelMappedBounds) || sampledPrimary || { r: 40, g: 40, b: 40 };
+                const cancelVisualState = resolvePromptVisualState(rawCancelColor, CUPERTINO_PROMPT_WHITE_BLEND_ALPHA);
+                sampledCancelColor = applyPromptVisualState(rawCancelColor, cancelVisualState, { preblend: true });
+
                 const cancelSliceResult = createBlurredPromptSlice(
                     pixbuf,
                     cancelMappedBounds,
@@ -684,33 +715,8 @@ export async function getWallpaperPromptColor(params) {
                     CANCEL_BUTTON_BLUR_BRIGHTNESS,
                     0.0,
                     CUPERTINO_PROMPT_WHITE_BLEND_ALPHA,
-                    promptVisualState
+                    cancelVisualState
                 );
-
-                const cancelHoverSliceResult = createBlurredPromptSlice(
-                    pixbuf,
-                    cancelMappedBounds,
-                    CANCEL_BUTTON_WIDTH,
-                    CANCEL_BUTTON_HEIGHT,
-                    CANCEL_BUTTON_BLUR_RADIUS,
-                    CANCEL_BUTTON_BLUR_BRIGHTNESS,
-                    CANCEL_BUTTON_HOVER_OVERLAY_ALPHA,
-                    CUPERTINO_PROMPT_WHITE_BLEND_ALPHA,
-                    promptVisualState
-                );
-
-                const cancelActiveSliceResult = createBlurredPromptSlice(
-                    pixbuf,
-                    cancelMappedBounds,
-                    CANCEL_BUTTON_WIDTH,
-                    CANCEL_BUTTON_HEIGHT,
-                    CANCEL_BUTTON_BLUR_RADIUS,
-                    CANCEL_BUTTON_BLUR_BRIGHTNESS,
-                    CANCEL_BUTTON_ACTIVE_OVERLAY_ALPHA,
-                    CUPERTINO_PROMPT_WHITE_BLEND_ALPHA,
-                    promptVisualState
-                );
-
                 if (cancelSliceResult?.pixbuf) {
                     const cancelFilePath = `/var/tmp/wack-cancel-blur-${userName}-${hash}.png`;
                     try {
@@ -720,30 +726,6 @@ export async function getWallpaperPromptColor(params) {
                         cancelImagePath = cancelFilePath;
                     } catch (saveErr) {
                         _logError(`[WACK/AlphaManager] Failed to save cancel slice: ${saveErr}`);
-                    }
-                }
-
-                if (cancelHoverSliceResult?.pixbuf) {
-                    const cancelHoverFilePath = `/var/tmp/wack-cancel-blur-hover-${userName}-${hash}.png`;
-                    try {
-                        cancelHoverSliceResult.pixbuf.savev(cancelHoverFilePath, 'png', [], []);
-                        const chFile = Gio.File.new_for_path(cancelHoverFilePath);
-                        chFile.set_attribute_uint32('unix::mode', 0o644, Gio.FileQueryInfoFlags.NONE, null);
-                        cancelHoverImagePath = cancelHoverFilePath;
-                    } catch (saveErr) {
-                        _logError(`[WACK/AlphaManager] Failed to save cancel hover slice: ${saveErr}`);
-                    }
-                }
-
-                if (cancelActiveSliceResult?.pixbuf) {
-                    const cancelActiveFilePath = `/var/tmp/wack-cancel-blur-active-${userName}-${hash}.png`;
-                    try {
-                        cancelActiveSliceResult.pixbuf.savev(cancelActiveFilePath, 'png', [], []);
-                        const caFile = Gio.File.new_for_path(cancelActiveFilePath);
-                        caFile.set_attribute_uint32('unix::mode', 0o644, Gio.FileQueryInfoFlags.NONE, null);
-                        cancelActiveImagePath = cancelActiveFilePath;
-                    } catch (saveErr) {
-                        _logError(`[WACK/AlphaManager] Failed to save cancel active slice: ${saveErr}`);
                     }
                 }
 
@@ -858,6 +840,15 @@ export async function getWallpaperPromptColor(params) {
         sampledEnd = fallback;
     }
 
+    if (!sampledCancelColor) {
+        const raw = sampledPrimary || { r: 40, g: 40, b: 40 };
+        sampledCancelColor = applyPromptVisualState(
+            raw,
+            resolvePromptVisualState(raw, CUPERTINO_PROMPT_WHITE_BLEND_ALPHA),
+            { preblend: true }
+        );
+    }
+
     if (!sampledAvatarColor) {
         const raw = sampledPrimary || { r: 40, g: 40, b: 40 };
         sampledAvatarColor = applyPromptVisualState(
@@ -895,12 +886,12 @@ export async function getWallpaperPromptColor(params) {
         b: sampledPrimary.b,
         start: { r: sampledStart.r, g: sampledStart.g, b: sampledStart.b },
         end: { r: sampledEnd.r, g: sampledEnd.g, b: sampledEnd.b },
+        noise: promptVisualState?.noise ?? sampledPrimary?.noise ?? 0.0,
         direction: direction,
         vibrancyMode: vibrancyMode,
         imagePath: imagePath,
         cancelImagePath: cancelImagePath,
-        cancelHoverImagePath: cancelHoverImagePath,
-        cancelActiveImagePath: cancelActiveImagePath,
+        cancelColor: sampledCancelColor,
         avatarColor: sampledAvatarColor,
         a11yColor: sampledA11yColor,
         sessionColor: sampledSessionColor,

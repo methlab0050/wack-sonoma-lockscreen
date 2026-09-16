@@ -3,10 +3,14 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: wack-lockscreen-clock@rinzler69-wastaken.github.com\n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: 2026-09-16 00:00+0000\n"
+"Last-Translator: rinzler69-wastaken\n"
+"Language-Team: WACK Project\n"
+"Language: zh\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: zh\n"
 
 msgid "more"
 msgstr "更多"
@@ -15,244 +19,313 @@ msgid "Press Shift + N to view notifications"
 msgstr "按 Shift + N 查看通知"
 
 msgid "Sleep prevented by an active process"
-msgstr "系统挂起被活动进程阻止"
-
-msgid "1 minute"
-msgstr "1分钟"
-
-msgid "10 minutes"
-msgstr "10分钟"
-
-msgid "15 minutes"
-msgstr "15分钟"
-
-msgid "2 hours"
-msgstr "2小时"
-
-msgid "30 minutes"
-msgstr "30分钟"
-
-msgid "5 minutes"
-msgstr "5分钟"
-
-msgid "60 minutes"
-msgstr "60分钟"
-
-msgid "Always Show User Widget (Cupertino)"
-msgstr "始终显示用户小部件 (库比蒂诺)"
-
-msgid "Always shows user widget, hides notifications by default. Press Shift+N to show notifications."
-msgstr "始终显示用户小部件，默认隐藏通知。按 Shift+N 显示通知。"
-
-msgid "Animations"
-msgstr "动画"
-
-msgid "Applied to the authentication prompt while it appears"
-msgstr "应用于出现的身份验证提示"
-
-msgid "Applied to the date and time while opening the password prompt"
-msgstr "在显示密码输入框时应用于日期和时间"
-
-msgid "Blank Timeout"
-msgstr "关闭屏幕超时"
-
-msgid "A complete macOS Sonoma-inspired lockscreen layout (Click user-icon to switch users)."
-msgstr "完整的 macOS Sonoma 启发锁屏布局（点击用户图标以切换用户）。"
-
-msgid "macOS Sonoma-style clock over the classic, GNOME-compliant layout and flow."
-msgstr "在传统的 GNOME 布局和流程之上显示 macOS Sonoma 风格的时钟。"
-
-msgid "Unlock Crossfade"
-msgstr "解锁渐变"
-
-msgid "Crossfade the lockscreen with desktop when unlocking (automatically disabled in Power Saver mode)."
-msgstr "解锁时使锁屏渐变至桌面（在省电模式下自动禁用）。"
-
-msgid "Crossfade Speed"
-msgstr "渐变速度"
-
-msgid "Cupertino Unlock Fade"
-msgstr "库比蒂诺解锁淡出"
-
-msgid "Fade out the lock screen with a panel slide-in when unlocking."
-msgstr "解锁时使锁屏淡出，同时面板滑入。"
-
-msgid "Choose between Legacy and Cupertino styles"
-msgstr "在经典与 Cupertino 样式之间选择"
-
-msgid "Choose how the lock screen clock leaves and how the password prompt enters."
-msgstr "选择锁屏时钟消失及密码输入框出现的动画样式。"
-
-msgid "Clock Animation"
-msgstr "时钟动画"
-
-msgid "Configuration"
-msgstr "配置"
-
-msgid "Consider supporting its development!"
-msgstr "考虑支持它的发展！"
-
-msgid "Control when the screen turns off or blanks on the lock screen."
-msgstr "控制锁屏时屏幕何时关闭或变黑。"
-
-msgid "Cupertino"
-msgstr "库比蒂诺"
-
-msgid "Enjoying this extension?"
-msgstr "喜欢这个扩展吗？"
-
-msgid "Escape to Sleep / Suspend"
-msgstr "Esc 键用于关闭屏幕/挂起"
-
-msgid "Extension Repo"
-msgstr "扩展仓库"
+msgstr "活动进程阻止了系统睡眠"
 
 msgid "Home"
 msgstr "主页"
 
-msgid "Keep Screen On"
-msgstr "保持屏幕开启"
+msgid "Resources"
+msgstr "资源"
 
-msgid "Ko-fi"
-msgstr "科菲"
-
-msgid "Legacy"
-msgstr "经典"
-
-msgid "Lockscreen Mode"
-msgstr "锁屏模式"
-
-msgid "Show message when locked"
-msgstr "锁屏时显示消息"
-
-msgid "Set..."
-msgstr "设置..."
-
-msgid "Set a message to appear on the lockscreen"
-msgstr "设置要在锁屏上显示的消息"
-
-msgid "Cancel"
-msgstr "取消"
-
-msgid "OK"
-msgstr "确定"
-
-msgid "Mode"
-msgstr "模式"
-
-msgid "Never"
-msgstr "绝不"
-
-msgid "Only keep the screen on if the system is plugged in"
-msgstr "仅在接通电源时保持屏幕开启"
-
-msgid "Only on AC Power"
-msgstr "仅在接通电源时"
-
-msgid "Open Ko-fi"
-msgstr "打开 Ko-fi"
-
-msgid "Open Saweria"
-msgstr "打开 Saweria"
+msgid "Extension Repo"
+msgstr "扩展仓库"
 
 msgid "Open on GitHub"
 msgstr "在 GitHub 上打开"
 
-msgid "Press Escape on the lock screen to sleep display (or suspend)"
-msgstr "在锁定屏幕上按 Esc 键以关闭屏幕（或挂起）"
+msgid "Enjoying this extension?"
+msgstr "喜欢这个扩展吗？"
 
-msgid "Prevent the screen from immediately turning off when locked. The screen will still turn off after the normal timeout duration set in system settings."
-msgstr "防止锁屏时屏幕立即关闭。屏幕仍会在系统设置中设定的常规超时时间后关闭。"
+msgid "Consider supporting its development!"
+msgstr "考虑支持其后续开发！"
+
+msgid "Ko-fi"
+msgstr "Ko-fi"
+
+msgid "Open Ko-fi"
+msgstr "打开 Ko-fi"
+
+msgid "Saweria"
+msgstr "Saweria"
+
+msgid "Open Saweria"
+msgstr "打开 Saweria"
+
+msgid "Configuration"
+msgstr "配置"
+
+msgid "General"
+msgstr "通用"
+
+msgid "Date Style"
+msgstr "日期样式"
+
+msgid "Choose between shortened and full date names."
+msgstr "在缩写和完整日期名称之间选择。"
+
+msgid "Short"
+msgstr "简短"
+
+msgid "Full"
+msgstr "完整"
+
+msgid "Cursor Blinking"
+msgstr "光标闪烁"
+
+msgid "Enable or disable text cursor blinking in the password field."
+msgstr "启用或禁用密码输入框中的光标闪烁。"
+
+msgid "Custom Lockscreen Wallpaper"
+msgstr "自定义锁屏壁纸"
+
+msgid "Use a custom image overlay for the lockscreen background."
+msgstr "使用自定义图像作为锁屏背景。"
+
+msgid "Wallpaper Image Path"
+msgstr "壁纸图像路径"
+
+msgid "No image selected"
+msgstr "未选择图像"
+
+msgid "Select Image File"
+msgstr "选择图像文件"
+
+msgid "Select Lockscreen Wallpaper"
+msgstr "选择锁屏壁纸"
+
+msgid "Select"
+msgstr "选择"
+
+msgid "Cancel"
+msgstr "取消"
+
+msgid "Image Files"
+msgstr "图像文件"
+
+msgid "Lockscreen Mode"
+msgstr "锁屏模式"
+
+msgid "Mode"
+msgstr "模式"
+
+msgid "Legacy"
+msgstr "传统 (Legacy)"
+
+msgid "Cupertino"
+msgstr "库比蒂诺 (Cupertino)"
+
+msgid "A complete macOS Sonoma-inspired lockscreen layout (Click user-icon to switch users)."
+msgstr "受 macOS Sonoma 启发的完整锁屏布局（点击用户图标可切换用户）。"
+
+msgid "macOS Sonoma-style clock over the classic, GNOME-compliant layout and flow."
+msgstr "在符合 GNOME 规范的经典布局与流程之上呈现 macOS Sonoma 风格的时钟。"
+
+msgid "Always Show User Widget"
+msgstr "始终显示用户组件"
+
+msgid "Hides notifications by default. Press Shift+N to show notifications."
+msgstr "默认隐藏通知。按 Shift+N 显示通知。"
+
+msgid "Prompt Vibrancy"
+msgstr "密码输入框视觉效果"
+
+msgid "Adaptive color and depth enhancements for the password field."
+msgstr "针对密码输入框的自适应颜色与深度增强。"
+
+msgid "Tonal"
+msgstr "色调"
+
+msgid "Acrylic"
+msgstr "亚克力"
+
+msgid "Lightweight, color-based mode."
+msgstr "基于颜色的轻量模式。"
+
+msgid "Advanced, blur-based mode."
+msgstr "基于模糊的高级模式。"
+
+msgid "Show message when locked"
+msgstr "锁定屏幕时显示自定义文本"
+
+msgid "Set..."
+msgstr "设置…"
+
+msgid "Set a message to appear on the lockscreen"
+msgstr "设置要在锁屏上显示的消息"
+
+msgid "OK"
+msgstr "确定"
+
+msgid "Unlock Crossfade"
+msgstr "解锁渐变过渡"
+
+msgid "Crossfade the lockscreen with desktop when unlocking (automatically disabled in Power Saver mode)."
+msgstr "解锁时在锁屏与桌面之间平滑淡入淡出（在节电模式下自动停用）。"
+
+msgid "Requires WACK Shell to be installed and enabled."
+msgstr "需要安装并启用 WACK Shell。"
+
+msgid "Requires WACK Shell to be enabled."
+msgstr "需要启用 WACK Shell。"
+
+msgid "Crossfade Speed"
+msgstr "过渡速度"
+
+msgid "Slower"
+msgstr "较慢"
+
+msgid "Faster"
+msgstr "较快"
+
+msgid "Clock Animation"
+msgstr "时钟动画"
+
+msgid "Applied to the date and time while opening the password prompt"
+msgstr "在打开密码输入提示时应用于日期和时间"
 
 msgid "Prompt Animation"
-msgstr "密码输入框动画"
+msgstr "身份验证框动画"
+
+msgid "Applied to the authentication prompt while it appears"
+msgstr "在身份验证框出现时应用"
 
 msgid "Reset Animations"
 msgstr "重置动画"
 
-msgid "Reset animations"
-msgstr "重置动画"
-
-msgid "Resources"
-msgstr "资源"
-
 msgid "Restore defaults"
 msgstr "恢复默认设置"
 
-msgid "Saweria"
-msgstr "萨维利亚"
+msgid "Reset animations"
+msgstr "重置动画"
 
-msgid "Show a custom message above the user prompt stack."
-msgstr "在用户登录框上方显示自定义消息。"
+msgid "Scale Down"
+msgstr "缩小"
+
+msgid "Zoom Up"
+msgstr "放大"
+
+msgid "Slide Up"
+msgstr "向上滑动"
+
+msgid "Fade"
+msgstr "渐变淡化"
+
+msgid "GNOME Default"
+msgstr "GNOME 默认"
+
+msgid "Rise"
+msgstr "升起"
+
+msgid "Zoom"
+msgstr "缩放"
 
 msgid "Screen Timeout"
 msgstr "屏幕超时"
 
-msgid "Time to wait before turning off the screen"
-msgstr "关闭屏幕前的等待时间"
+msgid "Keep Screen On"
+msgstr "保持屏幕常亮"
+
+msgid "Prevent the screen from immediately turning off when locked. The screen will still turn off after the normal timeout duration set in system settings."
+msgstr "防止锁定时屏幕立即关闭。屏幕仍会在系统设置中配置的正常超时后关闭。"
+
+msgid "Only on AC Power"
+msgstr "仅在使用交流电源时"
+
+msgid "Only keep the screen on if the system is plugged in"
+msgstr "仅在设备连接电源时保持屏幕常亮"
+
+msgid "Escape to Sleep / Suspend"
+msgstr "按 Escape 关闭屏幕 / 睡眠"
+
+msgid "Press Escape on the lock screen to sleep display (or suspend)"
+msgstr "在锁屏界面按 Escape 键关闭屏幕（或使系统睡眠）"
 
 msgid "Extras"
 msgstr "附加功能"
 
 msgid "[PRO] GDM Expansion"
-msgstr "[PRO] GDM 扩展"
+msgstr "[PRO] GDM Expansion"
 
-msgid "Enabled. Custom layout is active on GDM."
-msgstr "已启用。自定义布局已在 GDM 上激活。"
+msgid "Status: Enabled. Custom layout is active on GDM."
+msgstr "状态：已启用。自定义布局已在 GDM 上生效。"
 
 msgid "Enabled"
 msgstr "已启用"
 
-msgid "Disabled"
-msgstr "已禁用"
-
-msgid "Disabled."
-msgstr "已禁用。"
-
-msgid "GDM and Cross Session Module are missing."
-msgstr "缺少 GDM 和 Cross Session 模块。"
-
-msgid "GDM dconf override configuration is missing."
-msgstr "缺少 GDM dconf 覆盖配置。"
-
-msgid "GDM integration is not configured."
-msgstr "GDM 集成未配置。"
-
-msgid "Upgrade to Pro"
-msgstr "升级到 Pro"
-
-msgid "Get a Sonoma-inspired GDM login screen layout and automatically synchronize your wallpapers from the active user session. To upgrade, run copied command in a terminal."
-msgstr "获取受 Sonoma 启发的 GDM 登录屏幕布局，并自动从活动用户会话同步您的壁纸。要升级，请在终端中运行复制的命令。"
-
-msgid "Copy upgrade command to clipboard"
-msgstr "复制升级命令到剪贴板"
-
-msgid "Copied upgrade command to clipboard!"
-msgstr "已将升级命令复制到剪贴板！"
-
-msgid "Uninstall GDM Expansion"
-msgstr "卸载 GDM 扩展"
+msgid "GDM Expansion - Remove"
+msgstr "GDM 扩展模块 - 卸载"
 
 msgid "Revert GDM login screen layout to GNOME Default. To uninstall, run copied command in a terminal."
 msgstr "将 GDM 登录屏幕布局恢复为 GNOME 默认设置。要卸载，请在终端中运行复制的命令。"
 
 msgid "Copy uninstall command to clipboard"
-msgstr "复制卸载命令到剪贴板"
+msgstr "将卸载命令复制到剪贴板"
 
 msgid "Copied uninstall command to clipboard!"
-msgstr "已将卸载命令复制到剪贴板！"
+msgstr "卸载命令已复制到剪贴板！"
 
-msgid "[BETA] WACK Shell Integration"
-msgstr "[BETA] WACK Shell 集成"
+msgid "Extension is not installed system-wide in /usr/share."
+msgstr "扩展未在 /usr/share 中进行系统级安装。"
 
-msgid "Installed. Enables crossfade transitions and Cupertino-inspired shell customisations."
-msgstr "已安装。启用淡入淡出过渡和受库比蒂诺启发的系统外壳定制。"
+msgid "GDM expansion modules (src/pro) are missing system-wide."
+msgstr "系统中缺少 GDM 扩展模块 (src/pro)。"
+
+msgid "GDM session mode is not enabled in system-wide metadata."
+msgstr "系统级 metadata 中未启用 GDM 会话模式。"
+
+msgid "GDM dconf override configuration (/etc/dconf/db/gdm.d) is missing."
+msgstr "缺少 GDM dconf 覆盖配置 (/etc/dconf/db/gdm.d)。"
+
+msgid "GDM integration is not configured."
+msgstr "GDM 集成未配置。"
+
+msgid "Status: Disabled."
+msgstr "状态：已禁用。"
+
+msgid "Disabled"
+msgstr "已禁用"
+
+msgid "Enable GDM DLC Support"
+msgstr "启用 GDM DLC 支持"
+
+msgid "Click icon to copy installer command, then run it in a terminal."
+msgstr "点击图标复制安装命令，然后在终端中运行。"
+
+msgid "Copy install command to clipboard"
+msgstr "将安装命令复制到剪贴板"
+
+msgid "Copied install command to clipboard!"
+msgstr "安装命令已复制到剪贴板！"
 
 msgid "Upgrade to [PRO]"
 msgstr "升级到 [PRO]"
 
+msgid "Check PRO features of this extension on this extension's GitHub repo."
+msgstr "在该扩展的 GitHub 仓库中了解 PRO 功能。"
+
+msgid "Visit documentation on GitHub"
+msgstr "在 GitHub 上查看文档"
+
+msgid "[BETA] WACK Shell Integration"
+msgstr "[BETA] WACK Shell Integration"
+
+msgid "Installed. Enables crossfade transitions and Cupertino-inspired shell customisations."
+msgstr "已安装。启用淡入淡出过渡效果以及受 Cupertino 启发的 Shell 定制。"
+
 msgid "Installed"
 msgstr "已安装"
+
+msgid "WACK Shell - Check for Updates"
+msgstr "WACK Shell - 检查更新"
+
+msgid "Copy check command to verify if a newer version of WACK Shell is available."
+msgstr "复制检查命令以确认是否有更新版本的 WACK Shell 可用。"
+
+msgid "Copy update-check command to clipboard"
+msgstr "复制更新检查命令"
+
+msgid "Copied WACK Shell update-check command to clipboard!"
+msgstr "WACK Shell 更新检查命令已复制到剪贴板！"
 
 msgid "Not installed. Install WACK Shell to unlock transition effects."
 msgstr "未安装。安装 WACK Shell 以解锁过渡效果。"
@@ -260,57 +333,15 @@ msgstr "未安装。安装 WACK Shell 以解锁过渡效果。"
 msgid "Not Installed"
 msgstr "未安装"
 
-msgid "Install WACK Shell"
-msgstr "安装 WACK Shell"
-
-msgid "Get advanced desktop crossfade transitions and Cupertino-inspired shell customisations. May contain bugs, report if found."
-msgstr "获取先进的桌面淡入淡出过渡和受库比蒂诺启发的系统外壳定制。可能包含错误，如发现请报告。"
-
-msgid "Copy install command to clipboard"
-msgstr "复制安装命令到剪贴板"
-
-msgid "Copied WACK Shell install command to clipboard!"
-msgstr "已将 WACK Shell 安装命令复制到剪贴板！"
-
-msgid "Open WACK Shell repository"
-msgstr "打开 WACK Shell 仓库"
-
-msgid "Check for Updates"
-msgstr "检查更新"
-
-msgid "Copy check command to verify if a newer version of WACK Shell is available."
-msgstr "复制检查命令以验证是否有更新版本的 WACK Shell 可用。"
-
-msgid "Copy update-check command to clipboard"
-msgstr "复制更新检查命令到剪贴板"
-
-msgid "Copied WACK Shell update-check command to clipboard!"
-msgstr "已复制 WACK Shell 更新检查命令到剪贴板！"
-
-msgid "Extras - Status"
-msgstr "附加功能 - 状态"
-
-msgid "Extras - Actions"
-msgstr "附加功能 - 操作"
-
-msgid "GDM Expansion - Remove"
-msgstr "GDM 扩展 - 卸载"
-
-msgid "WACK Shell - Check for Updates"
-msgstr "WACK Shell - 检查更新"
-
 msgid "WACK Shell - Install"
 msgstr "WACK Shell - 安装"
 
-msgid "Upcoming Features"
-msgstr "即将推出的功能"
+msgid "Get advanced desktop crossfade transitions and Cupertino-inspired shell customisations. May contain bugs, report if found."
+msgstr "获取高级桌面淡入淡出过渡与 Cupertino 风格的 Shell 定制。可能包含缺陷，如发现请反馈。"
 
-msgid "Check PRO features of this extension on this extension's GitHub repo."
-msgstr "在此扩展的 GitHub 仓库中查看 PRO 功能。"
+msgid "Copied WACK Shell install command to clipboard!"
+msgstr "WACK Shell 安装命令已复制到剪贴板！"
 
-msgid "Prompt Vibrancy"
-msgstr "密码框毛玻璃效果"
-
-msgid "Applies a frosted glass effect to the password field (Static Blur)."
-msgstr "为密码输入框应用毛玻璃磨砂效果（静态模糊）。"
+msgid "Open WACK Shell repository"
+msgstr "打开 WACK Shell 仓库"
 

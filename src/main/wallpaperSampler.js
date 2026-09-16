@@ -4,6 +4,8 @@ import {
     resolvePromptVisualState,
     PROMPT_SHADOW_FLOOR,
     CUPERTINO_PROMPT_WHITE_BLEND_ALPHA,
+    clamp01,
+    clamp255,
 } from './colorUtils.js';
 
 function fastBoxBlur(srcPixels, w, h, stride, channels, r) {
@@ -137,9 +139,9 @@ export function createBlurredPromptSlice(
         const blendAlpha = resolvedState.overlay.alpha;
         const invAlpha = 1 - blendAlpha;
         const hInv = highlightAlpha > 0 ? (1 - highlightAlpha) : 1;
-        const hR = resolvedState.useInverse ? 0 : 255;
-        const hG = resolvedState.useInverse ? 0 : 255;
-        const hB = resolvedState.useInverse ? 0 : 255;
+        const hR = 255;
+        const hG = 255;
+        const hB = 255;
 
         for (let y = 0; y < h; y++) {
             for (let x = 0; x < w; x++) {
@@ -246,9 +248,9 @@ export function createBlurredPromptSlice(
         const bFactor = Math.max(0, brightness);
         const invAlpha = 1 - blendAlpha;
         const hInv = highlightAlpha > 0 ? (1 - highlightAlpha) : 1;
-        const hR = resolvedState.useInverse ? 0 : 255;
-        const hG = resolvedState.useInverse ? 0 : 255;
-        const hB = resolvedState.useInverse ? 0 : 255;
+        const hR = 255;
+        const hG = 255;
+        const hB = 255;
 
         for (let y = 0; y < dsCropH; y++) {
             const clampedY = Math.max(0, Math.min(dsH - 1, y + dsOffY));
@@ -332,6 +334,7 @@ export function sampleRegionAverageColor(srcPixbuf, bounds) {
     const stride = rawPix.get_rowstride();
 
     let sumR = 0, sumG = 0, sumB = 0;
+    let diffSum = 0, diffCount = 0;
     const stepX = Math.max(1, Math.floor(cropW / 32));
     const stepY = Math.max(1, Math.floor(cropH / 32));
     let samples = 0;
@@ -340,20 +343,40 @@ export function sampleRegionAverageColor(srcPixbuf, bounds) {
         const rowOff = y * stride;
         for (let x = 0; x < cropW; x += stepX) {
             const off = rowOff + x * nChannels;
-            sumR += pixels[off];
-            sumG += pixels[off + 1];
-            sumB += pixels[off + 2];
+            const r = pixels[off];
+            const g = pixels[off + 1];
+            const b = pixels[off + 2];
+            sumR += r;
+            sumG += g;
+            sumB += b;
             samples++;
+
+            if (x + stepX < cropW && y + stepY < cropH) {
+                const offRight = rowOff + (x + stepX) * nChannels;
+                const offDown = (y + stepY) * stride + x * nChannels;
+                const rR = pixels[offRight], gR = pixels[offRight + 1], bR = pixels[offRight + 2];
+                const rD = pixels[offDown], gD = pixels[offDown + 1], bD = pixels[offDown + 2];
+
+                const lum = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255.0;
+                const lumR = (0.2126 * rR + 0.7152 * gR + 0.0722 * bR) / 255.0;
+                const lumD = (0.2126 * rD + 0.7152 * gD + 0.0722 * bD) / 255.0;
+
+                diffSum += (Math.abs(lum - lumR) + Math.abs(lum - lumD)) / 2.0;
+                diffCount++;
+            }
         }
     }
 
     if (samples === 0)
         return null;
 
+    const noise = diffCount > 0 ? (diffSum / diffCount) : 0.0;
+
     return {
-        r: Math.round(sumR / samples),
-        g: Math.round(sumG / samples),
-        b: Math.round(sumB / samples),
+        r: clamp255(sumR / samples),
+        g: clamp255(sumG / samples),
+        b: clamp255(sumB / samples),
+        noise: Math.max(0.0, noise),
     };
 }
 

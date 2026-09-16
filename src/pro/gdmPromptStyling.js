@@ -3,6 +3,7 @@ import Gio from 'gi://Gio';
 import GLib from 'gi://GLib';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import { getWallpaperPromptColor } from '../main/alphaManager.js';
+import { getChromeAlpha } from '../main/colorUtils.js';
 import {
     A11Y_BUTTON_WIDTH,
     A11Y_BUTTON_HEIGHT,
@@ -148,7 +149,7 @@ export class GdmPromptStyling {
         entry.set_style(`${entry._wackOriginalStyle}${bgStyle}${shadowStyle}`);
     }
 
-    applyCancelButtonBackground(button, color) {
+    _setupChromeButton(button, color, buttonType = 'generic') {
         if (!button)
             return;
 
@@ -162,34 +163,40 @@ export class GdmPromptStyling {
             }
             delete button._wackColor;
             delete button._wackPressed;
+            delete button._wackButtonType;
+            delete button._wackAppliedR;
+            delete button._wackAppliedG;
+            delete button._wackAppliedB;
             return;
         }
 
         button._wackColor = color;
+        button._wackButtonType = buttonType;
 
         if (button._wackOriginalStyle === undefined) {
             button._wackOriginalStyle = button.get_style() ?? '';
 
             button.connectObject(
-                'notify::hover', () => this.updateCancelButtonStyle(button),
+                'notify::hover', () => this._updateChromeButtonStyle(button, button._wackButtonType),
+                'notify::has-focus', () => this._updateChromeButtonStyle(button, button._wackButtonType),
                 'button-press-event', () => {
                     button._wackPressed = true;
-                    this.updateCancelButtonStyle(button);
+                    this._updateChromeButtonStyle(button, button._wackButtonType);
                     return Clutter.EVENT_PROPAGATE;
                 },
                 'button-release-event', () => {
                     button._wackPressed = false;
-                    this.updateCancelButtonStyle(button);
+                    this._updateChromeButtonStyle(button, button._wackButtonType);
                     return Clutter.EVENT_PROPAGATE;
                 },
                 this
             );
         }
 
-        this.updateCancelButtonStyle(button);
+        this._updateChromeButtonStyle(button, buttonType);
     }
 
-    updateCancelButtonStyle(button) {
+    _updateChromeButtonStyle(button, buttonType = 'generic') {
         const color = button._wackColor;
         if (!color)
             return;
@@ -199,121 +206,88 @@ export class GdmPromptStyling {
 
         const isHovered = button.hover && !button._wackPressed;
         const isPressed = button._wackPressed;
+        const isFocused = button.has_focus;
+
+        const colorObj = buttonType === 'cancel'
+            ? (color.cancelColor ?? (color.r !== undefined ? color : null))
+            : buttonType === 'a11y'
+                ? (color.a11yColor ?? (color.r !== undefined ? color : null))
+                : buttonType === 'session'
+                    ? (color.sessionColor ?? (color.r !== undefined ? color : null))
+                    : color;
+
+        if (!colorObj || colorObj.r == null || colorObj.g == null || colorObj.b == null)
+            return;
 
         const vibrancyMode = color.vibrancyMode ?? (this._gdm._extension?.getSettings().get_string('prompt-vibrancy') ?? 'tonal');
+        const isSolid = (vibrancyMode === 'tonal' || vibrancyMode === 'less');
+
+        const visualState = colorObj.visualState ?? color.visualState ?? colorObj;
+        const hoverAlpha = getChromeAlpha(visualState, 'hover');
+        const activeAlpha = getChromeAlpha(visualState, 'active');
+        const focusAlpha = getChromeAlpha(visualState, 'focus');
 
         let bgStyle;
         let imgPath = null;
-        const isSolid = (vibrancyMode === 'tonal' || vibrancyMode === 'less');
 
-        if (!isSolid) {
-            imgPath = color.cancelImagePath;
-            if (isPressed && color.cancelActiveImagePath) {
-                imgPath = color.cancelActiveImagePath;
-            } else if (isHovered && color.cancelHoverImagePath) {
-                imgPath = color.cancelHoverImagePath;
-            }
-            if (!imgPath && color.imagePath) {
-                imgPath = color.imagePath;
-            }
+        if (!isSolid && buttonType === 'cancel') {
+            imgPath = color.cancelImagePath ?? color.imagePath;
         }
 
         if (imgPath) {
             const imageUri = imgPath.startsWith('file://') ? imgPath : `file://${imgPath}`;
             let overlayStyle = '';
-            if (isPressed && !color.cancelActiveImagePath) {
-                overlayStyle = ' filter: brightness(1.25);';
-            } else if (isHovered && !color.cancelHoverImagePath) {
-                overlayStyle = ' filter: brightness(1.12);';
+            if (isFocused) {
+                overlayStyle += ` border: 1px solid rgba(255, 255, 255, ${(focusAlpha * 2.5).toFixed(3)}) !important;`;
+            }
+            if (isHovered) {
+                overlayStyle += ` color: #ffffff !important;`;
             }
             bgStyle = ` background-color: transparent !important; background-gradient-direction: none !important; background-image: url("${imageUri}") !important; background-size: cover !important; background-position: center !important; background-repeat: no-repeat !important;${overlayStyle}`;
         } else {
-            let overlayStyle = '';
+            let curR = colorObj.r;
+            let curG = colorObj.g;
+            let curB = colorObj.b;
+
             if (isPressed) {
-                overlayStyle = ' filter: brightness(1.25);';
+                const invA = 1 - activeAlpha;
+                curR = Math.min(255, Math.max(0, Math.round(curR * invA + 255 * activeAlpha)));
+                curG = Math.min(255, Math.max(0, Math.round(curG * invA + 255 * activeAlpha)));
+                curB = Math.min(255, Math.max(0, Math.round(curB * invA + 255 * activeAlpha)));
             } else if (isHovered) {
-                overlayStyle = ' filter: brightness(1.12);';
+                const invA = 1 - hoverAlpha;
+                curR = Math.min(255, Math.max(0, Math.round(curR * invA + 255 * hoverAlpha)));
+                curG = Math.min(255, Math.max(0, Math.round(curG * invA + 255 * hoverAlpha)));
+                curB = Math.min(255, Math.max(0, Math.round(curB * invA + 255 * hoverAlpha)));
             }
-            bgStyle = ` background-image: none !important; background-gradient-direction: none !important; background-color: rgb(${color.r}, ${color.g}, ${color.b}) !important;${overlayStyle}`;
+
+            let overlayStyle = '';
+            if (isHovered) {
+                overlayStyle += ` color: #ffffff !important;`;
+            }
+            if (isFocused) {
+                overlayStyle += ` border: 1px solid rgba(255, 255, 255, ${(focusAlpha * 2.5).toFixed(3)}) !important;`;
+            }
+            bgStyle = ` background-image: none !important; background-gradient-direction: none !important; background-color: rgb(${curR}, ${curG}, ${curB}) !important;${overlayStyle}`;
         }
 
         button.set_style(`${button._wackOriginalStyle}${bgStyle}`);
+    }
+
+    applyCancelButtonBackground(button, color) {
+        this._setupChromeButton(button, color, 'cancel');
+    }
+
+    updateCancelButtonStyle(button) {
+        this._updateChromeButtonStyle(button, 'cancel');
     }
 
     applyA11yButtonBackground(button, color) {
-        if (!button)
-            return;
-
-        if (!color) {
-            if (button._wackOriginalStyle !== undefined) {
-                button.set_style(button._wackOriginalStyle);
-                delete button._wackOriginalStyle;
-            } else {
-                button.set_style(null);
-            }
-            delete button._wackAppliedR;
-            delete button._wackAppliedG;
-            delete button._wackAppliedB;
-            return;
-        }
-
-        const colorObj = color.a11yColor ?? (color.r !== undefined ? color : null);
-        if (!colorObj || colorObj.r == null || colorObj.g == null || colorObj.b == null)
-            return;
-
-        if (button._wackOriginalStyle === undefined)
-            button._wackOriginalStyle = button.get_style() ?? '';
-
-        if (button._wackAppliedR === colorObj.r &&
-            button._wackAppliedG === colorObj.g &&
-            button._wackAppliedB === colorObj.b) {
-            return;
-        }
-
-        button._wackAppliedR = colorObj.r;
-        button._wackAppliedG = colorObj.g;
-        button._wackAppliedB = colorObj.b;
-
-        const bgStyle = ` background-image: none !important; background-gradient-direction: none !important; background-color: rgb(${colorObj.r}, ${colorObj.g}, ${colorObj.b}) !important;`;
-        button.set_style(`${button._wackOriginalStyle}${bgStyle}`);
+        this._setupChromeButton(button, color, 'a11y');
     }
 
     applySessionButtonBackground(button, color) {
-        if (!button)
-            return;
-
-        if (!color) {
-            if (button._wackOriginalStyle !== undefined) {
-                button.set_style(button._wackOriginalStyle);
-                delete button._wackOriginalStyle;
-            } else {
-                button.set_style(null);
-            }
-            delete button._wackAppliedR;
-            delete button._wackAppliedG;
-            delete button._wackAppliedB;
-            return;
-        }
-
-        const colorObj = color.sessionColor ?? (color.r !== undefined ? color : null);
-        if (!colorObj || colorObj.r == null || colorObj.g == null || colorObj.b == null)
-            return;
-
-        if (button._wackOriginalStyle === undefined)
-            button._wackOriginalStyle = button.get_style() ?? '';
-
-        if (button._wackAppliedR === colorObj.r &&
-            button._wackAppliedG === colorObj.g &&
-            button._wackAppliedB === colorObj.b) {
-            return;
-        }
-
-        button._wackAppliedR = colorObj.r;
-        button._wackAppliedG = colorObj.g;
-        button._wackAppliedB = colorObj.b;
-
-        const bgStyle = ` background-image: none !important; background-gradient-direction: none !important; background-color: rgb(${colorObj.r}, ${colorObj.g}, ${colorObj.b}) !important;`;
-        button.set_style(`${button._wackOriginalStyle}${bgStyle}`);
+        this._setupChromeButton(button, color, 'session');
     }
 
     clearCupertinoPromptBackground() {
@@ -497,11 +471,7 @@ export class GdmPromptStyling {
             const hasValidPromptImage = promptColor?.imagePath &&
                 Gio.File.new_for_path(promptColor.imagePath).query_exists(null);
             const hasValidCancelImages = promptColor?.cancelImagePath &&
-                Gio.File.new_for_path(promptColor.cancelImagePath).query_exists(null) &&
-                promptColor?.cancelHoverImagePath &&
-                Gio.File.new_for_path(promptColor.cancelHoverImagePath).query_exists(null) &&
-                promptColor?.cancelActiveImagePath &&
-                Gio.File.new_for_path(promptColor.cancelActiveImagePath).query_exists(null);
+                Gio.File.new_for_path(promptColor.cancelImagePath).query_exists(null);
 
             let avatarColor = promptColor?.avatarColor;
             if (!avatarColor && promptColor && promptColor.r != null) {

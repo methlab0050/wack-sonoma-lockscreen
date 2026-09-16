@@ -1,5 +1,8 @@
 import GLib from 'gi://GLib';
+import GnomeDesktop from 'gi://GnomeDesktop';
 import Clutter from 'gi://Clutter';
+
+let _cachedWallClock = null;
 
 export const HINT_TIMEOUT = 4; // Seconds before the "swipe to unlock" hint appears
 export const CROSSFADE_TIME = 500; // Animation duration for transitions
@@ -15,9 +18,8 @@ export const DATE_LABEL_HEIGHT = 25;
 export const TIME_LABEL_HEIGHT_FALLBACK = 128; // Fallback natural height for the time label in logical px
 
 // Background blur settings when entering the password prompt
-export const PROMPT_BLUR_RADIUS = 30;
+export const PROMPT_BLUR_RADIUS = 50;
 export const PROMPT_BLUR_BRIGHTNESS = 1.0;
-export const PROMPT_BLUR_DURATION = 300;
 
 // Cancel button sampling constants (for GDM / lockscreen)
 export const CANCEL_BUTTON_BLUR_RADIUS = 50;
@@ -72,16 +74,57 @@ export const CUPERTINO_UNLOCK_FADE_DURATION = 400; // ms — duration of the act
 export const CROSSFADE_SPEED_SLOW = 400;
 export const CROSSFADE_SPEED_FAST = 300;
 
-export function getPrettyDate() {
-    // Respect LC_TIME (date/time formatting) over LANG (UI language) — toLocaleDateString(undefined) only reads LANG.
+export function getPrettyDate(style = 'full', wallClock = null) {
+    if (style === 'short') {
+        const wc = wallClock ?? (_cachedWallClock ??= new GnomeDesktop.WallClock());
+        try {
+            const now = GLib.DateTime.new_now_local();
+            const full = wc.string_for_datetime(now, 0, true, true, false);
+            // In GnomeDesktop.WallClock, the date part is separated from time by an en-space (\u2002)
+            const datePart = full.split('\u2002')[0]?.trim();
+            if (datePart)
+                return datePart;
+        } catch (e) {
+            // Fallback if WallClock failed
+        }
+
+        let locale = (GLib.getenv('LC_TIME') || GLib.getenv('LANG') || '').split('.')[0].replace('_', '-');
+        if (!locale || locale === 'C' || locale === 'POSIX')
+            locale = 'en-US';
+        try {
+            return new Date().toLocaleDateString(locale, { weekday: 'short', month: 'short', day: 'numeric' });
+        } catch (e) {
+            return new Date().toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' });
+        }
+    }
+
+    // Full style: retain/use the verbose date presentation currently used by the lockscreen.
+    // Respect LC_TIME (date/time formatting) over LANG (UI language).
     let locale = (GLib.getenv('LC_TIME') || GLib.getenv('LANG') || '').split('.')[0].replace('_', '-');
     if (!locale || locale === 'C' || locale === 'POSIX')
         locale = 'en-US';
+
     try {
-        return new Date().toLocaleDateString(locale, { weekday: 'long', month: 'long', day: 'numeric' });
+        const dtf = new Intl.DateTimeFormat(locale, { weekday: 'long', month: 'long', day: 'numeric' });
+        const parts = dtf.formatToParts(new Date());
+        let result = '';
+        for (let i = 0; i < parts.length; i++) {
+            const part = parts[i];
+            result += part.value;
+            if (part.type === 'weekday') {
+                const next = parts[i + 1];
+                if (next && next.type === 'literal' && !next.value.includes(',') && !next.value.includes('،') && !next.value.includes('、')) {
+                    result += ',';
+                }
+            }
+        }
+        return result;
     } catch (e) {
-        // Bad locale string — let the engine pick.
-        return new Date().toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric' });
+        try {
+            return new Date().toLocaleDateString(locale, { weekday: 'long', month: 'long', day: 'numeric' });
+        } catch {
+            return new Date().toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric' });
+        }
     }
 }
 

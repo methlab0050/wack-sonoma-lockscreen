@@ -3,238 +3,260 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: wack-lockscreen-clock@rinzler69-wastaken.github.com\n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: 2026-09-16 00:00+0000\n"
+"Last-Translator: rinzler69-wastaken\n"
+"Language-Team: WACK Project\n"
+"Language: pt\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: pt\n"
 
 msgid "more"
 msgstr "mais"
 
 msgid "Press Shift + N to view notifications"
-msgstr "Pressione Shift + N para ver as notifications"
+msgstr "Pressione Shift + N para ver as notificações"
 
 msgid "Sleep prevented by an active process"
 msgstr "Suspensão impedida por um processo ativo"
 
-msgid "1 minute"
-msgstr "1 minuto"
-
-msgid "10 minutes"
-msgstr "10 minutos"
-
-msgid "15 minutes"
-msgstr "15 minutos"
-
-msgid "2 hours"
-msgstr "2 horas"
-
-msgid "30 minutes"
-msgstr "30 minutos"
-
-msgid "5 minutes"
-msgstr "5 minutos"
-
-msgid "60 minutes"
-msgstr "60 minutos"
-
-msgid "Always Show User Widget (Cupertino)"
-msgstr "Sempre mostrar o widget do usuário (Cupertino)"
-
-msgid "Always shows user widget, hides notifications by default. Press Shift+N to show notifications."
-msgstr "Mostra sempre o widget do usuário e oculta as notificações por padrão. Pressione Shift+N para exibir as notificações."
-
-msgid "Animations"
-msgstr "Animações"
-
-msgid "Applied to the authentication prompt while it appears"
-msgstr "Aplicado ao prompt de autenticação enquanto ele aparece"
-
-msgid "Applied to the date and time while opening the password prompt"
-msgstr "Aplicado à data e hora ao abrir o campo de senha"
-
-msgid "Blank Timeout"
-msgstr "Tempo limite para desligar a tela"
-
-msgid "A complete macOS Sonoma-inspired lockscreen layout (Click user-icon to switch users)."
-msgstr "Layout de tela de bloqueio completo inspirado no macOS Sonoma (clique no ícone do usuário para alternar de usuário)."
-
-msgid "macOS Sonoma-style clock over the classic, GNOME-compliant layout and flow."
-msgstr "Relógio estilo macOS Sonoma sobre o layout e fluxo clássico compatível com o GNOME."
-
-msgid "Unlock Crossfade"
-msgstr "Esmaecimento de desbloqueio"
-
-msgid "Crossfade the lockscreen with desktop when unlocking (automatically disabled in Power Saver mode)."
-msgstr "Esmaece a tela de bloqueio com a área de trabalho ao desbloquear (desativado automaticamente no modo de economia de energia)."
-
-msgid "Crossfade Speed"
-msgstr "Velocidade do esmaecimento"
-
-msgid "Cupertino Unlock Fade"
-msgstr "Esmaecimento de desbloqueio Cupertino"
-
-msgid "Fade out the lock screen with a panel slide-in when unlocking."
-msgstr "Esmaece a tela de bloqueio com um deslizamento do painel ao desbloquear."
-
-msgid "Choose between Legacy and Cupertino styles"
-msgstr "Escolha entre os estilos clássico e Cupertino"
-
-msgid "Choose how the lock screen clock leaves and how the password prompt enters."
-msgstr "Escolha como o relógio da tela de bloqueio desaparece e como o campo de senha aparece."
-
-msgid "Clock Animation"
-msgstr "Animação de relógio"
-
-msgid "Configuration"
-msgstr "Configuração"
-
-msgid "Consider supporting its development!"
-msgstr "Considere apoiar o seu desenvolvimento!"
-
-msgid "Control when the screen turns off or blanks on the lock screen."
-msgstr "Controla quando a tela desliga ou escurece na tela de bloqueio."
-
-msgid "Cupertino"
-msgstr "Cupertino"
-
-msgid "Enjoying this extension?"
-msgstr "Está gostando desta extensão?"
-
-msgid "Escape to Sleep / Suspend"
-msgstr "Esc para desligar tela / suspender"
-
-msgid "Extension Repo"
-msgstr "Repositório de extensão"
-
 msgid "Home"
 msgstr "Início"
-
-msgid "Keep Screen On"
-msgstr "Manter tela ligada"
-
-msgid "Ko-fi"
-msgstr "Ko-fi"
-
-msgid "Legacy"
-msgstr "Clássico"
-
-msgid "Lockscreen Mode"
-msgstr "Modo de tela de bloqueio"
-
-msgid "Show message when locked"
-msgstr "Mostrar mensagem quando bloqueado"
-
-msgid "Set..."
-msgstr "Definir..."
-
-msgid "Set a message to appear on the lockscreen"
-msgstr "Definir uma mensagem para aparecer na tela de bloqueio"
-
-msgid "Cancel"
-msgstr "Cancelar"
-
-msgid "OK"
-msgstr "OK"
-
-msgid "Mode"
-msgstr "Modo"
-
-msgid "Never"
-msgstr "Nunca"
-
-msgid "Only keep the screen on if the system is plugged in"
-msgstr "Manter a tela ligada apenas na tomada"
-
-msgid "Only on AC Power"
-msgstr "Apenas na tomada"
-
-msgid "Open Ko-fi"
-msgstr "Abrir Ko-fi"
-
-msgid "Open Saweria"
-msgstr "Abrir Saweria"
-
-msgid "Open on GitHub"
-msgstr "Abrir no GitHub"
-
-msgid "Press Escape on the lock screen to sleep display (or suspend)"
-msgstr "Pressione Esc na tela de bloco para desligar a tela (ou suspender)"
-
-msgid "Prevent the screen from immediately turning off when locked. The screen will still turn off after the normal timeout duration set in system settings."
-msgstr "Evita que a tela se apague imediatamente quando bloqueada. A tela ainda se apagará após o tempo limite normal definido nas configurações do sistema."
-
-msgid "Prompt Animation"
-msgstr "Animação do campo de senha"
-
-msgid "Reset Animations"
-msgstr "Redefinir animações"
-
-msgid "Reset animations"
-msgstr "Redefinir animações"
 
 msgid "Resources"
 msgstr "Recursos"
 
+msgid "Extension Repo"
+msgstr "Repositório da extensão"
+
+msgid "Open on GitHub"
+msgstr "Abrir no GitHub"
+
+msgid "Enjoying this extension?"
+msgstr "Gostando desta extensão?"
+
+msgid "Consider supporting its development!"
+msgstr "Considere apoiar o desenvolvimento!"
+
+msgid "Ko-fi"
+msgstr "Ko-fi"
+
+msgid "Open Ko-fi"
+msgstr "Abrir Ko-fi"
+
+msgid "Saweria"
+msgstr "Saweria"
+
+msgid "Open Saweria"
+msgstr "Abrir Saweria"
+
+msgid "Configuration"
+msgstr "Configuração"
+
+msgid "General"
+msgstr "Geral"
+
+msgid "Date Style"
+msgstr "Estilo da data"
+
+msgid "Choose between shortened and full date names."
+msgstr "Escolha entre nomes de data abreviados ou completos."
+
+msgid "Short"
+msgstr "Curto"
+
+msgid "Full"
+msgstr "Completo"
+
+msgid "Cursor Blinking"
+msgstr "Piscar do cursor"
+
+msgid "Enable or disable text cursor blinking in the password field."
+msgstr "Ativa ou desativa o piscar do cursor no campo de senha."
+
+msgid "Custom Lockscreen Wallpaper"
+msgstr "Plano de fundo personalizado da tela de bloqueio"
+
+msgid "Use a custom image overlay for the lockscreen background."
+msgstr "Usa uma imagem personalizada para o plano de fundo da tela de bloqueio."
+
+msgid "Wallpaper Image Path"
+msgstr "Caminho da imagem de plano de fundo"
+
+msgid "No image selected"
+msgstr "Nenhuma imagem selecionada"
+
+msgid "Select Image File"
+msgstr "Selecionar arquivo de imagem"
+
+msgid "Select Lockscreen Wallpaper"
+msgstr "Selecionar plano de fundo da tela de bloqueio"
+
+msgid "Select"
+msgstr "Selecionar"
+
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgid "Image Files"
+msgstr "Arquivos de imagem"
+
+msgid "Lockscreen Mode"
+msgstr "Modo da tela de bloqueio"
+
+msgid "Mode"
+msgstr "Modo"
+
+msgid "Legacy"
+msgstr "Clássico"
+
+msgid "Cupertino"
+msgstr "Cupertino"
+
+msgid "A complete macOS Sonoma-inspired lockscreen layout (Click user-icon to switch users)."
+msgstr "Layout completo inspirado no macOS Sonoma (clique no ícone do usuário para alternar usuários)."
+
+msgid "macOS Sonoma-style clock over the classic, GNOME-compliant layout and flow."
+msgstr "Relógio estilo macOS Sonoma sobre o layout e fluxo clássicos do GNOME."
+
+msgid "Always Show User Widget"
+msgstr "Sempre mostrar o widget de usuário"
+
+msgid "Hides notifications by default. Press Shift+N to show notifications."
+msgstr "Oculta as notificações por padrão. Pressione Shift+N para exibi-las."
+
+msgid "Prompt Vibrancy"
+msgstr "Vivacidade do campo de senha"
+
+msgid "Adaptive color and depth enhancements for the password field."
+msgstr "Aprimoramentos adaptativos de cor e profundidade para o campo de senha."
+
+msgid "Tonal"
+msgstr "Tonal"
+
+msgid "Acrylic"
+msgstr "Acrílico"
+
+msgid "Lightweight, color-based mode."
+msgstr "Modo leve baseado em cores."
+
+msgid "Advanced, blur-based mode."
+msgstr "Modo avançado baseado em desfoque."
+
+msgid "Show message when locked"
+msgstr "Mostrar mensagem ao bloquear"
+
+msgid "Set..."
+msgstr "Definir…"
+
+msgid "Set a message to appear on the lockscreen"
+msgstr "Definir uma mensagem para aparecer na tela de bloqueio"
+
+msgid "OK"
+msgstr "OK"
+
+msgid "Unlock Crossfade"
+msgstr "Transição suave ao desbloquear"
+
+msgid "Crossfade the lockscreen with desktop when unlocking (automatically disabled in Power Saver mode)."
+msgstr "Transição suave entre a tela de bloqueio e a área de trabalho ao desbloquear (desativada automaticamente no modo de economia de energia)."
+
+msgid "Requires WACK Shell to be installed and enabled."
+msgstr "Requer que o WACK Shell esteja instalado e ativado."
+
+msgid "Requires WACK Shell to be enabled."
+msgstr "Requer que o WACK Shell esteja ativado."
+
+msgid "Crossfade Speed"
+msgstr "Velocidade da transição"
+
+msgid "Slower"
+msgstr "Mais lento"
+
+msgid "Faster"
+msgstr "Mais rápido"
+
+msgid "Clock Animation"
+msgstr "Animação do relógio"
+
+msgid "Applied to the date and time while opening the password prompt"
+msgstr "Aplicada à data e hora ao abrir a solicitação de senha"
+
+msgid "Prompt Animation"
+msgstr "Animação de autenticação"
+
+msgid "Applied to the authentication prompt while it appears"
+msgstr "Aplicada à solicitação de autenticação enquanto ela aparece"
+
+msgid "Reset Animations"
+msgstr "Redefinir animações"
+
 msgid "Restore defaults"
 msgstr "Restaurar padrões"
 
-msgid "Saweria"
-msgstr "Serraria"
+msgid "Reset animations"
+msgstr "Redefinir animações"
 
-msgid "Show a custom message above the user prompt stack."
-msgstr "Mostra uma mensagem personalizada acima dos campos do usuário."
+msgid "Scale Down"
+msgstr "Reduzir escala"
+
+msgid "Zoom Up"
+msgstr "Ampliar escala"
+
+msgid "Slide Up"
+msgstr "Deslizar para cima"
+
+msgid "Fade"
+msgstr "Esmaecer"
+
+msgid "GNOME Default"
+msgstr "Padrão do GNOME"
+
+msgid "Rise"
+msgstr "Elevar"
+
+msgid "Zoom"
+msgstr "Zoom"
 
 msgid "Screen Timeout"
-msgstr "Tempo limite da tela"
+msgstr "Tempo limite de tela"
 
-msgid "Time to wait before turning off the screen"
-msgstr "Tempo de espera antes de desligar a tela"
+msgid "Keep Screen On"
+msgstr "Manter a tela ligada"
+
+msgid "Prevent the screen from immediately turning off when locked. The screen will still turn off after the normal timeout duration set in system settings."
+msgstr "Evita que a tela desligue imediatamente ao bloquear. A tela ainda desligará após a duração normal definida nas configurações do sistema."
+
+msgid "Only on AC Power"
+msgstr "Apenas conectado à tomada (CA)"
+
+msgid "Only keep the screen on if the system is plugged in"
+msgstr "Manter a tela ligada apenas se o sistema estiver conectado à tomada"
+
+msgid "Escape to Sleep / Suspend"
+msgstr "Escape para desligar tela / suspender"
+
+msgid "Press Escape on the lock screen to sleep display (or suspend)"
+msgstr "Pressione Escape na tela de bloqueio para desligar a tela (ou suspender o sistema)"
 
 msgid "Extras"
 msgstr "Extras"
 
 msgid "[PRO] GDM Expansion"
-msgstr "[PRO] Expansão GDM"
+msgstr "[PRO] GDM Expansion"
 
-msgid "Enabled. Custom layout is active on GDM."
-msgstr "Ativado. O layout personalizado está ativo no GDM."
+msgid "Status: Enabled. Custom layout is active on GDM."
+msgstr "Status: Ativado. O layout personalizado está ativo no GDM."
 
 msgid "Enabled"
 msgstr "Ativado"
 
-msgid "Disabled"
-msgstr "Desativado"
-
-msgid "Disabled."
-msgstr "Desativado."
-
-msgid "GDM and Cross Session Module are missing."
-msgstr "Os módulos GDM e Cross Session estão faltando."
-
-msgid "GDM dconf override configuration is missing."
-msgstr "A configuração de substituição dconf do GDM está faltando."
-
-msgid "GDM integration is not configured."
-msgstr "A integração do GDM não está configurada."
-
-msgid "Upgrade to Pro"
-msgstr "Atualizar para Pro"
-
-msgid "Get a Sonoma-inspired GDM login screen layout and automatically synchronize your wallpapers from the active user session. To upgrade, run copied command in a terminal."
-msgstr "Obtenha um layout de tela de login do GDM inspirado no Sonoma e sincronize automaticamente seus papéis de parede da sessão de usuário ativa. Para atualizar, execute o comando copiado em um terminal."
-
-msgid "Copy upgrade command to clipboard"
-msgstr "Copiar comando de atualização para a área de transferência"
-
-msgid "Copied upgrade command to clipboard!"
-msgstr "Comando de atualização copiado para a área de transferência!"
-
-msgid "Uninstall GDM Expansion"
-msgstr "Desinstalar expansão GDM"
+msgid "GDM Expansion - Remove"
+msgstr "Expansão GDM - Remover"
 
 msgid "Revert GDM login screen layout to GNOME Default. To uninstall, run copied command in a terminal."
-msgstr "Reverte o layout da tela de login do GDM para o padrão do GNOME. Para desinstalar, execute o comando copiado em um terminal."
+msgstr "Restaura a tela de login do GDM para o padrão do GNOME. Para desinstalar, execute o comando copiado no terminal."
 
 msgid "Copy uninstall command to clipboard"
 msgstr "Copiar comando de desinstalação para a área de transferência"
@@ -242,17 +264,68 @@ msgstr "Copiar comando de desinstalação para a área de transferência"
 msgid "Copied uninstall command to clipboard!"
 msgstr "Comando de desinstalação copiado para a área de transferência!"
 
-msgid "[BETA] WACK Shell Integration"
-msgstr "[BETA] Integração do WACK Shell"
+msgid "Extension is not installed system-wide in /usr/share."
+msgstr "A extensão não está instalada em todo o sistema em /usr/share."
 
-msgid "Installed. Enables crossfade transitions and Cupertino-inspired shell customisations."
-msgstr "Instalado. Habilita transições de esmaecimento cruzado e personalizações de shell inspiradas em Cupertino."
+msgid "GDM expansion modules (src/pro) are missing system-wide."
+msgstr "Módulos de expansão do GDM (src/pro) estão ausentes no sistema."
+
+msgid "GDM session mode is not enabled in system-wide metadata."
+msgstr "O modo de sessão GDM não está ativado nos metadados do sistema."
+
+msgid "GDM dconf override configuration (/etc/dconf/db/gdm.d) is missing."
+msgstr "A configuração de sobreposição dconf do GDM (/etc/dconf/db/gdm.d) está ausente."
+
+msgid "GDM integration is not configured."
+msgstr "A integração com o GDM não está configurada."
+
+msgid "Status: Disabled."
+msgstr "Status: Desativado."
+
+msgid "Disabled"
+msgstr "Desativado"
+
+msgid "Enable GDM DLC Support"
+msgstr "Ativar suporte ao DLC do GDM"
+
+msgid "Click icon to copy installer command, then run it in a terminal."
+msgstr "Clique no ícone para copiar o comando de instalação e execute-o no terminal."
+
+msgid "Copy install command to clipboard"
+msgstr "Copiar comando de instalação para a área de transferência"
+
+msgid "Copied install command to clipboard!"
+msgstr "Comando de instalação copiado para a área de transferência!"
 
 msgid "Upgrade to [PRO]"
 msgstr "Atualizar para [PRO]"
 
+msgid "Check PRO features of this extension on this extension's GitHub repo."
+msgstr "Confira os recursos PRO desta extensão em seu repositório no GitHub."
+
+msgid "Visit documentation on GitHub"
+msgstr "Ver documentação no GitHub"
+
+msgid "[BETA] WACK Shell Integration"
+msgstr "[BETA] WACK Shell Integration"
+
+msgid "Installed. Enables crossfade transitions and Cupertino-inspired shell customisations."
+msgstr "Instalado. Ativa transições suaves e personalizações de Shell inspiradas em Cupertino."
+
 msgid "Installed"
 msgstr "Instalado"
+
+msgid "WACK Shell - Check for Updates"
+msgstr "WACK Shell - Verificar atualizações"
+
+msgid "Copy check command to verify if a newer version of WACK Shell is available."
+msgstr "Copie o comando para verificar se há uma versão mais recente do WACK Shell disponível."
+
+msgid "Copy update-check command to clipboard"
+msgstr "Copiar comando de verificação de atualização"
+
+msgid "Copied WACK Shell update-check command to clipboard!"
+msgstr "Comando de verificação do WACK Shell copiado para a área de transferência!"
 
 msgid "Not installed. Install WACK Shell to unlock transition effects."
 msgstr "Não instalado. Instale o WACK Shell para desbloquear os efeitos de transição."
@@ -260,57 +333,15 @@ msgstr "Não instalado. Instale o WACK Shell para desbloquear os efeitos de tran
 msgid "Not Installed"
 msgstr "Não instalado"
 
-msgid "Install WACK Shell"
-msgstr "Instalar WACK Shell"
+msgid "WACK Shell - Install"
+msgstr "WACK Shell - Instalar"
 
 msgid "Get advanced desktop crossfade transitions and Cupertino-inspired shell customisations. May contain bugs, report if found."
-msgstr "Obtenha transições avançadas de esmaecimento cruzado na área de trabalho e personalizações de shell inspiradas em Cupertino. Pode conter bugs, relate-os se encontrados."
-
-msgid "Copy install command to clipboard"
-msgstr "Copiar comando de instalación para a área de transferência"
+msgstr "Obtenha transições suaves avançadas para a área de trabalho e personalizações do Shell inspiradas em Cupertino. Pode conter erros; reporte se encontrar."
 
 msgid "Copied WACK Shell install command to clipboard!"
 msgstr "Comando de instalação do WACK Shell copiado para a área de transferência!"
 
 msgid "Open WACK Shell repository"
 msgstr "Abrir repositório do WACK Shell"
-
-msgid "Check for Updates"
-msgstr "Procurar atualizações"
-
-msgid "Copy check command to verify if a newer version of WACK Shell is available."
-msgstr "Copie o comando de verificação para verificar se há uma nova versão do WACK Shell disponível."
-
-msgid "Copy update-check command to clipboard"
-msgstr "Copiar comando de verificação de atualização para a área de transferência"
-
-msgid "Copied WACK Shell update-check command to clipboard!"
-msgstr "Comando de verificação de atualização do WACK Shell copiado para a área de transferência!"
-
-msgid "Extras - Status"
-msgstr "Extras - Status"
-
-msgid "Extras - Actions"
-msgstr "Extras - Ações"
-
-msgid "GDM Expansion - Remove"
-msgstr "Expansão do GDM - Remover"
-
-msgid "WACK Shell - Check for Updates"
-msgstr "WACK Shell - Procurar atualizações"
-
-msgid "WACK Shell - Install"
-msgstr "WACK Shell - Instalar"
-
-msgid "Upcoming Features"
-msgstr "Próximas funções"
-
-msgid "Check PRO features of this extension on this extension's GitHub repo."
-msgstr "Verifique os recursos PRO desta extensão no seu repositório GitHub."
-
-msgid "Prompt Vibrancy"
-msgstr "Vivacidade do campo de senha"
-
-msgid "Applies a frosted glass effect to the password field (Static Blur)."
-msgstr "Aplica um efeito de vidro fosco ao campo de senha (desfoque estático)."
 

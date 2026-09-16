@@ -2,6 +2,7 @@ import Clutter from 'gi://Clutter';
 import Gio from 'gi://Gio';
 import St from 'gi://St';
 import { _log } from './gdmUtils.js';
+import { getUserLabelStyle } from '../main/colorUtils.js';
 
 export class GdmAvatarManager {
     constructor(gdmManager) {
@@ -127,8 +128,14 @@ export class GdmAvatarManager {
             }
         }
 
+        const label = item?._userWidget?._label;
+        if (label && this._lastAvatarColor) {
+            label.set_style(getUserLabelStyle(this._lastAvatarColor));
+        }
+
         this._applyStyleToUserListItemAvatar(avatar);
     }
+
 
     _applyStyleToUserListItemAvatar(avatar) {
         if (!avatar) return;
@@ -152,6 +159,13 @@ export class GdmAvatarManager {
             if (avatar.get_style() !== buttonStyle) {
                 avatar.set_style(buttonStyle);
                 avatar._wackHasVibrancy = true;
+            }
+            avatar.clip_to_allocation = true;
+            const child = avatar.get_child?.();
+            if (child) {
+                const iconStyle = 'background-color: transparent !important; border-radius: 999px !important;';
+                if (child.get_style?.() !== iconStyle)
+                    child.set_style(iconStyle);
             }
         }
     }
@@ -200,12 +214,31 @@ export class GdmAvatarManager {
                         avatar.set_style(buttonStyle);
                         avatar._wackHasVibrancy = true;
                     }
+                    if (avatar)
+                        avatar.clip_to_allocation = true;
+                    if (avatarButton)
+                        avatarButton.clip_to_allocation = true;
+                    const child = avatar?.get_child?.();
+                    if (child) {
+                        const iconStyle = 'background-color: transparent !important; border-radius: 999px !important;';
+                        if (child.get_style?.() !== iconStyle)
+                            child.set_style(iconStyle);
+                    }
                 }
             };
 
             const authPrompt = this._dialog?._authPrompt || this._gdm._dialog?._authPrompt;
-            applyToWell(authPrompt?._userWell?.get_child());
-            applyToWell(this._gdm._cupertinoRestPrompt?._userWell?.get_child());
+            const authPromptWell = authPrompt?._userWell?.get_child();
+            applyToWell(authPromptWell);
+            if (authPromptWell?._label && this._lastAvatarColor) {
+                authPromptWell._label.set_style(getUserLabelStyle(this._lastAvatarColor));
+            }
+
+            if (this._gdm._cupertinoRestPrompt?.updateVisuals) {
+                this._gdm._cupertinoRestPrompt.updateVisuals(this._lastAvatarColor);
+            } else {
+                applyToWell(this._gdm._cupertinoRestPrompt?._userWell?.get_child());
+            }
 
             // Also apply to empty-avatar tiles in the user selection list.
             this.updateUserListVibrancy();

@@ -3,10 +3,14 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: wack-lockscreen-clock@rinzler69-wastaken.github.com\n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: 2026-09-16 00:00+0000\n"
+"Last-Translator: rinzler69-wastaken\n"
+"Language-Team: WACK Project\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: \n"
 
 msgid "more"
 msgstr ""
@@ -17,43 +21,97 @@ msgstr ""
 msgid "Sleep prevented by an active process"
 msgstr ""
 
-msgid "1 minute"
+msgid "Home"
 msgstr ""
 
-msgid "10 minutes"
+msgid "Resources"
 msgstr ""
 
-msgid "15 minutes"
+msgid "Extension Repo"
 msgstr ""
 
-msgid "2 hours"
+msgid "Open on GitHub"
 msgstr ""
 
-msgid "30 minutes"
+msgid "Enjoying this extension?"
 msgstr ""
 
-msgid "5 minutes"
+msgid "Consider supporting its development!"
 msgstr ""
 
-msgid "60 minutes"
+msgid "Ko-fi"
 msgstr ""
 
-msgid "Always Show User Widget (Cupertino)"
+msgid "Open Ko-fi"
 msgstr ""
 
-msgid "Always shows user widget, hides notifications by default. Press Shift+N to show notifications."
+msgid "Saweria"
 msgstr ""
 
-msgid "Animations"
+msgid "Open Saweria"
 msgstr ""
 
-msgid "Applied to the authentication prompt while it appears"
+msgid "Configuration"
 msgstr ""
 
-msgid "Applied to the date and time while opening the password prompt"
+msgid "General"
 msgstr ""
 
-msgid "Blank Timeout"
+msgid "Date Style"
+msgstr ""
+
+msgid "Choose between shortened and full date names."
+msgstr ""
+
+msgid "Short"
+msgstr ""
+
+msgid "Full"
+msgstr ""
+
+msgid "Cursor Blinking"
+msgstr ""
+
+msgid "Enable or disable text cursor blinking in the password field."
+msgstr ""
+
+msgid "Custom Lockscreen Wallpaper"
+msgstr ""
+
+msgid "Use a custom image overlay for the lockscreen background."
+msgstr ""
+
+msgid "Wallpaper Image Path"
+msgstr ""
+
+msgid "No image selected"
+msgstr ""
+
+msgid "Select Image File"
+msgstr ""
+
+msgid "Select Lockscreen Wallpaper"
+msgstr ""
+
+msgid "Select"
+msgstr ""
+
+msgid "Cancel"
+msgstr ""
+
+msgid "Image Files"
+msgstr ""
+
+msgid "Lockscreen Mode"
+msgstr ""
+
+msgid "Mode"
+msgstr ""
+
+msgid "Legacy"
+msgstr ""
+
+msgid "Cupertino"
 msgstr ""
 
 msgid "A complete macOS Sonoma-inspired lockscreen layout (Click user-icon to switch users)."
@@ -62,64 +120,28 @@ msgstr ""
 msgid "macOS Sonoma-style clock over the classic, GNOME-compliant layout and flow."
 msgstr ""
 
-msgid "Unlock Crossfade"
+msgid "Always Show User Widget"
 msgstr ""
 
-msgid "Crossfade the lockscreen with desktop when unlocking (automatically disabled in Power Saver mode)."
+msgid "Hides notifications by default. Press Shift+N to show notifications."
 msgstr ""
 
-msgid "Crossfade Speed"
+msgid "Prompt Vibrancy"
 msgstr ""
 
-msgid "Cupertino Unlock Fade"
+msgid "Adaptive color and depth enhancements for the password field."
 msgstr ""
 
-msgid "Fade out the lock screen with a panel slide-in when unlocking."
+msgid "Tonal"
 msgstr ""
 
-msgid "Choose between Legacy and Cupertino styles"
+msgid "Acrylic"
 msgstr ""
 
-msgid "Choose how the lock screen clock leaves and how the password prompt enters."
+msgid "Lightweight, color-based mode."
 msgstr ""
 
-msgid "Clock Animation"
-msgstr ""
-
-msgid "Configuration"
-msgstr ""
-
-msgid "Consider supporting its development!"
-msgstr ""
-
-msgid "Control when the screen turns off or blanks on the lock screen."
-msgstr ""
-
-msgid "Cupertino"
-msgstr ""
-
-msgid "Enjoying this extension?"
-msgstr ""
-
-msgid "Escape to Sleep / Suspend"
-msgstr ""
-
-msgid "Extension Repo"
-msgstr ""
-
-msgid "Home"
-msgstr ""
-
-msgid "Keep Screen On"
-msgstr ""
-
-msgid "Ko-fi"
-msgstr ""
-
-msgid "Legacy"
-msgstr ""
-
-msgid "Lockscreen Mode"
+msgid "Advanced, blur-based mode."
 msgstr ""
 
 msgid "Show message when locked"
@@ -131,64 +153,91 @@ msgstr ""
 msgid "Set a message to appear on the lockscreen"
 msgstr ""
 
-msgid "Cancel"
-msgstr ""
-
 msgid "OK"
 msgstr ""
 
-msgid "Mode"
+msgid "Unlock Crossfade"
 msgstr ""
 
-msgid "Never"
+msgid "Crossfade the lockscreen with desktop when unlocking (automatically disabled in Power Saver mode)."
 msgstr ""
 
-msgid "Only keep the screen on if the system is plugged in"
+msgid "Requires WACK Shell to be installed and enabled."
 msgstr ""
 
-msgid "Only on AC Power"
+msgid "Requires WACK Shell to be enabled."
 msgstr ""
 
-msgid "Open Ko-fi"
+msgid "Crossfade Speed"
 msgstr ""
 
-msgid "Open Saweria"
+msgid "Slower"
 msgstr ""
 
-msgid "Open on GitHub"
+msgid "Faster"
 msgstr ""
 
-msgid "Press Escape on the lock screen to sleep display (or suspend)"
+msgid "Clock Animation"
 msgstr ""
 
-msgid "Prevent the screen from immediately turning off when locked. The screen will still turn off after the normal timeout duration set in system settings."
+msgid "Applied to the date and time while opening the password prompt"
 msgstr ""
 
 msgid "Prompt Animation"
 msgstr ""
 
+msgid "Applied to the authentication prompt while it appears"
+msgstr ""
+
 msgid "Reset Animations"
-msgstr ""
-
-msgid "Reset animations"
-msgstr ""
-
-msgid "Resources"
 msgstr ""
 
 msgid "Restore defaults"
 msgstr ""
 
-msgid "Saweria"
+msgid "Reset animations"
 msgstr ""
 
-msgid "Show a custom message above the user prompt stack."
+msgid "Scale Down"
+msgstr ""
+
+msgid "Zoom Up"
+msgstr ""
+
+msgid "Slide Up"
+msgstr ""
+
+msgid "Fade"
+msgstr ""
+
+msgid "GNOME Default"
+msgstr ""
+
+msgid "Rise"
+msgstr ""
+
+msgid "Zoom"
 msgstr ""
 
 msgid "Screen Timeout"
 msgstr ""
 
-msgid "Time to wait before turning off the screen"
+msgid "Keep Screen On"
+msgstr ""
+
+msgid "Prevent the screen from immediately turning off when locked. The screen will still turn off after the normal timeout duration set in system settings."
+msgstr ""
+
+msgid "Only on AC Power"
+msgstr ""
+
+msgid "Only keep the screen on if the system is plugged in"
+msgstr ""
+
+msgid "Escape to Sleep / Suspend"
+msgstr ""
+
+msgid "Press Escape on the lock screen to sleep display (or suspend)"
 msgstr ""
 
 msgid "Extras"
@@ -197,40 +246,13 @@ msgstr ""
 msgid "[PRO] GDM Expansion"
 msgstr ""
 
-msgid "Enabled. Custom layout is active on GDM."
+msgid "Status: Enabled. Custom layout is active on GDM."
 msgstr ""
 
 msgid "Enabled"
 msgstr ""
 
-msgid "Disabled"
-msgstr ""
-
-msgid "Disabled."
-msgstr ""
-
-msgid "GDM and Cross Session Module are missing."
-msgstr ""
-
-msgid "GDM dconf override configuration is missing."
-msgstr ""
-
-msgid "GDM integration is not configured."
-msgstr ""
-
-msgid "Upgrade to Pro"
-msgstr ""
-
-msgid "Get a Sonoma-inspired GDM login screen layout and automatically synchronize your wallpapers from the active user session. To upgrade, run copied command in a terminal."
-msgstr ""
-
-msgid "Copy upgrade command to clipboard"
-msgstr ""
-
-msgid "Copied upgrade command to clipboard!"
-msgstr ""
-
-msgid "Uninstall GDM Expansion"
+msgid "GDM Expansion - Remove"
 msgstr ""
 
 msgid "Revert GDM login screen layout to GNOME Default. To uninstall, run copied command in a terminal."
@@ -242,40 +264,58 @@ msgstr ""
 msgid "Copied uninstall command to clipboard!"
 msgstr ""
 
+msgid "Extension is not installed system-wide in /usr/share."
+msgstr ""
+
+msgid "GDM expansion modules (src/pro) are missing system-wide."
+msgstr ""
+
+msgid "GDM session mode is not enabled in system-wide metadata."
+msgstr ""
+
+msgid "GDM dconf override configuration (/etc/dconf/db/gdm.d) is missing."
+msgstr ""
+
+msgid "GDM integration is not configured."
+msgstr ""
+
+msgid "Status: Disabled."
+msgstr ""
+
+msgid "Disabled"
+msgstr ""
+
+msgid "Enable GDM DLC Support"
+msgstr ""
+
+msgid "Click icon to copy installer command, then run it in a terminal."
+msgstr ""
+
+msgid "Copy install command to clipboard"
+msgstr ""
+
+msgid "Copied install command to clipboard!"
+msgstr ""
+
+msgid "Upgrade to [PRO]"
+msgstr ""
+
+msgid "Check PRO features of this extension on this extension's GitHub repo."
+msgstr ""
+
+msgid "Visit documentation on GitHub"
+msgstr ""
+
 msgid "[BETA] WACK Shell Integration"
 msgstr ""
 
 msgid "Installed. Enables crossfade transitions and Cupertino-inspired shell customisations."
 msgstr ""
 
-msgid "Upgrade to [PRO]"
-msgstr ""
-
 msgid "Installed"
 msgstr ""
 
-msgid "Not installed. Install WACK Shell to unlock transition effects."
-msgstr ""
-
-msgid "Not Installed"
-msgstr ""
-
-msgid "Install WACK Shell"
-msgstr ""
-
-msgid "Get advanced desktop crossfade transitions and Cupertino-inspired shell customisations. May contain bugs, report if found."
-msgstr ""
-
-msgid "Copy install command to clipboard"
-msgstr ""
-
-msgid "Copied WACK Shell install command to clipboard!"
-msgstr ""
-
-msgid "Open WACK Shell repository"
-msgstr ""
-
-msgid "Check for Updates"
+msgid "WACK Shell - Check for Updates"
 msgstr ""
 
 msgid "Copy check command to verify if a newer version of WACK Shell is available."
@@ -287,30 +327,21 @@ msgstr ""
 msgid "Copied WACK Shell update-check command to clipboard!"
 msgstr ""
 
-msgid "Extras - Status"
+msgid "Not installed. Install WACK Shell to unlock transition effects."
 msgstr ""
 
-msgid "Extras - Actions"
-msgstr ""
-
-msgid "GDM Expansion - Remove"
-msgstr ""
-
-msgid "WACK Shell - Check for Updates"
+msgid "Not Installed"
 msgstr ""
 
 msgid "WACK Shell - Install"
 msgstr ""
 
-msgid "Upcoming Features"
+msgid "Get advanced desktop crossfade transitions and Cupertino-inspired shell customisations. May contain bugs, report if found."
 msgstr ""
 
-msgid "Check PRO features of this extension on this extension's GitHub repo."
+msgid "Copied WACK Shell install command to clipboard!"
 msgstr ""
 
-msgid "Prompt Vibrancy"
-msgstr ""
-
-msgid "Applies a frosted glass effect to the password field (Static Blur)."
+msgid "Open WACK Shell repository"
 msgstr ""
 

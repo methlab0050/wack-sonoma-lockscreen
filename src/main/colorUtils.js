@@ -20,12 +20,24 @@ export const PROMPT_INVERSE_ALPHA_CEILING = 0.18;
 export const PROMPT_SHADOW_FLOOR = 0.0175;
 export const PROMPT_SHADOW_ROOF = 0.1175;
 
-export const PROMPT_VISUAL_ALGORITHM_VERSION = 17;
+export const PROMPT_VISUAL_ALGORITHM_VERSION = 23;
+
+export function clamp01(val) {
+    if (typeof val !== 'number' || isNaN(val))
+        return 0.0;
+    return Math.max(0.0, Math.min(1.0, val));
+}
+
+export function clamp255(val) {
+    if (typeof val !== 'number' || isNaN(val))
+        return 0;
+    return Math.max(0, Math.min(255, Math.round(val)));
+}
 
 export function rgbToHsl(r, g, b) {
-    const rNorm = r / 255;
-    const gNorm = g / 255;
-    const bNorm = b / 255;
+    const rNorm = clamp01(r / 255);
+    const gNorm = clamp01(g / 255);
+    const bNorm = clamp01(b / 255);
 
     const max = Math.max(rNorm, gNorm, bNorm);
     const min = Math.min(rNorm, gNorm, bNorm);
@@ -46,16 +58,18 @@ export function rgbToHsl(r, g, b) {
 
     return {
         h: h * 360,
-        s: s,
-        l: l,
+        s: clamp01(s),
+        l: clamp01(l),
     };
 }
 
 export function hslToRgb(h, s, l) {
     const hue = ((h % 360) + 360) % 360 / 360;
+    const sat = clamp01(s);
+    const light = clamp01(l);
 
-    if (s === 0) {
-        const value = Math.round(l * 255);
+    if (sat === 0) {
+        const value = clamp255(light * 255);
         return { r: value, g: value, b: value };
     }
 
@@ -74,34 +88,23 @@ export function hslToRgb(h, s, l) {
         return p;
     };
 
-    const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
-    const p = 2 * l - q;
+    const q = light < 0.5 ? light * (1 + sat) : light + sat - light * sat;
+    const p = 2 * light - q;
 
     return {
-        r: Math.round(hueToRgb(p, q, hue + 1 / 3) * 255),
-        g: Math.round(hueToRgb(p, q, hue) * 255),
-        b: Math.round(hueToRgb(p, q, hue - 1 / 3) * 255),
+        r: clamp255(hueToRgb(p, q, hue + 1 / 3) * 255),
+        g: clamp255(hueToRgb(p, q, hue) * 255),
+        b: clamp255(hueToRgb(p, q, hue - 1 / 3) * 255),
     };
 }
 
-export function isPixelColorful(r, g, b) {
-    const maxVal = Math.max(r, g, b);
-    const minVal = Math.min(r, g, b);
-    const chroma = maxVal - minVal;
-    const lightness = (maxVal + minVal) / 510;
-
-    if (chroma < 25)
-        return false;
-    if (chroma < 45 && lightness > 0.75)
-        return false;
-    return true;
-}
-
 export function blendOverOpaque(base, overlay, alpha) {
+    const a = clamp01(alpha);
+    const invA = 1 - a;
     return {
-        r: Math.round(base.r * (1 - alpha) + overlay.r * alpha),
-        g: Math.round(base.g * (1 - alpha) + overlay.g * alpha),
-        b: Math.round(base.b * (1 - alpha) + overlay.b * alpha),
+        r: clamp255((base?.r ?? 0) * invA + (overlay?.r ?? 0) * a),
+        g: clamp255((base?.g ?? 0) * invA + (overlay?.g ?? 0) * a),
+        b: clamp255((base?.b ?? 0) * invA + (overlay?.b ?? 0) * a),
     };
 }
 
@@ -111,46 +114,52 @@ export function parseHexColor(hex) {
     const cleaned = hex.replace('#', '');
     if (cleaned.length === 3) {
         return {
-            r: parseInt(cleaned[0] + cleaned[0], 16),
-            g: parseInt(cleaned[1] + cleaned[1], 16),
-            b: parseInt(cleaned[2] + cleaned[2], 16),
+            r: parseInt(cleaned[0] + cleaned[0], 16) || 0,
+            g: parseInt(cleaned[1] + cleaned[1], 16) || 0,
+            b: parseInt(cleaned[2] + cleaned[2], 16) || 0,
         };
     } else if (cleaned.length === 6) {
         return {
-            r: parseInt(cleaned.substring(0, 2), 16),
-            g: parseInt(cleaned.substring(2, 4), 16),
-            b: parseInt(cleaned.substring(4, 6), 16),
+            r: parseInt(cleaned.substring(0, 2), 16) || 0,
+            g: parseInt(cleaned.substring(2, 4), 16) || 0,
+            b: parseInt(cleaned.substring(4, 6), 16) || 0,
         };
     }
     return { r: 0, g: 0, b: 0 };
 }
 
 export function rgbToHex(r, g, b) {
-    const toHex = c => Math.max(0, Math.min(255, Math.round(c))).toString(16).padStart(2, '0');
+    const toHex = c => clamp255(c).toString(16).padStart(2, '0');
     return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
 }
 
 export function getRelativeLuminance(color) {
+    const r = clamp255(color?.r ?? 0);
+    const g = clamp255(color?.g ?? 0);
+    const b = clamp255(color?.b ?? 0);
+
     const channelLum = (val) => {
         const s = val / 255;
         return s <= 0.03928 ? s / 12.92 : Math.pow((s + 0.055) / 1.055, 2.4);
     };
-    return 0.2126 * channelLum(color.r) +
-        0.7152 * channelLum(color.g) +
-        0.0722 * channelLum(color.b);
+    return clamp01(0.2126 * channelLum(r) +
+        0.7152 * channelLum(g) +
+        0.0722 * channelLum(b));
 }
 
 // WCAG relative luminance is gamma-linear, not perceptually linear (mid-gray sits
 // at ~0.18-0.22 relative luminance, not 0.5). Convert to CIE L* so the adaptive
 // alpha responds to how bright the sample actually LOOKS, not the raw light value.
 export function getPerceptualLightness(luminance) {
-    return luminance <= 0.008856
-        ? luminance * 9.033
-        : Math.pow(luminance, 1 / 3) * 1.16 - 0.16; // 0.0-1.0 scale (CIE L* / 100)
+    const lum = clamp01(luminance);
+    const lStar = lum <= 0.008856
+        ? lum * 9.033
+        : Math.pow(lum, 1 / 3) * 1.16 - 0.16;
+    return clamp01(lStar);
 }
 
 export function getApcaContrast(txtR, txtG, txtB, bgR, bgG, bgB) {
-    const simpleExp = (chan) => Math.pow(chan / 255.0, 2.4);
+    const simpleExp = (chan) => Math.pow(clamp255(chan) / 255.0, 2.4);
 
     let txtY = 0.2126729 * simpleExp(txtR) +
         0.7151522 * simpleExp(txtG) +
@@ -179,98 +188,106 @@ export function getApcaContrast(txtR, txtG, txtB, bgR, bgG, bgB) {
 }
 
 /**
+ * Canonical perceptual analysis of a sampled color region.
+ * Single source of truth for color metrics across the extension.
+ *
+ * @param {{r: number, g: number, b: number}} color
+ * @param {number} [noise=0.0]
+ * @returns {{r: number, g: number, b: number, luminance: number, perceptualLightness: number, chroma: number, noise: number}}
+ */
+export function analyzePerceptualColor(color, noise = 0.0) {
+    const r = clamp255(color?.r ?? 0);
+    const g = clamp255(color?.g ?? 0);
+    const b = clamp255(color?.b ?? 0);
+    const safeNoise = Math.max(0.0, typeof noise === 'number' && !isNaN(noise) ? noise : 0.0);
+
+    const luminance = getRelativeLuminance({ r, g, b });
+    const perceptualLightness = getPerceptualLightness(luminance);
+    const maxVal = Math.max(r, g, b);
+    const minVal = Math.min(r, g, b);
+    const chroma = clamp01((maxVal - minVal) / 255.0);
+
+    return {
+        r,
+        g,
+        b,
+        luminance,
+        perceptualLightness,
+        chroma,
+        noise: safeNoise,
+    };
+}
+
+/**
  * Computes the adaptive white-blend alpha for the Cupertino prompt chip based on
  * the sampled backdrop color's perceptual lightness and saturation.
- *
- * Darker wallpapers -> lower alpha (less white blend) -> prompt chip stays dark.
- * Brighter wallpapers -> higher alpha (more white blend) -> prompt chip stays light.
- * Saturated wallpapers -> vibrancy boost (more white blend) to avoid excessive coloring.
  *
  * @param {{r: number, g: number, b: number}} sampled
  * @returns {number} alpha between PROMPT_ALPHA_FLOOR and PROMPT_ALPHA_ROOF
  */
 export function getPromptBlendAlpha(sampled) {
-    const luminance = Math.max(0, Math.min(1, getRelativeLuminance(sampled)));
-    const perceptualL = getPerceptualLightness(luminance);
-
-    let alpha = PROMPT_ALPHA_FLOOR + (PROMPT_ALPHA_ROOF - PROMPT_ALPHA_FLOOR) * perceptualL;
-
-    const maxVal = Math.max(sampled.r, sampled.g, sampled.b);
-    const minVal = Math.min(sampled.r, sampled.g, sampled.b);
-    const chroma = (maxVal - minVal) / 255.0;
-    const vibrancyProduct = Math.min(0.75, chroma * perceptualL);
+    const analysis = analyzePerceptualColor(sampled);
+    let alpha = PROMPT_ALPHA_FLOOR + (PROMPT_ALPHA_ROOF - PROMPT_ALPHA_FLOOR) * analysis.perceptualLightness;
+    const vibrancyProduct = Math.min(0.75, analysis.chroma * analysis.perceptualLightness);
     alpha = alpha + (PROMPT_ALPHA_ROOF - alpha) * vibrancyProduct;
 
     return Math.max(PROMPT_ALPHA_FLOOR, Math.min(PROMPT_ALPHA_ROOF, alpha));
 }
 
 export function getPromptDarkenedHueColor(sampled) {
-    const hsl = rgbToHsl(sampled.r, sampled.g, sampled.b);
+    const r = clamp255(sampled?.r ?? 0);
+    const g = clamp255(sampled?.g ?? 0);
+    const b = clamp255(sampled?.b ?? 0);
+    const hsl = rgbToHsl(r, g, b);
     return hslToRgb(
         hsl.h,
         hsl.s,
-        Math.max(0, Math.min(1, hsl.l * PROMPT_BRIGHT_HUE_LIGHTNESS_FACTOR))
+        clamp01(hsl.l * PROMPT_BRIGHT_HUE_LIGHTNESS_FACTOR)
     );
 }
 
-export function getPromptInvertedNeutralColor(sampled, perceptualL) {
-    const t = Math.max(0, Math.min(
-        1,
-        (perceptualL - PROMPT_BRIGHT_HUE_LIGHTNESS_THRESHOLD) /
-        (1 - PROMPT_BRIGHT_HUE_LIGHTNESS_THRESHOLD)
-    ));
-    const alpha = PROMPT_INVERSE_ALPHA_CEILING * t;
-
-    return blendOverOpaque(sampled, { r: 0, g: 0, b: 0 }, alpha);
-}
-
 /**
- * Single owner of password-prompt inverse/blend policy.
- * Sampled wallpaper color in → complete PromptVisualState out.
- * Consumers must apply this result rather than re-classifying brightness.
+ * Resolves the base visual policy from perceptual analysis.
  *
- * @param {{r: number, g: number, b: number}} sampledColor
- * @param {number|null} [whiteBlendAlpha=null] Optional override used by the prompt chip path
- * @returns {object} PromptVisualState
+ * @param {object} analysis Analyzed perceptual characteristics
+ * @param {object} [options]
+ * @param {number|null} [options.whiteBlendAlpha=null]
+ * @returns {object} Base visual policy decision
  */
-export function resolvePromptVisualState(sampledColor, whiteBlendAlpha = null) {
-    const sourceColor = {
-        r: sampledColor?.r ?? 0,
-        g: sampledColor?.g ?? 0,
-        b: sampledColor?.b ?? 0,
-    };
+export function resolveBaseVisualPolicy(analysis, options = {}) {
+    const whiteBlendAlpha = options.whiteBlendAlpha ?? null;
+    const { r, g, b, luminance, perceptualLightness, chroma, noise } = analysis;
 
-    const luminance = Math.max(0, Math.min(1, getRelativeLuminance(sourceColor)));
-    const perceptualL = getPerceptualLightness(luminance);
-    const maxVal = Math.max(sourceColor.r, sourceColor.g, sourceColor.b);
-    const minVal = Math.min(sourceColor.r, sourceColor.g, sourceColor.b);
-    const chroma = (maxVal - minVal) / 255.0;
-    const isBrightSample = perceptualL > PROMPT_BRIGHT_HUE_LIGHTNESS_THRESHOLD;
+    const isBrightSample = perceptualLightness > PROMPT_BRIGHT_HUE_LIGHTNESS_THRESHOLD;
     const isBrightHue = isBrightSample && chroma >= PROMPT_BRIGHT_HUE_MIN_CHROMA;
     const useInverse = isBrightSample;
 
-    const hasWhiteBlendOverride = whiteBlendAlpha !== null && whiteBlendAlpha !== undefined;
-    const adaptiveAlpha = getPromptBlendAlpha(sourceColor);
-    const baseAlpha = hasWhiteBlendOverride ? whiteBlendAlpha : adaptiveAlpha;
+    const adaptiveAlpha = getPromptBlendAlpha({ r, g, b });
+    const baseAlpha = whiteBlendAlpha !== null && whiteBlendAlpha !== undefined
+        ? clamp01(whiteBlendAlpha)
+        : adaptiveAlpha;
 
-    let overlayR, overlayG, overlayB, blendAlpha;
-    const darkenedHue = isBrightHue ? getPromptDarkenedHueColor(sourceColor) : null;
+    let overlayR, overlayG, overlayB, blendAlpha, treatment;
+
     if (isBrightHue) {
-        overlayR = darkenedHue.r;
-        overlayG = darkenedHue.g;
-        overlayB = darkenedHue.b;
+        treatment = 'darkened-hue';
+        const darkened = getPromptDarkenedHueColor({ r, g, b });
+        overlayR = darkened.r;
+        overlayG = darkened.g;
+        overlayB = darkened.b;
         blendAlpha = 0.55;
     } else if (isBrightSample) {
+        treatment = 'inverse-neutral';
         overlayR = 0;
         overlayG = 0;
         overlayB = 0;
-        const t = Math.max(0, Math.min(
-            1,
-            (perceptualL - PROMPT_BRIGHT_HUE_LIGHTNESS_THRESHOLD) /
-            (1 - PROMPT_BRIGHT_HUE_LIGHTNESS_THRESHOLD)
-        ));
+        const t = clamp01(
+            (perceptualLightness - PROMPT_BRIGHT_HUE_LIGHTNESS_THRESHOLD) /
+            (1.0 - PROMPT_BRIGHT_HUE_LIGHTNESS_THRESHOLD)
+        );
         blendAlpha = PROMPT_INVERSE_ALPHA_CEILING * t;
     } else {
+        treatment = 'normal';
         overlayR = 255;
         overlayG = 255;
         overlayB = 255;
@@ -286,25 +303,15 @@ export function resolvePromptVisualState(sampledColor, whiteBlendAlpha = null) {
     };
 
     const finalColor = isBrightHue
-        ? getPromptDarkenedHueColor(sourceColor)
-        : blendOverOpaque(sourceColor, { r: overlayR, g: overlayG, b: overlayB }, blendAlpha);
+        ? getPromptDarkenedHueColor({ r, g, b })
+        : blendOverOpaque({ r, g, b }, { r: overlayR, g: overlayG, b: overlayB }, blendAlpha);
 
-    let shadowAlpha = PROMPT_SHADOW_FLOOR + (PROMPT_SHADOW_ROOF - PROMPT_SHADOW_FLOOR) * perceptualL;
+    let shadowAlpha = PROMPT_SHADOW_FLOOR + (PROMPT_SHADOW_ROOF - PROMPT_SHADOW_FLOOR) * perceptualLightness;
     if (isBrightSample)
         shadowAlpha = PROMPT_SHADOW_FLOOR;
 
-    console.debug(
-        `[WACK/PromptVisual] sampledColor=(${sourceColor.r},${sourceColor.g},${sourceColor.b}) ` +
-        `perceptualL=${perceptualL.toFixed(4)} chroma=${chroma.toFixed(4)} ` +
-        `isBrightSample=${isBrightSample} isBrightHue=${isBrightHue} useInverse=${useInverse} ` +
-        `overlayRGBA=${overlay.rgba} blendAlpha=${blendAlpha.toFixed(4)}`
-    );
-
     return {
-        sourceColor,
-        luminance,
-        perceptualL,
-        chroma,
+        treatment,
         isBrightSample,
         isBrightHue,
         useInverse,
@@ -315,20 +322,59 @@ export function resolvePromptVisualState(sampledColor, whiteBlendAlpha = null) {
     };
 }
 
+/**
+ * Single authoritative owner of password-prompt and button visual decisions.
+ * Sampled wallpaper color in -> complete PromptVisualState out.
+ *
+ * @param {{r: number, g: number, b: number, noise?: number}} sampledColor
+ * @param {number|null} [whiteBlendAlpha=null] Optional override used by the prompt chip path
+ * @returns {object} PromptVisualState
+ */
+export function resolvePromptVisualState(sampledColor, whiteBlendAlpha = null) {
+    const analysis = analyzePerceptualColor(sampledColor, sampledColor?.noise ?? 0.0);
+    const policy = resolveBaseVisualPolicy(analysis, { whiteBlendAlpha });
+
+    const sourceColor = {
+        r: analysis.r,
+        g: analysis.g,
+        b: analysis.b,
+    };
+
+    return {
+        sourceColor,
+        r: policy.finalColor.r,
+        g: policy.finalColor.g,
+        b: policy.finalColor.b,
+        luminance: analysis.luminance,
+        perceptualL: analysis.perceptualLightness,
+        perceptualLightness: analysis.perceptualLightness,
+        chroma: analysis.chroma,
+        noise: analysis.noise,
+        treatment: policy.treatment,
+        isBrightSample: policy.isBrightSample,
+        isBrightHue: policy.isBrightHue,
+        useInverse: policy.useInverse,
+        isInverse: policy.useInverse,
+        overlay: policy.overlay,
+        finalColor: policy.finalColor,
+        shadowAlpha: policy.shadowAlpha,
+        blendAlpha: policy.blendAlpha,
+    };
+}
+
 export function ensurePromptVisualState(color, whiteBlendAlpha = CUPERTINO_PROMPT_WHITE_BLEND_ALPHA) {
     if (color?.visualState?.overlay)
         return color.visualState;
     return resolvePromptVisualState(
-        { r: color?.r ?? 0, g: color?.g ?? 0, b: color?.b ?? 0 },
+        { r: color?.r ?? 0, g: color?.g ?? 0, b: color?.b ?? 0, noise: color?.noise ?? color?.visualState?.noise ?? 0.0 },
         whiteBlendAlpha
     );
 }
 
 /**
  * Apply an already-resolved prompt visual policy to a locally sampled base color.
- * Does not re-decide inverse vs normal blend.
  *
- * @param {{r: number, g: number, b: number}} sourceColor
+ * @param {{r: number, g: number, b: number, noise?: number}} sourceColor
  * @param {object} visualState
  * @param {{preblend?: boolean}} [options]
  */
@@ -359,6 +405,7 @@ export function applyPromptVisualState(sourceColor, visualState, options = {}) {
         rawR: sourceColor.r,
         rawG: sourceColor.g,
         rawB: sourceColor.b,
+        noise: visualState?.noise ?? sourceColor?.noise ?? 0.0,
         rgba: `rgba(${display.r}, ${display.g}, ${display.b}, 1.0)`,
         hex: rgbToHex(display.r, display.g, display.b),
         overlayR: overlay.r,
@@ -388,15 +435,191 @@ export function getPromptBlendOverlay(sampledColor, whiteBlendAlpha = null) {
     };
 }
 
-export function processPromptColor(sampled) {
-    const state = resolvePromptVisualState(sampled);
-    return {
-        r: state.finalColor.r,
-        g: state.finalColor.g,
-        b: state.finalColor.b,
-        perceptualL: state.perceptualL,
-        isBrightSample: state.isBrightSample,
-        isBrightHue: state.isBrightHue,
-        useInverse: state.useInverse,
-    };
+/**
+ * Computes dynamic shadow alpha for user label based on backdrop lightness and texture noisiness.
+ * Range: 0.15 (dark smooth wallpapers) to 0.75 (bright/noisy wallpapers).
+ *
+ * @param {number|object} visualStateOrLightness
+ * @returns {number}
+ */
+export function getUserLabelShadowAlpha(visualStateOrLightness) {
+    let pL = 0.5;
+    let noise = 0.0;
+    if (typeof visualStateOrLightness === 'number') {
+        pL = visualStateOrLightness <= 1.0 && visualStateOrLightness >= 0.0
+            ? visualStateOrLightness
+            : clamp01((visualStateOrLightness - 0.60) / 0.25);
+    } else if (visualStateOrLightness) {
+        pL = visualStateOrLightness.visualState?.perceptualL ??
+            visualStateOrLightness.perceptualL ??
+            (visualStateOrLightness.luminance != null ? getPerceptualLightness(visualStateOrLightness.luminance) : 0.5);
+        noise = visualStateOrLightness.visualState?.noise ??
+            visualStateOrLightness.noise ??
+            0.0;
+    }
+    const clampedL = clamp01(pL);
+    let shadowAlpha = 0.15 + 0.60 * clampedL;
+    if (noise > 0.0) {
+        const noiseBoost = Math.min(1.0, noise * 25.0) * 0.20;
+        shadowAlpha += noiseBoost;
+    }
+    return clamp01(Math.max(0.15, Math.min(0.75, shadowAlpha)));
 }
+
+export function getUserLabelStyle(visualStateOrLightness) {
+    const shadowAlpha = getUserLabelShadowAlpha(visualStateOrLightness);
+    return `text-shadow: 0 1px 10px rgba(0, 0, 0, ${shadowAlpha.toFixed(3)}) !important;`;
+}
+
+/**
+ * Computes dynamic shadow alpha for hint text based on backdrop lightness and texture noisiness.
+ * Range: 0.10 (dark smooth wallpapers) to 0.60 (bright/noisy wallpapers).
+ *
+ * @param {number|object} visualStateOrLightness
+ * @returns {number}
+ */
+export function getHintTextShadowAlpha(visualStateOrLightness) {
+    let pL = 0.5;
+    let noise = 0.0;
+    if (typeof visualStateOrLightness === 'number') {
+        pL = visualStateOrLightness <= 1.0 && visualStateOrLightness >= 0.0
+            ? visualStateOrLightness
+            : clamp01((visualStateOrLightness - 0.60) / 0.25);
+    } else if (visualStateOrLightness) {
+        pL = visualStateOrLightness.visualState?.perceptualL ??
+            visualStateOrLightness.perceptualL ??
+            (visualStateOrLightness.luminance != null ? getPerceptualLightness(visualStateOrLightness.luminance) : 0.5);
+        noise = visualStateOrLightness.visualState?.noise ??
+            visualStateOrLightness.noise ??
+            0.0;
+    }
+    const clampedL = clamp01(pL);
+    let shadowAlpha = 0.10 + 0.40 * clampedL;
+    if (noise > 0.0) {
+        const noiseBoost = Math.min(1.0, noise * 25.0) * 0.20;
+        shadowAlpha += noiseBoost;
+    }
+    return clamp01(Math.max(0.10, Math.min(0.60, shadowAlpha)));
+}
+
+/**
+ * Computes dynamic color alpha for hint text based on backdrop lightness / wallpaper alpha and noisiness.
+ * Range: 0.60 (dark smooth wallpapers) to 0.95 (bright/noisy wallpapers).
+ *
+ * @param {number|object} visualStateOrLightness
+ * @param {number|null} [wallpaperAlpha=null]
+ * @returns {number}
+ */
+export function getHintTextColorAlpha(visualStateOrLightness, wallpaperAlpha = null) {
+    let noise = 0.0;
+    if (visualStateOrLightness && typeof visualStateOrLightness === 'object') {
+        noise = visualStateOrLightness.visualState?.noise ??
+            visualStateOrLightness.noise ??
+            0.0;
+    }
+
+    let baseAlpha = 0.60;
+    if (wallpaperAlpha != null && typeof wallpaperAlpha === 'number') {
+        const t = clamp01((wallpaperAlpha - 0.60) / 0.25);
+        baseAlpha = 0.60 + 0.30 * t;
+    } else {
+        let pL = 0.5;
+        if (typeof visualStateOrLightness === 'number') {
+            pL = visualStateOrLightness <= 1.0 && visualStateOrLightness >= 0.0
+                ? visualStateOrLightness
+                : clamp01((visualStateOrLightness - 0.60) / 0.25);
+        } else if (visualStateOrLightness) {
+            pL = visualStateOrLightness.visualState?.perceptualL ??
+                visualStateOrLightness.perceptualL ??
+                (visualStateOrLightness.luminance != null ? getPerceptualLightness(visualStateOrLightness.luminance) : 0.5);
+        }
+        const clampedL = clamp01(pL);
+        baseAlpha = 0.60 + 0.30 * clampedL;
+    }
+
+    if (noise > 0.0) {
+        const noiseBoost = Math.min(1.0, noise * 25.0) * 0.30;
+        baseAlpha = Math.max(baseAlpha, 0.60 + noiseBoost);
+    }
+
+    return clamp01(Math.max(0.60, Math.min(0.95, baseAlpha)));
+}
+
+export function getHintTextStyle(visualStateOrLightness, wallpaperAlpha = null) {
+    const colorAlpha = getHintTextColorAlpha(visualStateOrLightness, wallpaperAlpha);
+    const shadowAlpha = getHintTextShadowAlpha(visualStateOrLightness);
+    return `color: rgba(255, 255, 255, ${colorAlpha.toFixed(3)}) !important; text-shadow: 0 1px 10px rgba(0, 0, 0, ${shadowAlpha.toFixed(3)}) !important;`;
+}
+
+/**
+ * Calculates adaptive white chrome alpha for GDM / Lockscreen interactive controls
+ * (Cancel, Accessibility, Session selector) based on the resolved visual state.
+ *
+ * Fundamental invariant:
+ * - The interaction chrome is ALWAYS strictly WHITE.
+ * - Darker / more inverted visual backdrops -> higher/stronger white chrome alpha.
+ * - Lighter / softer backdrops -> lower/subtler chrome alpha.
+ * - Continuous, bounded, monotonic mapping with zero discontinuities.
+ *
+ * @param {object|number} visualStateOrLightness
+ * @param {'base'|'hover'|'focus'|'active'} state
+ * @returns {number} alpha value between 0.0 and 1.0
+ */
+export function getChromeAlpha(visualStateOrLightness, state = 'base') {
+    let pL = 0.5;
+    let isInverse = false;
+    let noise = 0.0;
+
+    if (typeof visualStateOrLightness === 'number') {
+        pL = visualStateOrLightness <= 1.0 && visualStateOrLightness >= 0.0
+            ? visualStateOrLightness
+            : clamp01((visualStateOrLightness - 0.60) / 0.25);
+    } else if (visualStateOrLightness) {
+        const vs = visualStateOrLightness.visualState ?? visualStateOrLightness;
+        pL = vs.perceptualLightness ?? vs.perceptualL ??
+            (vs.luminance != null ? getPerceptualLightness(vs.luminance) : 0.5);
+        isInverse = vs.useInverse ?? vs.isBrightSample ?? false;
+        noise = vs.noise ?? 0.0;
+    }
+
+    const clampedL = clamp01(pL);
+
+    switch (state) {
+        case 'hover':
+            // Inverse/bright backdrops need gentle white highlight (0.08-0.10) to avoid blowout
+            // Dark backgrounds need crisp white highlight (0.14-0.18) to stand out against black
+            if (isInverse) {
+                return clamp01(0.08 + 0.04 * (1.0 - clampedL));
+            }
+            return clamp01(0.18 - 0.04 * clampedL);
+
+        case 'focus':
+            // Focus border alpha
+            if (isInverse) {
+                return clamp01(0.18 + 0.04 * (1.0 - clampedL));
+            }
+            return clamp01(0.20 - 0.04 * clampedL);
+
+        case 'active':
+            // Pressed state highlight
+            if (isInverse) {
+                return clamp01(0.16 + 0.04 * (1.0 - clampedL));
+            }
+            return clamp01(0.28 - 0.04 * clampedL);
+
+        case 'base':
+        default: {
+            let baseAlpha;
+            if (isInverse) {
+                baseAlpha = 0.20 + 0.04 * clampedL;
+            } else {
+                baseAlpha = 0.18 - 0.05 * clampedL;
+            }
+            if (noise > 0.0) {
+                baseAlpha += Math.min(0.04, noise * 2.0);
+            }
+            return clamp01(Math.max(0.12, Math.min(0.25, baseAlpha)));
+        }
+    }
+}
+
