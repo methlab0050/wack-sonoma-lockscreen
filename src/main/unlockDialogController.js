@@ -21,13 +21,48 @@ export class UnlockDialogController {
         this.origFinish = null;
         this.origContinueDeactivate = null;
         this.origSetTransitionProgress = null;
+        this.origEnsureAuthPrompt = null;
         this.finishTimeoutId = null;
         this.finishFallbackId = null;
         this.windowFadeContainer = null;
     }
 
+    _setupAuthPrompt(authPrompt) {
+        if (!authPrompt) return;
+
+        if (authPrompt.setMessage && !authPrompt._wackOrigSetMessage) {
+            authPrompt._wackOrigSetMessage = authPrompt.setMessage.bind(authPrompt);
+            authPrompt.setMessage = (message, type) => {
+                authPrompt._wackOrigSetMessage(message, type);
+                this._extension._promptStyling?.updatePromptMessageStyle();
+            };
+        }
+
+        if (this._extension._lockscreenMode === 'cupertino') {
+            if (authPrompt._message) {
+                authPrompt._message.add_style_class_name('wack-cupertino-message');
+            }
+            this._extension._promptStyling?.updatePromptMessageStyle();
+        }
+    }
+
     install(dialog, lockDialogGroup) {
-        // 1. Background Effects Override
+        // 1. AuthPrompt lifecycle & PAM message intercept
+        if (dialog._ensureAuthPrompt) {
+            this.origEnsureAuthPrompt = dialog._ensureAuthPrompt.bind(dialog);
+            dialog._ensureAuthPrompt = () => {
+                const hadAuthPrompt = !!dialog._authPrompt;
+                this.origEnsureAuthPrompt();
+                if (!hadAuthPrompt && dialog._authPrompt) {
+                    this._setupAuthPrompt(dialog._authPrompt);
+                }
+            };
+        }
+        if (dialog._authPrompt) {
+            this._setupAuthPrompt(dialog._authPrompt);
+        }
+
+        // 2. Background Effects Override
         if (dialog._updateBackgroundEffects) {
             this.origUpdateBgEffects = dialog._updateBackgroundEffects.bind(dialog);
             dialog._updateBackgroundEffects = () => {
@@ -402,6 +437,17 @@ export class UnlockDialogController {
         if (dialog && this.origSetTransitionProgress) {
             dialog._setTransitionProgress = this.origSetTransitionProgress;
             this.origSetTransitionProgress = null;
+        }
+
+        if (dialog && this.origEnsureAuthPrompt) {
+            dialog._ensureAuthPrompt = this.origEnsureAuthPrompt;
+            this.origEnsureAuthPrompt = null;
+        }
+
+        const authPrompt = dialog?._authPrompt ?? dialog?._promptBox?._authPrompt;
+        if (authPrompt?._wackOrigSetMessage) {
+            authPrompt.setMessage = authPrompt._wackOrigSetMessage;
+            delete authPrompt._wackOrigSetMessage;
         }
 
         if (dialog?._notificationsBox) {

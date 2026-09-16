@@ -2,7 +2,7 @@ import GLib from 'gi://GLib';
 import Clutter from 'gi://Clutter';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import { _log, _logError } from './mainUtils.js';
-import { getChromeAlpha, getPromptMessageStyle } from './colorUtils.js';
+import { getChromeAlpha, getPromptMessageStyle, getHintTextStyle } from './colorUtils.js';
 
 export class PromptStyling {
     constructor(extension) {
@@ -10,6 +10,8 @@ export class PromptStyling {
         this.cursorBlinkTimeoutId = null;
         this.lastWellH = undefined;
         this.lastYCenterFraction = undefined;
+        this._lastPromptColor = null;
+        this._lastClockAlpha = null;
     }
 
     findPromptEntry(actor) {
@@ -125,12 +127,46 @@ export class PromptStyling {
 
         entry.set_style(`${entry._wackOriginalStyle}${bgStyle}${shadowStyle}`);
 
+        this._lastPromptColor = color;
+        this.updatePromptMessageStyle(color);
+    }
+
+    updatePromptMessageStyle(color = null, alpha = null) {
         const dialog = this._extension._dialog;
         const authPrompt = dialog?._authPrompt ?? dialog?._promptBox?._authPrompt;
-        if (authPrompt) {
-            const msgStyle = getPromptMessageStyle(color);
-            if (authPrompt._message)
+        if (!authPrompt)
+            return;
+
+        const isCupertino = this._extension?._lockscreenMode === 'cupertino' ||
+            this._extension?._selectedPromptMode === 'cupertino' ||
+            authPrompt.has_style_class_name?.('wack-cupertino-prompt') ||
+            this._extension?._promptActor?.has_style_class_name?.('wack-cupertino-prompt');
+
+        if (!isCupertino)
+            return;
+
+        if (color)
+            this._lastPromptColor = color;
+        if (alpha != null)
+            this._lastClockAlpha = alpha;
+
+        const effectiveColor = color
+            ?? this._lastPromptColor
+            ?? this._extension._lastPromptColor
+            ?? this._extension._avatarManager?._lastAvatarColor
+            ?? null;
+
+        const effectiveAlpha = alpha
+            ?? this._lastClockAlpha
+            ?? this._extension._lastClockAlpha
+            ?? null;
+
+        if (effectiveColor || effectiveAlpha != null) {
+            const msgStyle = getHintTextStyle(effectiveColor, effectiveAlpha);
+            if (authPrompt._message) {
                 authPrompt._message.set_style(msgStyle);
+                authPrompt._message.add_style_class_name('wack-cupertino-message');
+            }
             if (authPrompt._capsLockWarningLabel)
                 authPrompt._capsLockWarningLabel.set_style(msgStyle);
         }
@@ -288,8 +324,10 @@ export class PromptStyling {
         if (cancelButton)
             this.applyCancelButtonBackground(cancelButton, null);
 
-        if (authPrompt?._message)
+        if (authPrompt?._message) {
             authPrompt._message.set_style(null);
+            authPrompt._message.remove_style_class_name('wack-cupertino-message');
+        }
         if (authPrompt?._capsLockWarningLabel)
             authPrompt._capsLockWarningLabel.set_style(null);
     }

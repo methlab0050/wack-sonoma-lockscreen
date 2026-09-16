@@ -391,6 +391,7 @@ export class GdmAnimationController {
         if (authPrompt._capsLockWarningLabel) {
             authPrompt._capsLockWarningLabel.add_style_class_name('wack-cupertino-caps-lock-warning');
         }
+        this._gdm._promptStyling?.updatePromptMessageStyle();
 
         const uw = authPrompt._userWell?.get_child();
         if (uw) {

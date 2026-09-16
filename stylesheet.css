@@ -256,7 +256,7 @@
     padding-top: 0;
     text-align: center !important;
     text-wrap: wrap !important;
-    text-shadow: 0 1px 10px rgba(0, 0, 0, 0.225);
+    text-shadow: 0 1px 7px rgba(0, 0, 0, 0.225);
 }
 
 .wack-cupertino-lockscreen-message {
@@ -288,7 +288,7 @@
 
 .unlock-dialog .caps-lock-warning-label,
 .wack-cupertino-caps-lock-warning {
-    color: rgba(255, 255, 255, 0.625) !important;
+    color: rgba(255, 255, 255, 0.625);
     font-size: 14px !important;
     font-weight: 600 !important;
     padding-top: 0 !important;
@@ -301,7 +301,7 @@
 .unlock-dialog .login-dialog-message-hint,
 .unlock-dialog .login-dialog-message-warning,
 .wack-cupertino-message {
-    color: rgba(255, 255, 255, 0.625) !important;
+    color: rgba(255, 255, 255, 0.625);
     font-size: 14px !important;
     font-weight: 600 !important;
     padding-top: 0 !important;
@@ -309,6 +309,7 @@
     spacing: 0 !important;
     text-align: center !important;
     text-wrap: wrap !important;
+    text-shadow: 0 1px 7px rgba(0, 0, 0, 0.225);
 }
 
 /* Base transparent border to match box models between prompt and list */

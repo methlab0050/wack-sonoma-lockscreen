@@ -208,7 +208,7 @@
 .login-dialog .login-dialog-message,
 .login-dialog .login-dialog-message-hint,
 .login-dialog .login-dialog-message-warning {
-    color: rgba(255, 255, 255, 0.625) !important;
+    color: rgba(255, 255, 255, 0.625);
     font-size: 14px !important;
     font-weight: 600 !important;
     padding-top: 0 !important;
@@ -216,6 +216,7 @@
     spacing: 0 !important;
     text-align: center !important;
     text-wrap: wrap !important;
+    text-shadow: 0 1px 7px rgba(0, 0, 0, 0.225);
 }
 
 /* ── GDM User Selection Box & Items ───────────────────────────────────── */

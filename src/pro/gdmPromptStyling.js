@@ -3,7 +3,7 @@ import Gio from 'gi://Gio';
 import GLib from 'gi://GLib';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import { getWallpaperPromptColor } from '../main/alphaManager.js';
-import { getChromeAlpha, getPromptMessageStyle } from '../main/colorUtils.js';
+import { getChromeAlpha, getPromptMessageStyle, getHintTextStyle } from '../main/colorUtils.js';
 import {
     A11Y_BUTTON_WIDTH,
     A11Y_BUTTON_HEIGHT,
@@ -24,6 +24,8 @@ export class GdmPromptStyling {
         this.bottomButtonsColorRequestId = 0;
         this._lastA11yColor = null;
         this._lastSessionColor = null;
+        this._lastPromptColor = null;
+        this._lastClockAlpha = null;
     }
 
     teardown() {
@@ -148,11 +150,38 @@ export class GdmPromptStyling {
 
         entry.set_style(`${entry._wackOriginalStyle}${bgStyle}${shadowStyle}`);
 
+        this._lastPromptColor = color;
+        this.updatePromptMessageStyle(color);
+    }
+
+    updatePromptMessageStyle(color = null, alpha = null) {
         const authPrompt = this._gdm._dialog?._authPrompt;
-        if (authPrompt) {
-            const msgStyle = getPromptMessageStyle(color);
-            if (authPrompt._message)
+        if (!authPrompt || !authPrompt.has_style_class_name('wack-cupertino-prompt'))
+            return;
+
+        if (color)
+            this._lastPromptColor = color;
+        if (alpha != null)
+            this._lastClockAlpha = alpha;
+
+        const effectiveColor = color
+            ?? this._lastPromptColor
+            ?? this._gdm._currentWallpaperMetadata?.promptColor
+            ?? this._gdm._avatarManager?._lastAvatarColor
+            ?? null;
+
+        const effectiveAlpha = alpha
+            ?? this._lastClockAlpha
+            ?? this._gdm._currentWallpaperMetadata?.clockAlpha
+            ?? this._gdm._lastClockAlpha
+            ?? null;
+
+        if (effectiveColor || effectiveAlpha != null) {
+            const msgStyle = getHintTextStyle(effectiveColor, effectiveAlpha);
+            if (authPrompt._message) {
                 authPrompt._message.set_style(msgStyle);
+                authPrompt._message.add_style_class_name('wack-cupertino-message');
+            }
             if (authPrompt._capsLockWarningLabel)
                 authPrompt._capsLockWarningLabel.set_style(msgStyle);
         }

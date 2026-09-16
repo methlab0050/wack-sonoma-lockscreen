@@ -622,6 +622,7 @@ export default class WackLockscreenClockExtension extends Extension {
                     this._applyPromptEntryBackground(entry, promptColor);
                 if (currentAuthPrompt?.cancelButton)
                     this._applyCancelButtonBackground(currentAuthPrompt.cancelButton, promptColor);
+                this._promptStyling?.updatePromptMessageStyle(promptColor, alpha);
             }
         } catch (e) {
             _logError(`[WACK/Extension] _updateClockAlphaAndPromptColor error: ${e}`);
@@ -658,6 +659,7 @@ export default class WackLockscreenClockExtension extends Extension {
                     this._applyPromptEntryBackground(entry, this._lastPromptColor);
                 if (currentAuthPrompt?.cancelButton && currentAuthPrompt.cancelButton._wackColor !== this._lastPromptColor)
                     this._applyCancelButtonBackground(currentAuthPrompt.cancelButton, this._lastPromptColor);
+                this._promptStyling?.updatePromptMessageStyle(this._lastPromptColor, this._lastClockAlpha);
             } else {
                 this._updateClockAlphaAndPromptColor();
             }

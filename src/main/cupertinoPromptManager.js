@@ -433,10 +433,12 @@ export class CupertinoPromptManager {
                 });
             }
 
-            if (this._extension._promptActive)
+            if (this._extension._promptActive) {
                 promptActor.add_style_class_name('wack-cupertino-prompt');
-            else
+                this._extension._promptStyling?.updatePromptMessageStyle();
+            } else {
                 promptActor.remove_style_class_name('wack-cupertino-prompt');
+            }
 
             this.updateCupertinoRestState(false);
         } else {

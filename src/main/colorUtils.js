@@ -436,8 +436,9 @@ export function getPromptBlendOverlay(sampledColor, whiteBlendAlpha = null) {
 }
 
 /**
- * Computes dynamic shadow alpha for user label based on backdrop lightness and texture noisiness.
- * Range: 0.15 (dark smooth wallpapers) to 0.75 (bright/noisy wallpapers).
+ * Computes dynamic shadow alpha for the User Label based on backdrop lightness and texture noisiness.
+ * Consistently stronger than hint shadow alpha to maintain clear visual hierarchy.
+ * Range: 0.15 (dark smooth wallpapers) to 0.675 (bright/noisy wallpapers).
  *
  * @param {number|object} visualStateOrLightness
  * @returns {number}
@@ -458,12 +459,12 @@ export function getUserLabelShadowAlpha(visualStateOrLightness) {
             0.0;
     }
     const clampedL = clamp01(pL);
-    let shadowAlpha = 0.15 + 0.60 * clampedL;
+    let shadowAlpha = 0.10 + 0.70 * clampedL;
     if (noise > 0.0) {
-        const noiseBoost = Math.min(1.0, noise * 25.0) * 0.20;
+        const noiseBoost = Math.min(1.0, noise * 25.0) * 0.10;
         shadowAlpha += noiseBoost;
     }
-    return clamp01(Math.max(0.15, Math.min(0.75, shadowAlpha)));
+    return clamp01(Math.max(0.10, Math.min(0.80, shadowAlpha)));
 }
 
 export function getUserLabelStyle(visualStateOrLightness) {
@@ -473,7 +474,7 @@ export function getUserLabelStyle(visualStateOrLightness) {
 
 /**
  * Computes dynamic shadow alpha for hint text based on backdrop lightness and texture noisiness.
- * Range: 0.10 (dark smooth wallpapers) to 0.60 (bright/noisy wallpapers).
+ * Range: 0.10 (dark smooth wallpapers) to 0.50 (bright/noisy wallpapers).
  *
  * @param {number|object} visualStateOrLightness
  * @returns {number}
@@ -494,12 +495,12 @@ export function getHintTextShadowAlpha(visualStateOrLightness) {
             0.0;
     }
     const clampedL = clamp01(pL);
-    let shadowAlpha = 0.10 + 0.40 * clampedL;
+    let shadowAlpha = 0.10 + 0.275 * clampedL;
     if (noise > 0.0) {
-        const noiseBoost = Math.min(1.0, noise * 25.0) * 0.20;
+        const noiseBoost = Math.min(1.0, noise * 25.0) * 0.15;
         shadowAlpha += noiseBoost;
     }
-    return clamp01(Math.max(0.10, Math.min(0.60, shadowAlpha)));
+    return clamp01(Math.max(0.10, Math.min(0.375, shadowAlpha)));
 }
 
 /**
@@ -548,12 +549,11 @@ export function getHintTextColorAlpha(visualStateOrLightness, wallpaperAlpha = n
 export function getHintTextStyle(visualStateOrLightness, wallpaperAlpha = null) {
     const colorAlpha = getHintTextColorAlpha(visualStateOrLightness, wallpaperAlpha);
     const shadowAlpha = getHintTextShadowAlpha(visualStateOrLightness);
-    return `color: rgba(255, 255, 255, ${colorAlpha.toFixed(3)}) !important; text-shadow: 0 1px 10px rgba(0, 0, 0, ${shadowAlpha.toFixed(3)}) !important;`;
+    return `color: rgba(255, 255, 255, ${colorAlpha.toFixed(3)}) !important; text-shadow: 0 1px 7px rgba(0, 0, 0, ${shadowAlpha.toFixed(3)}) !important;`;
 }
 
-export function getPromptMessageStyle(visualStateOrLightness) {
-    const shadowAlpha = getHintTextShadowAlpha(visualStateOrLightness);
-    return `text-shadow: 0 1px 10px rgba(0, 0, 0, ${shadowAlpha.toFixed(3)}) !important;`;
+export function getPromptMessageStyle(visualStateOrLightness, wallpaperAlpha = null) {
+    return getHintTextStyle(visualStateOrLightness, wallpaperAlpha);
 }
 
 

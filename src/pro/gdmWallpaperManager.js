@@ -553,9 +553,11 @@ export class GdmWallpaperManager {
             }
 
             alphaPromise.then(alpha => {
+                this._gdm._lastClockAlpha = alpha;
                 const activeClock = this._gdm._clockManager?.clock ?? this._gdm._gdmClock;
                 if (activeClock)
                     activeClock.setWallpaperAlpha(alpha);
+                this._gdm._promptStyling?.updatePromptMessageStyle(null, alpha);
             }).catch(e => {
                 _log('[WACK/GdmManager] Failed to compute dynamic alpha: ' + e);
             });

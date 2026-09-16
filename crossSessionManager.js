@@ -355,7 +355,7 @@ export class CrossSessionManager {
                 is_color: isColor,
                 clockFormat: this._interfaceSettings.get_string('clock-format'),
                 dateStyle: this._settings ? (this._settings.get_string('date-style') || 'full') : 'full',
-                userLocale: Intl.DateTimeFormat().resolvedOptions().locale || GLib.getenv('LC_TIME') || GLib.getenv('LANG') || null,
+                userLocale: GLib.getenv('LC_TIME') || GLib.getenv('LANG') || Intl.DateTimeFormat().resolvedOptions().locale || null,
                 clockAlpha: this._clockAlpha ?? 0.6,
                 promptColor: this._promptColor,
                 promptVibrancy: true,

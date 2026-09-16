@@ -596,6 +596,14 @@ export class GdmManager {
             dialog._authPrompt.verificationStatus = 4; // VERIFICATION_CANCELLED
             this._origAuthPromptCancel();
         };
+
+        if (dialog._authPrompt.setMessage) {
+            this._origAuthPromptSetMessage = dialog._authPrompt.setMessage.bind(dialog._authPrompt);
+            dialog._authPrompt.setMessage = (message, type) => {
+                this._origAuthPromptSetMessage(message, type);
+                this._promptStyling?.updatePromptMessageStyle();
+            };
+        }
     }
 
     _restartDialogFadeIn() {
@@ -645,6 +653,10 @@ export class GdmManager {
         if (this._origAuthPromptCancel && dialog?._authPrompt) {
             dialog._authPrompt.cancel = this._origAuthPromptCancel;
             this._origAuthPromptCancel = null;
+        }
+        if (this._origAuthPromptSetMessage && dialog?._authPrompt) {
+            dialog._authPrompt.setMessage = this._origAuthPromptSetMessage;
+            this._origAuthPromptSetMessage = null;
         }
 
         for (const { actor, id } of this._allocationHandlers)
