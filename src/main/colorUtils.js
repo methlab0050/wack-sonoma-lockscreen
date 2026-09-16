@@ -551,6 +551,12 @@ export function getHintTextStyle(visualStateOrLightness, wallpaperAlpha = null) 
     return `color: rgba(255, 255, 255, ${colorAlpha.toFixed(3)}) !important; text-shadow: 0 1px 10px rgba(0, 0, 0, ${shadowAlpha.toFixed(3)}) !important;`;
 }
 
+export function getPromptMessageStyle(visualStateOrLightness) {
+    const shadowAlpha = getHintTextShadowAlpha(visualStateOrLightness);
+    return `text-shadow: 0 1px 10px rgba(0, 0, 0, ${shadowAlpha.toFixed(3)}) !important;`;
+}
+
+
 /**
  * Calculates adaptive white chrome alpha for Lockscreen interactive controls
  * (Cancel, Accessibility, Session selector) based on the resolved visual state.

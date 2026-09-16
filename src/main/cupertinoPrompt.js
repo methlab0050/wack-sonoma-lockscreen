@@ -240,8 +240,17 @@ export const WackCupertinoRestPrompt = GObject.registerClass(
             this._updateHintLabel();
         }
 
+        setHint(text, count = 0) {
+            this._currentText = text ?? '';
+            this._currentCount = count ?? 0;
+            this._updateHintLabel();
+        }
+
         _updateHintLabel() {
             if (!this._hintLabel) return;
+
+            // Invalidate StLabel's cached shadow pipeline (st_label_set_text clears text_shadow_pipeline)
+            this._hintLabel.text = '';
 
             // Escape the text to prevent markup injection errors
             const safeText = GLib.markup_escape_text(this._currentText, -1);
@@ -256,8 +265,9 @@ export const WackCupertinoRestPrompt = GObject.registerClass(
                     `${this._currentCount} <span size="8625">🔔\uFE0E</span>  ·  ${safeText}`
                 );
             } else {
-                this._hintLabel.clutter_text.use_markup = true;
-                this._hintLabel.clutter_text.set_markup(this._currentText);
+                this._hintLabel.clutter_text.use_markup = false;
+                this._hintLabel.text = this._currentText;
             }
         }
     });
+

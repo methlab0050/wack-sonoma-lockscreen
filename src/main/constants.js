@@ -74,38 +74,54 @@ export const CUPERTINO_UNLOCK_FADE_DURATION = 400; // ms — duration of the act
 export const CROSSFADE_SPEED_SLOW = 400;
 export const CROSSFADE_SPEED_FAST = 300;
 
-export function getPrettyDate(style = 'full', wallClock = null) {
+export function normalizeLocaleTag(rawLocale) {
+    if (!rawLocale || typeof rawLocale !== 'string')
+        return undefined;
+
+    const trimmed = rawLocale.trim();
+    if (!trimmed || trimmed === 'C' || trimmed === 'POSIX')
+        return undefined;
+
+    const tag = trimmed.split('.')[0].replace('_', '-');
+    try {
+        const supported = Intl.DateTimeFormat.supportedLocalesOf([tag]);
+        return supported.length > 0 ? supported[0] : undefined;
+    } catch {
+        return undefined;
+    }
+}
+
+export function getPrettyDate(style = 'full', wallClock = null, explicitLocale = null) {
+    const targetLocale = normalizeLocaleTag(explicitLocale) ??
+        normalizeLocaleTag(GLib.getenv('LC_TIME')) ??
+        normalizeLocaleTag(GLib.getenv('LANG')) ??
+        undefined;
+
     if (style === 'short') {
-        const wc = wallClock ?? (_cachedWallClock ??= new GnomeDesktop.WallClock());
-        try {
-            const now = GLib.DateTime.new_now_local();
-            const full = wc.string_for_datetime(now, 0, true, true, false);
-            // In GnomeDesktop.WallClock, the date part is separated from time by an en-space (\u2002)
-            const datePart = full.split('\u2002')[0]?.trim();
-            if (datePart)
-                return datePart;
-        } catch (e) {
-            // Fallback if WallClock failed
+        if (!explicitLocale && wallClock) {
+            try {
+                const now = GLib.DateTime.new_now_local();
+                const full = wallClock.string_for_datetime(now, 0, true, true, false);
+                // In GnomeDesktop.WallClock, the date part is separated from time by an en-space (\u2002)
+                const datePart = full.split('\u2002')[0]?.trim();
+                if (datePart)
+                    return datePart;
+            } catch {
+                // Fallback if WallClock failed
+            }
         }
 
-        let locale = (GLib.getenv('LC_TIME') || GLib.getenv('LANG') || '').split('.')[0].replace('_', '-');
-        if (!locale || locale === 'C' || locale === 'POSIX')
-            locale = 'en-US';
         try {
-            return new Date().toLocaleDateString(locale, { weekday: 'short', month: 'short', day: 'numeric' });
-        } catch (e) {
-            return new Date().toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' });
+            const dtf = new Intl.DateTimeFormat(targetLocale, { weekday: 'short', month: 'short', day: 'numeric' });
+            return dtf.format(new Date());
+        } catch {
+            return new Date().toLocaleDateString(targetLocale, { weekday: 'short', month: 'short', day: 'numeric' });
         }
     }
 
-    // Full style: retain/use the verbose date presentation currently used by the lockscreen.
-    // Respect LC_TIME (date/time formatting) over LANG (UI language).
-    let locale = (GLib.getenv('LC_TIME') || GLib.getenv('LANG') || '').split('.')[0].replace('_', '-');
-    if (!locale || locale === 'C' || locale === 'POSIX')
-        locale = 'en-US';
-
+    // Full style: verbose date presentation (e.g. "Wednesday, September 16" / "Mittwoch, 16. September")
     try {
-        const dtf = new Intl.DateTimeFormat(locale, { weekday: 'long', month: 'long', day: 'numeric' });
+        const dtf = new Intl.DateTimeFormat(targetLocale, { weekday: 'long', month: 'long', day: 'numeric' });
         const parts = dtf.formatToParts(new Date());
         let result = '';
         for (let i = 0; i < parts.length; i++) {
@@ -119,9 +135,9 @@ export function getPrettyDate(style = 'full', wallClock = null) {
             }
         }
         return result;
-    } catch (e) {
+    } catch {
         try {
-            return new Date().toLocaleDateString(locale, { weekday: 'long', month: 'long', day: 'numeric' });
+            return new Date().toLocaleDateString(targetLocale, { weekday: 'long', month: 'long', day: 'numeric' });
         } catch {
             return new Date().toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric' });
         }

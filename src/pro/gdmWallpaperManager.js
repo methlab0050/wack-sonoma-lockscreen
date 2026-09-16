@@ -515,6 +515,8 @@ export class GdmWallpaperManager {
             if (clock) {
                 clock.setClockFormat(metadata?.clockFormat ?? null);
                 clock.setDateStyle(metadata?.dateStyle ?? 'full');
+                const userLocale = this._gdm._dialog?._user?.get_language?.() || metadata?.userLocale || null;
+                clock.setLocale?.(userLocale);
             }
 
             let alphaPromise;

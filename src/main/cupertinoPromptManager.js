@@ -235,13 +235,9 @@ export class CupertinoPromptManager {
                             duration: CROSSFADE_TIME / 2,
                             mode: Clutter.AnimationMode.EASE_OUT_QUAD,
                             onComplete: () => {
-                                if (!this.restPrompt) return;
-                                this.restPrompt.setHintText(nextText);
-                                if (this.hintIsToggle) {
-                                    this.restPrompt.setNotifCount(0);
-                                } else {
-                                    this.restPrompt.setNotifCount(this._extension._notifManager.getNativeNotifCount());
-                                }
+                                if (!this.restPrompt || this.restPrompt._hintBox !== hintBox) return;
+                                const nextCount = this.hintIsToggle ? 0 : this._extension._notifManager.getNativeNotifCount();
+                                this.restPrompt.setHint(nextText, nextCount);
                                 hintBox.ease({ opacity: 255, duration: CROSSFADE_TIME / 2, mode: Clutter.AnimationMode.EASE_IN_QUAD });
                             }
                         });

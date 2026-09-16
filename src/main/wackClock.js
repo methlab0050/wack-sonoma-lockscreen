@@ -106,6 +106,19 @@ export const WackClock = GObject.registerClass(
             this._updateDate();
         }
 
+        /**
+         * Set the locale override for date formatting.
+         * Pass null or undefined to follow the system/environment default.
+         * @param {string|null} locale
+         */
+        setLocale(locale) {
+            if (this._locale === locale)
+                return;
+            this._locale = locale ?? null;
+            this._updateDate();
+            this._updateHint();
+        }
+
         _updateTime() {
             const clockFormat = this._clockFormatOverride
                 ?? this._interfaceSettings.get_string('clock-format');
@@ -121,7 +134,7 @@ export const WackClock = GObject.registerClass(
         }
 
         _updateDate() {
-            this._dateOutput.text = getPrettyDate(this._dateStyle, this._wallClock);
+            this._dateOutput.text = getPrettyDate(this._dateStyle, this._wallClock, this._locale);
         }
 
         /**

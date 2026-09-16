@@ -23,8 +23,11 @@ export class GdmClockManager {
 
     setup(dialog, dialogParent) {
         this.clock = new WackClock();
-        const dateStyle = this._gdm._currentWallpaperMetadata?.dateStyle ?? 'full';
+        const metadata = this._gdm._currentWallpaperMetadata;
+        const dateStyle = metadata?.dateStyle ?? 'full';
+        const userLocale = dialog?._user?.get_language?.() || metadata?.userLocale || null;
         this.clock.setDateStyle(dateStyle);
+        this.clock.setLocale(userLocale);
         const dateLabel = this.clock._dateOutput;
         const timeLabel = this.clock._time;
         this.timeLabel = timeLabel;
@@ -352,4 +355,11 @@ export class GdmClockManager {
 
         dateMenu.menu.toggle();
     }
+
+    setUserLocale(locale) {
+        if (this.clock) {
+            this.clock.setLocale(locale);
+        }
+    }
 }
+

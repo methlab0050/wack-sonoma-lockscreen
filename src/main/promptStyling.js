@@ -2,7 +2,7 @@ import GLib from 'gi://GLib';
 import Clutter from 'gi://Clutter';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import { _log, _logError } from './mainUtils.js';
-import { getChromeAlpha } from './colorUtils.js';
+import { getChromeAlpha, getPromptMessageStyle } from './colorUtils.js';
 
 export class PromptStyling {
     constructor(extension) {
@@ -124,6 +124,16 @@ export class PromptStyling {
         }
 
         entry.set_style(`${entry._wackOriginalStyle}${bgStyle}${shadowStyle}`);
+
+        const dialog = this._extension._dialog;
+        const authPrompt = dialog?._authPrompt ?? dialog?._promptBox?._authPrompt;
+        if (authPrompt) {
+            const msgStyle = getPromptMessageStyle(color);
+            if (authPrompt._message)
+                authPrompt._message.set_style(msgStyle);
+            if (authPrompt._capsLockWarningLabel)
+                authPrompt._capsLockWarningLabel.set_style(msgStyle);
+        }
     }
 
     _setupChromeButton(button, color, buttonType = 'generic') {
@@ -277,6 +287,11 @@ export class PromptStyling {
         const cancelButton = authPrompt?.cancelButton;
         if (cancelButton)
             this.applyCancelButtonBackground(cancelButton, null);
+
+        if (authPrompt?._message)
+            authPrompt._message.set_style(null);
+        if (authPrompt?._capsLockWarningLabel)
+            authPrompt._capsLockWarningLabel.set_style(null);
     }
 
     clearBottomButtonsBackground() {
