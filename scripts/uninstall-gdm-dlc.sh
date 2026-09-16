@@ -72,6 +72,9 @@ for file in "extension.js" "prefs.js"; do
         python3 -c "import re; c=open('$USER_DIR/$file').read(); c=re.sub(r'//\s*<GDM_EXCLUDE>.*?//\s*</GDM_EXCLUDE>', '', c, flags=re.DOTALL); open('$USER_DIR/$file','w').write(c)"
     fi
 done
+if [ -f "$USER_DIR/stylesheet.css" ]; then
+    python3 -c "import re; c=open('$USER_DIR/stylesheet.css').read(); c=re.sub(r'/\*\s*<GDM_EXCLUDE>\s*\*/.*?/\*\s*</GDM_EXCLUDE>\s*\*/', '', c, flags=re.DOTALL); open('$USER_DIR/stylesheet.css','w').write(c)"
+fi
 
 # Remove 'gdm' and 'PRO' version tag from user-level metadata.json
 if [ -f "$USER_DIR/metadata.json" ]; then

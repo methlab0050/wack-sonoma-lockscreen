@@ -11,7 +11,6 @@
     letter-spacing: 0px;
     /* for Inter, it's better to use -1px. safe to use -2px for SF Pro Text */
     text-shadow: 0 1px 8px rgba(0, 0, 0, 0.035);
-
 }
 
 .wack-time {
@@ -31,7 +30,7 @@
     text-shadow: 0 0px 12px 2px rgba(0, 0, 0, 0.15);
 }
 
-/* Notification and media message styling*/
+/* Notification and media message styling */
 
 .unlock-dialog-notification-source,
 .media-message {
@@ -42,7 +41,6 @@
     font-size: 16px;
     margin-bottom: 4px;
     text-shadow: 0 0px 12px 2px rgba(0, 0, 0, 0.08);
-    /* box-shadow: 0 2px 6px 2px rgba(0, 0, 0, 0.08); */
 }
 
 .media-message:hover {
@@ -58,8 +56,6 @@
     background-color: rgba(0, 0, 0, 0.175) !important;
 }
 
-
-
 .unlock-dialog-notification-icon {
     box-shadow: 0 0 12px 2px rgba(0, 0, 0, 0.04);
     icon-size: 24px;
@@ -71,12 +67,9 @@
     text-shadow: 0 0px 12px 2px rgba(0, 0, 0, 0.08);
 }
 
-
 /* ── Password Prompts ────────────────────────────────────────────────────
    macOS-inspired password prompt styles, adjust to taste    */
 
-
-.login-dialog .login-dialog-prompt-entry,
 .unlock-dialog .login-dialog-prompt-entry {
     border-radius: 999px !important;
     background-color: rgba(236, 236, 236, 0.12);
@@ -85,115 +78,33 @@
     box-shadow: 0 2px 24px rgba(0, 0, 0, 0.05) !important;
 }
 
-.login-dialog .login-dialog-prompt-entry:hover,
 .unlock-dialog .login-dialog-prompt-entry:hover {
     background-color: rgba(236, 236, 236, 0.18);
     color: #ffffff;
     border: none !important;
 }
 
-.login-dialog .login-dialog-prompt-entry:focus,
 .unlock-dialog .login-dialog-prompt-entry:focus {
     background-color: rgba(236, 236, 236, 0.18);
     color: #ffffff;
     border: none !important;
 }
 
-.login-dialog .login-dialog-prompt-entry:insensitive,
 .unlock-dialog .login-dialog-prompt-entry:insensitive {
     background-color: rgba(236, 236, 236, 0.12);
     color: rgba(255, 255, 255, 0.5);
     border: none !important;
 }
 
-.login-dialog .login-dialog-prompt-entry StLabel.hint-text,
 .unlock-dialog .login-dialog-prompt-entry StLabel.hint-text {
     color: rgba(255, 255, 255, 0.55);
     font-weight: bold;
 }
 
-
 .unlock-dialog .user-widget.vertical .user-widget-label {
     font-weight: 600;
     text-shadow: 0 1px 10px rgba(0, 0, 0, 0.275);
 }
-
-.login-dialog .user-widget .user-widget-label {
-    font-weight: 600;
-    font-size: 16px;
-    color: rgba(255, 255, 255, 0.8);
-    text-shadow: 0 1px 10px rgba(0, 0, 0, 0.275);
-}
-
-/* Legacy GDM keeps the Cupertino picker, but its selected-account prompt uses
- * GNOME's native avatar/name presentation rather than the compact WACK label. */
-.login-dialog .wack-gdm-legacy-prompt .user-widget-label {
-    font-size: 20pt !important;
-    /* font-weight: 400 !important; */
-    margin-bottom: 0.75em !important;
-}
-
-.login-dialog-not-listed-button {
-    border: none !important;
-    background-color: transparent !important;
-    box-shadow: none !important;
-}
-
-.login-dialog-not-listed-button .login-dialog-not-listed-label {
-    font-size: 14px !important;
-    font-weight: 600 !important;
-    text-shadow: 0 1px 10px rgba(0, 0, 0, 0.275);
-    color: rgba(255, 255, 255, 0.75) !important;
-    transition-duration: 150ms;
-}
-
-.login-dialog-not-listed-button:hover,
-.login-dialog-not-listed-button:focus,
-.login-dialog-not-listed-button:active {
-    background-color: transparent !important;
-    box-shadow: none !important;
-}
-
-.login-dialog-not-listed-button:hover .login-dialog-not-listed-label,
-.login-dialog-not-listed-button:focus .login-dialog-not-listed-label,
-.login-dialog-not-listed-button:active .login-dialog-not-listed-label {
-    color: rgba(255, 255, 255, 1.0) !important;
-}
-
-.login-dialog-not-listed-button:focus {
-    background-color: none !important;
-}
-
-.login-dialog-not-listed-button .login-dialog-not-listed-label:focus {
-    background-color: none !important;
-    color: rgba(255, 255, 255, 0.95) !important;
-}
-
-.login-dialog-user-list {
-    spacing: 0 !important;
-}
-
-.login-dialog-user-list-view {
-    width: auto !important;
-}
-
-.login-dialog-user-list-item {
-    height: 56px;
-    padding: 6px;
-}
-
-.login-dialog-user-list-item .user-widget {
-    spacing: 8px;
-    /* Spacing between the avatar and the text label */
-}
-
-.login-dialog-user-list-item .user-icon {
-    icon-size: 58px !important;
-    width: 58px !important;
-    height: 58px !important;
-}
-
-
 
 .wack-avatar-well {
     transition-duration: 150ms;
@@ -219,7 +130,6 @@
     box-shadow: inset 0 0 0px 99px rgba(255, 255, 255, 0.175);
 }
 
-
 /* ── Cupertino mode ─────────────────────────────────────────────────────────
    Two states on the same _promptActor:
    .wack-cupertino-rest  — avatar + label visible, entry hidden via JS opacity
@@ -238,17 +148,15 @@
     opacity: 0 !important;
 }
 
-.login-dialog .wack-cupertino-prompt .user-widget.vertical .user-icon {
-    icon-size: 58px !important;
-    opacity: 1 !important;
-}
-
 .wack-cupertino-rest .wack-avatar-well .user-icon StIcon,
-.wack-cupertino-prompt .wack-avatar-well .user-icon StIcon {
+.wack-cupertino-prompt .wack-avatar-well .user-icon StIcon,
+.user-widget .user-icon StIcon,
+.wack-avatar-well .user-icon StIcon,
+.user-icon StIcon {
     padding: 10px;
+    background-color: transparent !important;
+    border-radius: 999px !important;
 }
-
-
 
 .wack-cupertino-rest .user-widget.vertical {
     spacing: 15px !important;
@@ -287,59 +195,15 @@
     opacity: 255 !important;
 }
 
-.wack-cupertino-prompt .login-dialog-prompt-entry,
-.login-dialog .wack-cupertino-prompt .login-dialog-prompt-entry {
+.wack-cupertino-prompt .login-dialog-prompt-entry {
     font-size: 14px !important;
     padding: 0px 9px !important;
     border-radius: 9999px !important;
     border: none !important;
 }
 
-/* Sync GDM Cupertino cancel button styling with the prompt entry */
-.login-dialog .wack-cupertino-prompt .login-dialog-button.cancel-button {
-    opacity: 1 !important;
-    background-color: rgba(236, 236, 236, 0.175);
-    color: rgba(255, 255, 255, 0.85) !important;
-    padding: 0.5px !important;
-    height: 34px !important;
-    width: 34px !important;
-    border-radius: 9999px !important;
-    border: 1px solid transparent !important;
-}
+/* ── Action Buttons (A11y, Session, Auth) ─────────────────────────────────── */
 
-.login-dialog .wack-cupertino-prompt .login-dialog-button.cancel-button:hover {
-    box-shadow: inset 0 0 8px rgba(255, 255, 255, 0.26) !important;
-    color: #ffffff !important;
-}
-
-.login-dialog .wack-cupertino-prompt .login-dialog-button.cancel-button:focus {
-    box-shadow: none !important;
-    color: #ffffff !important;
-    border: 1px solid rgba(255, 255, 255, 0.4) !important;
-    outline: none !important;
-}
-
-.login-dialog .wack-cupertino-prompt .login-dialog-button.cancel-button:active {
-    box-shadow: inset 0 0 8px rgba(255, 255, 255, 0.22) !important;
-}
-
-/* GDM's accessibility, desktop-session selector, and cancel actions share the
- * same compact translucent control treatment in both prompt presentations. */
-.login-dialog .login-dialog-button.cancel-button {
-    opacity: 1 !important;
-    background-color: rgba(236, 236, 236, 0.175);
-    color: rgba(255, 255, 255, 0.85) !important;
-    padding: 0.5px !important;
-    width: 34px !important;
-    height: 34px !important;
-    border-radius: 9999px !important;
-    border: 1px solid transparent !important;
-    box-shadow: none;
-}
-
-.login-dialog .login-dialog-button.a11y-button,
-.login-dialog .login-dialog-button.login-dialog-session-list-button,
-.login-dialog .login-dialog-button.login-dialog-auth-menu-button,
 .unlock-dialog .login-dialog-button.a11y-button,
 .unlock-dialog .login-dialog-button.login-dialog-session-list-button,
 .unlock-dialog .login-dialog-button.login-dialog-auth-menu-button {
@@ -351,37 +215,25 @@
     box-shadow: none;
 }
 
-.login-dialog .login-dialog-button.a11y-button:hover,
-.login-dialog .login-dialog-button.login-dialog-session-list-button:hover,
-.login-dialog .login-dialog-button.login-dialog-auth-menu-button:hover,
 .unlock-dialog .login-dialog-button.a11y-button:hover,
 .unlock-dialog .login-dialog-button.login-dialog-session-list-button:hover,
-.unlock-dialog .login-dialog-button.login-dialog-auth-menu-button:hover,
-.login-dialog .login-dialog-button.cancel-button:hover {
+.unlock-dialog .login-dialog-button.login-dialog-auth-menu-button:hover {
     box-shadow: inset 0 0 8px rgba(255, 255, 255, 0.188) !important;
     color: #ffffff !important;
 }
 
-.login-dialog .login-dialog-button.a11y-button:focus,
-.login-dialog .login-dialog-button.login-dialog-session-list-button:focus,
-.login-dialog .login-dialog-button.login-dialog-auth-menu-button:focus,
 .unlock-dialog .login-dialog-button.a11y-button:focus,
 .unlock-dialog .login-dialog-button.login-dialog-session-list-button:focus,
-.unlock-dialog .login-dialog-button.login-dialog-auth-menu-button:focus,
-.login-dialog .login-dialog-button.cancel-button:focus {
+.unlock-dialog .login-dialog-button.login-dialog-auth-menu-button:focus {
     box-shadow: none !important;
     color: #ffffff !important;
     border: 1px solid rgba(255, 255, 255, 0.4) !important;
     outline: none !important;
 }
 
-.login-dialog .login-dialog-button.a11y-button:active,
-.login-dialog .login-dialog-button.login-dialog-session-list-button:active,
-.login-dialog .login-dialog-button.login-dialog-auth-menu-button:active,
 .unlock-dialog .login-dialog-button.a11y-button:active,
 .unlock-dialog .login-dialog-button.login-dialog-session-list-button:active,
-.unlock-dialog .login-dialog-button.login-dialog-auth-menu-button:active,
-.login-dialog .login-dialog-button.cancel-button:active {
+.unlock-dialog .login-dialog-button.login-dialog-auth-menu-button:active {
     box-shadow: inset 0 0 8px rgba(255, 255, 255, 0.088) !important;
 }
 
@@ -448,132 +300,19 @@
 .unlock-dialog .login-dialog-message,
 .unlock-dialog .login-dialog-message-hint,
 .unlock-dialog .login-dialog-message-warning,
-.login-dialog .login-dialog-message,
-.login-dialog .login-dialog-message-hint,
-.login-dialog .login-dialog-message-warning,
 .wack-cupertino-message {
     color: rgba(255, 255, 255, 0.625) !important;
     font-size: 14px !important;
     font-weight: 600 !important;
     padding-top: 0 !important;
-    /* min-height: 0 !important; */
     margin-bottom: -1px !important;
     spacing: 0 !important;
     text-align: center !important;
     text-wrap: wrap !important;
 }
 
-/* GDM transparent user selection list and layout */
-.login-dialog-user-selection-box,
-.login-dialog-user-list-box,
-.login-dialog-user-list {
-    background-color: transparent !important;
-    border: none !important;
-    box-shadow: none !important;
-}
-
-.login-dialog-user-list-item {
-    background-color: transparent !important;
-    border: none !important;
-    box-shadow: none !important;
-}
-
-.login-dialog-user-list-item:hover,
-.login-dialog-user-list-item:selected,
-.login-dialog-user-list-item:focus {
-    background-color: transparent !important;
-    box-shadow: none !important;
-}
-
-.login-dialog-user-list-item .user-widget-label {
-    color: rgba(255, 255, 255, 0.85) !important;
-    transition-duration: 150ms;
-}
-
-.login-dialog-user-list-item:hover .user-widget-label,
-.login-dialog-user-list-item:selected .user-widget-label,
-.login-dialog-user-list-item:focus .user-widget-label {
-    color: rgba(255, 255, 255, 1.0) !important;
-}
-
-.login-dialog-user-list-item .user-icon {
-    transition-duration: 150ms;
-    border-radius: 999px !important;
-    box-shadow: inset 0 0 0 0px rgba(255, 255, 255, 0) !important;
-}
-
-.login-dialog-user-list-view .login-dialog-user-list .login-dialog-user-list-item:logged-in .user-icon StIcon,
-.login-dialog-user-list-view .login-dialog-user-list .login-dialog-user-list-item .user-icon StIcon,
-.login-dialog-user-list-item:logged-in .user-icon StIcon,
-.login-dialog-user-list-item .user-icon StIcon,
-.user-widget .user-icon StIcon,
-.wack-avatar-well .user-icon StIcon,
-.user-icon StIcon {
-    background-color: transparent !important;
-    border-radius: 999px !important;
-}
-
-.login-dialog-user-list-item:hover .user-icon,
-.login-dialog-user-list-item:selected .user-icon,
-.login-dialog-user-list-item:focus .user-icon {
-    opacity: 0.85 !important;
-    box-shadow: inset 0 0 15px 3px rgba(255, 255, 255, 0.275) !important;
-}
-
-.login-dialog-user-list-item:active .user-icon {
-    opacity: 0.7 !important;
-    box-shadow: inset 0 0 0px 99px rgba(255, 255, 255, 0.175) !important;
-}
-
 /* Base transparent border to match box models between prompt and list */
-.login-dialog-user-list-item .user-icon,
-.wack-cupertino-rest .user-widget.vertical .user-icon,
-.login-dialog .wack-cupertino-prompt .user-widget.vertical .user-icon {
+.wack-cupertino-rest .user-widget.vertical .user-icon {
     border: 2px solid transparent !important;
     box-sizing: border-box !important;
-}
-
-/* Highlight logged-in users with the system accent color */
-.login-dialog-user-list-item:logged-in .user-icon {
-    border-color: -st-accent-color !important;
-}
-
-.login-dialog-user-list-item {
-    height: 56px;
-    padding: 6px;
-    padding-right: 0 !important;
-}
-
-.login-dialog-user-list-item .user-widget {
-    spacing: 8px;
-}
-
-.login-dialog-user-list-item .user-icon {
-    margin-left: 0 !important;
-    min-width: 58px !important;
-    max-width: 58px !important;
-}
-
-.login-dialog-user-list-item .user-widget-label {
-    x-align: left;
-}
-
-/* Big clock DateMenu trigger: no hover states */
-.wack-gdm-clock-wrapper {
-    background-color: transparent !important;
-    border: none !important;
-    box-shadow: none !important;
-}
-
-.wack-gdm-clock-wrapper:hover {
-    background-color: transparent !important;
-    border: none !important;
-    box-shadow: none !important;
-}
-
-/* Glow overlay layer for buttery-smooth state transitions */
-.wack-clock-glow-date,
-.wack-clock-glow-time {
-    color: rgba(255, 255, 255, 0.95) !important;
-    text-shadow: 0 0 16px rgba(255, 255, 255, 0.95), 0 0 32px rgba(255, 255, 255, 0.8), 0 0 48px rgba(255, 255, 255, 0.5) !important;
 }

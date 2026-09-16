@@ -150,13 +150,22 @@ export class GdmManager {
         try {
             const themeContext = St.ThemeContext.get_for_stage(global.stage);
             const theme = themeContext.get_theme();
-            const stylesheetFile = this._extension.dir.get_child('stylesheet.css');
-            if (stylesheetFile.query_exists(null) && theme) {
-                theme.load_stylesheet(stylesheetFile);
-                _log('[WACK/GdmManager] Stylesheet loaded successfully');
+            if (!theme)
+                return;
+
+            const baseStylesheet = this._extension.dir.get_child('stylesheet.css');
+            if (baseStylesheet.query_exists(null)) {
+                theme.load_stylesheet(baseStylesheet);
             }
+
+            const gdmStylesheet = this._extension.dir.get_child('src').get_child('pro').get_child('gdm.css');
+            if (gdmStylesheet.query_exists(null)) {
+                theme.load_stylesheet(gdmStylesheet);
+            }
+
+            _log('[WACK/GdmManager] Stylesheets loaded successfully');
         } catch (e) {
-            _logError('[WACK/GdmManager] Failed to load stylesheet: ' + e);
+            _logError('[WACK/GdmManager] Failed to load stylesheets: ' + e);
         }
     }
 
@@ -164,13 +173,22 @@ export class GdmManager {
         try {
             const themeContext = St.ThemeContext.get_for_stage(global.stage);
             const theme = themeContext.get_theme();
-            const stylesheetFile = this._extension.dir.get_child('stylesheet.css');
-            if (stylesheetFile.query_exists(null) && theme) {
-                theme.unload_stylesheet(stylesheetFile);
-                _log('[WACK/GdmManager] Stylesheet unloaded');
+            if (!theme)
+                return;
+
+            const gdmStylesheet = this._extension.dir.get_child('src').get_child('pro').get_child('gdm.css');
+            if (gdmStylesheet.query_exists(null)) {
+                theme.unload_stylesheet(gdmStylesheet);
             }
+
+            const baseStylesheet = this._extension.dir.get_child('stylesheet.css');
+            if (baseStylesheet.query_exists(null)) {
+                theme.unload_stylesheet(baseStylesheet);
+            }
+
+            _log('[WACK/GdmManager] Stylesheets unloaded');
         } catch (e) {
-            _logError('[WACK/GdmManager] Failed to unload stylesheet: ' + e);
+            _logError('[WACK/GdmManager] Failed to unload stylesheets: ' + e);
         }
     }
 
