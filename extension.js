@@ -292,8 +292,8 @@ export default class WackLockscreenClockExtension extends Extension {
         };
         const syncLockscreenMode = () => {
             this._lockscreenMode = this._settings.get_string('lockscreen-mode') ?? 'wack';
-            this._applyPromptModeLayout?.();
-            this._dialog?._updateUserSwitchVisibility?.();
+            this._applyPromptModeLayout();
+            this._dialog?._updateUserSwitchVisibility();
             this._cupertinoShowNotifsOverride = false;
 
             const progress = this._dialog?._adjustment?.value ?? 0;
@@ -324,7 +324,7 @@ export default class WackLockscreenClockExtension extends Extension {
         const syncCupertinoAlwaysShowUser = () => {
             this._cupertinoAlwaysShowUser = this._settings.get_boolean('cupertino-always-show-user');
             this._cupertinoShowNotifsOverride = false;
-            this._updateCupertinoRestState?.(true);
+            this._updateCupertinoRestState(true);
         };
         syncCupertinoAlwaysShowUser();
 
@@ -367,7 +367,7 @@ export default class WackLockscreenClockExtension extends Extension {
 
         const syncDateStyle = () => {
             this._dateStyle = this._settings.get_string('date-style') ?? 'full';
-            this._dialog?._clock?.setDateStyle?.(this._dateStyle);
+            this._dialog?._clock?.setDateStyle(this._dateStyle);
         };
         syncDateStyle();
 
@@ -506,7 +506,7 @@ export default class WackLockscreenClockExtension extends Extension {
         let a11yBounds = null;
         const a11yButton = dialog?._a11yMenuButton
             ?? dialog?._bottomButtonGroup?._a11yMenuButton
-            ?? dialog?._bottomButtonGroup?.get_children?.().find?.(c => c.has_style_class_name?.('a11y-button'));
+            ?? dialog?._bottomButtonGroup?.get_children().find(c => c.has_style_class_name('a11y-button'));
         if (a11yButton && a11yButton.get_stage()) {
             const [axTrans, ayTrans] = a11yButton.get_transformed_position();
             const awTrans = a11yButton.get_width() || A11Y_BUTTON_WIDTH;
@@ -531,12 +531,12 @@ export default class WackLockscreenClockExtension extends Extension {
         let sessionBounds = null;
         const sessionButton = dialog?._authMenuButton
             ?? dialog?._sessionMenuButton?._button
-            ?? dialog?._sessionMenuButton?.get_child?.()
+            ?? dialog?._sessionMenuButton?.get_child()
             ?? dialog?._sessionMenuButton
             ?? dialog?._bottomButtonGroup?._authMenuButton
             ?? dialog?._bottomButtonGroup?._sessionMenuButton?._button
             ?? dialog?._bottomButtonGroup?._sessionMenuButton
-            ?? dialog?._bottomButtonGroup?.get_children?.().find?.(c => c.has_style_class_name?.('login-dialog-auth-menu-button') || c.has_style_class_name?.('login-dialog-session-list-button'));
+            ?? dialog?._bottomButtonGroup?.get_children().find(c => c.has_style_class_name('login-dialog-auth-menu-button') || c.has_style_class_name('login-dialog-session-list-button'));
         if (sessionButton && sessionButton.get_stage()) {
             const [sxTrans, syTrans] = sessionButton.get_transformed_position();
             const swTrans = sessionButton.get_width() || SESSION_BUTTON_WIDTH;
@@ -573,7 +573,7 @@ export default class WackLockscreenClockExtension extends Extension {
             sessionBounds,
             vibrancyMode: this._settings?.get_string('prompt-vibrancy') ?? 'tonal',
         };
-        const textLuminance = dialog?._clock?.getTextLuminance?.() ?? 1.0;
+        const textLuminance = dialog?._clock?.getTextLuminance() ?? 1.0;
 
         try {
             const [alpha, promptColor] = await Promise.all([
@@ -927,12 +927,13 @@ export default class WackLockscreenClockExtension extends Extension {
             this._dialog._stack.add_child(this._originalClock);
         }
 
+        if (this._messageManager) {
+            this._messageManager.teardown(this._mainBox);
+            this._messageManager = null;
+        }
+
         if (this._mainBox && this._origLayout) {
             const oldLayout = this._mainBox.layout_manager;
-            if (this._messageManager) {
-                this._messageManager.teardown(this._mainBox);
-                this._messageManager = null;
-            }
             this._mainBox.layout_manager = this._origLayout;
             if (oldLayout && oldLayout !== this._origLayout) oldLayout._extension = null;
             this._mainBox.opacity = 255;

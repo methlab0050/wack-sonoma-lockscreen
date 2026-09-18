@@ -173,11 +173,9 @@ export const WackCupertinoRestPrompt = GObject.registerClass(
         _hasImageAvatar(avatar) {
             if (!avatar || !avatar._user) return false;
             const user = avatar._user;
-            if (typeof user.get_icon_file === 'function') {
-                const iconFile = user.get_icon_file();
-                if (iconFile && typeof iconFile === 'string' && iconFile !== '' && Gio.File.new_for_path(iconFile).query_exists(null))
-                    return true;
-            }
+            const iconFile = user.get_icon_file();
+            if (iconFile && typeof iconFile === 'string' && iconFile !== '' && Gio.File.new_for_path(iconFile).query_exists(null))
+                return true;
             return false;
         }
 
@@ -216,10 +214,10 @@ export const WackCupertinoRestPrompt = GObject.registerClass(
                         avatar.clip_to_allocation = true;
                     if (this._avatarButton)
                         this._avatarButton.clip_to_allocation = true;
-                    const child = avatar?.get_child?.();
+                    const child = avatar?.get_child();
                     if (child) {
                         const iconStyle = 'background-color: transparent !important; border-radius: 999px !important;';
-                        if (child.get_style?.() !== iconStyle)
+                        if (child.get_style() !== iconStyle)
                             child.set_style(iconStyle);
                     }
                 }

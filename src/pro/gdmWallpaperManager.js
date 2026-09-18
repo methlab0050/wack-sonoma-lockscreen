@@ -178,8 +178,8 @@ export class GdmWallpaperManager {
             );
 
             this.sharedWallpaperMonitor.connectObject('changed', (_monitor, file, _otherFile, eventType) => {
-                const path = file?.get_path?.() ?? '';
-                const name = file?.get_basename?.() ?? '';
+                const path = file?.get_path() ?? '';
+                const name = file?.get_basename() ?? '';
                 const isRelevant = name.startsWith('wack-shared-wallpaper-') && name.endsWith('.json');
                 if (!isRelevant)
                     return;
@@ -206,7 +206,7 @@ export class GdmWallpaperManager {
         this.sharedWallpaperRefreshId = GLib.timeout_add(GLib.PRIORITY_DEFAULT, 150, () => {
             this.sharedWallpaperRefreshId = null;
 
-            const activeUserName = this._gdm._dialog?._user?.get_user_name?.() ?? null;
+            const activeUserName = this._gdm._dialog?._user?.get_user_name() ?? null;
             this.applyWallpaper(activeUserName);
             return GLib.SOURCE_REMOVE;
         });
@@ -515,8 +515,9 @@ export class GdmWallpaperManager {
             if (clock) {
                 clock.setClockFormat(metadata?.clockFormat ?? null);
                 clock.setDateStyle(metadata?.dateStyle ?? 'full');
-                const userLocale = this._gdm._dialog?._user?.get_language?.() || metadata?.userLocale || null;
-                clock.setLocale?.(userLocale);
+                const userLocale = this._gdm._dialog?._user?.get_language() || metadata?.userLocale || null;
+                if (clock.setLocale)
+                    clock.setLocale(userLocale);
             }
 
             let alphaPromise;

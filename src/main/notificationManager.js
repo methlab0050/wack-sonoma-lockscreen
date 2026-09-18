@@ -481,15 +481,28 @@ export class NotificationManager {
 
     teardownNotifBlur() {
         const nb = this._notifBox;
-        if (!nb) return;
+        if (nb) {
+            nb.opacity = 255;
 
-        nb.opacity = 255;
+            if (nb._notificationBox) {
+                nb._notificationBox.disconnectObject(this._extension);
+                for (const child of nb._notificationBox.get_children()) {
+                    child.visible = true;
+                    this._removeCardBlur(child);
+                }
+            }
 
-        nb._notificationBox.disconnectObject(this._extension);
+            if (this._origUpdateVisibility) {
+                nb._updateVisibility = this._origUpdateVisibility;
+                this._origUpdateVisibility = null;
+            }
 
-        if (this._origUpdateVisibility) {
-            nb._updateVisibility = this._origUpdateVisibility;
-            this._origUpdateVisibility = null;
+            if (nb._players) {
+                for (const msg of nb._players.values()) {
+                    msg.visible = true;
+                    msg.remove_style_class_name('wack-vibrancy-inverted');
+                }
+            }
         }
 
         if (this._playerSignalIds) {
@@ -497,21 +510,13 @@ export class NotificationManager {
                 player.disconnect(id);
             this._playerSignalIds.clear();
         }
-        this._playerActorIds.clear();
+        if (this._playerActorIds)
+            this._playerActorIds.clear();
 
         if (this._cardVisSignalIds) {
             for (const [actor, id] of this._cardVisSignalIds.entries())
                 actor.disconnect(id);
             this._cardVisSignalIds.clear();
-        }
-
-        for (const child of nb._notificationBox.get_children()) {
-            child.visible = true;
-            this._removeCardBlur(child);
-        }
-        for (const msg of nb._players.values()) {
-            msg.visible = true;
-            msg.remove_style_class_name('wack-vibrancy-inverted');
         }
 
         this._notifBox = null;

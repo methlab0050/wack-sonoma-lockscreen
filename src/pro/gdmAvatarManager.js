@@ -161,10 +161,10 @@ export class GdmAvatarManager {
                 avatar._wackHasVibrancy = true;
             }
             avatar.clip_to_allocation = true;
-            const child = avatar.get_child?.();
+            const child = avatar.get_child();
             if (child) {
                 const iconStyle = 'background-color: transparent !important; border-radius: 999px !important;';
-                if (child.get_style?.() !== iconStyle)
+                if (child.get_style() !== iconStyle)
                     child.set_style(iconStyle);
             }
         }
@@ -172,11 +172,11 @@ export class GdmAvatarManager {
 
     _hasImageAvatar(avatar) {
         if (!avatar) return false;
-        if (avatar.has_style_class_name?.('user-avatar')) return true;
-        const style = avatar.get_style?.() || '';
+        if (avatar.has_style_class_name('user-avatar')) return true;
+        const style = avatar.get_style() || '';
         if (style.includes('background-image')) return true;
         const user = avatar._user;
-        if (user && typeof user.get_icon_file === 'function') {
+        if (user) {
             const iconFile = user.get_icon_file();
             if (iconFile && typeof iconFile === 'string' && iconFile !== '' && Gio.File.new_for_path(iconFile).query_exists(null))
                 return true;
@@ -218,10 +218,10 @@ export class GdmAvatarManager {
                         avatar.clip_to_allocation = true;
                     if (avatarButton)
                         avatarButton.clip_to_allocation = true;
-                    const child = avatar?.get_child?.();
+                    const child = avatar?.get_child();
                     if (child) {
                         const iconStyle = 'background-color: transparent !important; border-radius: 999px !important;';
-                        if (child.get_style?.() !== iconStyle)
+                        if (child.get_style() !== iconStyle)
                             child.set_style(iconStyle);
                     }
                 }

@@ -498,8 +498,8 @@ export class GdmManager {
                 // Pre-warm the colour cache for this user immediately so the
                 // vibrancy update is already resolved when the crossfade starts.
                 const item = args[0];
-                const userName = item?.user?.get_user_name?.() ?? item?.userName ?? null;
-                const userLang = item?.user?.get_language?.() || null;
+                const userName = item?.user?.get_user_name() ?? item?.userName ?? null;
+                const userLang = item?.user?.get_language() || null;
                 if (userLang)
                     this._clockManager?.setUserLocale(userLang);
                 if (userName)

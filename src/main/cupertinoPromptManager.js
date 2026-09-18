@@ -61,7 +61,7 @@ export class CupertinoPromptManager {
         this._extension._updateLockscreenMessage();
 
         if (!this.seat) {
-            const backend = this._extension.get_context?.().get_backend() ?? Clutter.get_default_backend();
+            const backend = this._extension.get_context ? this._extension.get_context().get_backend() : Clutter.get_default_backend();
             this.seat = backend.get_default_seat();
             this.seat.connectObject('notify::touch-mode', () => this.syncCupertinoHint(), this);
         }
@@ -382,7 +382,7 @@ export class CupertinoPromptManager {
             }
         }
 
-        const messageActor = this._extension._getLockscreenMessageActor?.();
+        const messageActor = this._extension._getLockscreenMessageActor();
         const messageManager = this._extension._messageManager;
         const messageLabel = messageManager?.label ?? this._extension._lockscreenMessageLabel;
         if (messageActor && messageLabel && messageLabel.text !== '') {

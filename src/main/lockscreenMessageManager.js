@@ -54,7 +54,7 @@ export class LockscreenMessageManager {
                 : Clutter.EVENT_STOP;
         }, this);
 
-        const messageScrollbar = this.scrollView.get_vscroll_bar?.();
+        const messageScrollbar = this.scrollView.get_vscroll_bar();
         if (messageScrollbar) {
             messageScrollbar.reactive = false;
             messageScrollbar.can_focus = false;
@@ -67,7 +67,7 @@ export class LockscreenMessageManager {
 
         if (mainBox) {
             mainBox.add_child(this.scrollView);
-            mainBox.set_child_above_sibling?.(this.scrollView, null);
+            mainBox.set_child_above_sibling(this.scrollView, null);
         }
     }
 
@@ -109,9 +109,9 @@ export class LockscreenMessageManager {
 
     getLineHeight() {
         const clutterText = this.label?.clutter_text;
-        const layout = clutterText?.get_layout?.();
-        const context = layout?.get_context?.();
-        const fontDescription = layout?.get_font_description?.();
+        const layout = clutterText?.get_layout();
+        const context = layout?.get_context();
+        const fontDescription = layout?.get_font_description();
 
         if (context && fontDescription) {
             const metrics = context.get_metrics(fontDescription, Pango.Language.get_default());
@@ -125,13 +125,13 @@ export class LockscreenMessageManager {
                 return Math.ceil((ascent + descent) / Pango.SCALE);
         }
 
-        const [, naturalHeight] = this.label?.get_preferred_height?.(-1) ?? [0, 0];
+        const [, naturalHeight] = this.label?.get_preferred_height(-1) ?? [0, 0];
         return Math.max(Math.ceil(naturalHeight), 24);
     }
 
     getLineCount() {
-        const layout = this.label?.clutter_text?.get_layout?.();
-        return layout?.get_line_count?.() ?? 0;
+        const layout = this.label?.clutter_text?.get_layout();
+        return layout?.get_line_count() ?? 0;
     }
 
     syncFade() {

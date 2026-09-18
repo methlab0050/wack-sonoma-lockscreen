@@ -92,12 +92,12 @@ export class GdmAnimationController {
     animateLegacyPromptSuccessFadeOut(onComplete) {
         const authPrompt = this._gdm._dialog?._authPrompt;
         if (!authPrompt) {
-            onComplete?.();
+            if (onComplete) onComplete();
             return;
         }
 
         if (this._legacySuccessFadeRunning) {
-            onComplete?.();
+            if (onComplete) onComplete();
             return;
         }
 
@@ -112,7 +112,7 @@ export class GdmAnimationController {
             onComplete: () => {
                 this._legacySuccessFadeRunning = false;
                 authPrompt.visible = false;
-                onComplete?.();
+                if (onComplete) onComplete();
             },
         });
     }
@@ -152,7 +152,7 @@ export class GdmAnimationController {
         const btn = this._gdm._dialog?._sessionMenuButton;
         if (!btn) return;
 
-        if (!btn.visible && this._gdm._dialog._shouldShowSessionMenuButton?.())
+        if (!btn.visible && this._gdm._dialog._shouldShowSessionMenuButton())
             btn.visible = true;
         if (!btn.visible) return;
 
@@ -169,7 +169,7 @@ export class GdmAnimationController {
         const btn = this._gdm._dialog?._sessionMenuButton;
         if (!btn || !btn.visible) return;
 
-        btn.close?.();
+        if (btn.close) btn.close();
         btn.remove_all_transitions();
         btn.ease({
             opacity: 0,
@@ -193,7 +193,7 @@ export class GdmAnimationController {
         const authPrompt = this._gdm._dialog?._authPrompt;
         if (!authPrompt) {
             _log('[WACK/GdmManager] _animateLegacyPromptOut: no authPrompt, bailing');
-            onComplete?.();
+            if (onComplete) onComplete();
             return;
         }
 
@@ -213,7 +213,7 @@ export class GdmAnimationController {
                 this.yeetLegacyPromptTransform();
                 authPrompt.visible = false;
                 authPrompt.opacity = 255;
-                onComplete?.();
+                if (onComplete) onComplete();
             },
         });
     }
@@ -244,7 +244,7 @@ export class GdmAnimationController {
         _log('[WACK/GdmManager] _animateCupertinoPromptOut called');
         this.animateSessionMenuButtonOut();
         if (this._gdm._verificationSucceeded || this._gdm._legacyPromptAnimationState === 'success') {
-            onComplete?.();
+            if (onComplete) onComplete();
             return;
         }
 
@@ -264,7 +264,7 @@ export class GdmAnimationController {
         }
 
         if (!authPrompt) {
-            onComplete?.();
+            if (onComplete) onComplete();
             return;
         }
 
@@ -278,7 +278,7 @@ export class GdmAnimationController {
                 _log('[WACK/GdmManager] _animateCupertinoPromptOut: animation complete');
                 authPrompt.visible = false;
                 authPrompt.opacity = 255;
-                onComplete?.();
+                if (onComplete) onComplete();
             },
         });
     }

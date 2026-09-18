@@ -92,7 +92,7 @@ export class GdmPromptStyling {
         if (!actor)
             return null;
 
-        if (actor.has_style_class_name?.('login-dialog-prompt-entry')) {
+        if (actor.has_style_class_name('login-dialog-prompt-entry')) {
             return actor;
         }
 
@@ -348,18 +348,18 @@ export class GdmPromptStyling {
         const dialog = this._gdm._dialog;
         const a11yButton = dialog?._a11yMenuButton
             ?? dialog?._bottomButtonGroup?._a11yMenuButton
-            ?? dialog?._bottomButtonGroup?.get_children?.().find?.(c => c.has_style_class_name?.('a11y-button'));
+            ?? dialog?._bottomButtonGroup?.get_children().find(c => c.has_style_class_name('a11y-button'));
         if (a11yButton)
             this.applyA11yButtonBackground(a11yButton, null);
 
         const sessionButton = dialog?._authMenuButton
             ?? dialog?._sessionMenuButton?._button
-            ?? dialog?._sessionMenuButton?.get_child?.()
+            ?? dialog?._sessionMenuButton?.get_child()
             ?? dialog?._sessionMenuButton
             ?? dialog?._bottomButtonGroup?._authMenuButton
             ?? dialog?._bottomButtonGroup?._sessionMenuButton?._button
             ?? dialog?._bottomButtonGroup?._sessionMenuButton
-            ?? dialog?._bottomButtonGroup?.get_children?.().find?.(c => c.has_style_class_name?.('login-dialog-auth-menu-button') || c.has_style_class_name?.('login-dialog-session-list-button'));
+            ?? dialog?._bottomButtonGroup?.get_children().find(c => c.has_style_class_name('login-dialog-auth-menu-button') || c.has_style_class_name('login-dialog-session-list-button'));
         if (sessionButton)
             this.applySessionButtonBackground(sessionButton, null);
     }
@@ -456,7 +456,7 @@ export class GdmPromptStyling {
         const currentDialog = this._gdm._dialog;
         const a11yButton = currentDialog?._a11yMenuButton
             ?? currentDialog?._bottomButtonGroup?._a11yMenuButton
-            ?? currentDialog?._bottomButtonGroup?.get_children?.().find?.(c => c.has_style_class_name?.('a11y-button'));
+            ?? currentDialog?._bottomButtonGroup?.get_children().find(c => c.has_style_class_name('a11y-button'));
         if (a11yButton && a11yButton.get_stage()) {
             const [axTrans, ayTrans] = a11yButton.get_transformed_position();
             const awTrans = a11yButton.get_width() || A11Y_BUTTON_WIDTH;
@@ -481,12 +481,12 @@ export class GdmPromptStyling {
         let sessionBounds = null;
         const sessionButton = currentDialog?._authMenuButton
             ?? currentDialog?._sessionMenuButton?._button
-            ?? currentDialog?._sessionMenuButton?.get_child?.()
+            ?? currentDialog?._sessionMenuButton?.get_child()
             ?? currentDialog?._sessionMenuButton
             ?? currentDialog?._bottomButtonGroup?._authMenuButton
             ?? currentDialog?._bottomButtonGroup?._sessionMenuButton?._button
             ?? currentDialog?._bottomButtonGroup?._sessionMenuButton
-            ?? currentDialog?._bottomButtonGroup?.get_children?.().find?.(c => c.has_style_class_name?.('login-dialog-auth-menu-button') || c.has_style_class_name?.('login-dialog-session-list-button'));
+            ?? currentDialog?._bottomButtonGroup?.get_children().find(c => c.has_style_class_name('login-dialog-auth-menu-button') || c.has_style_class_name('login-dialog-session-list-button'));
         if (sessionButton && sessionButton.get_stage()) {
             const [sxTrans, syTrans] = sessionButton.get_transformed_position();
             const swTrans = sessionButton.get_width() || SESSION_BUTTON_WIDTH;
@@ -676,16 +676,16 @@ export class GdmPromptStyling {
 
         const a11yButton = currentDialog?._a11yMenuButton
             ?? currentDialog?._bottomButtonGroup?._a11yMenuButton
-            ?? currentDialog?._bottomButtonGroup?.get_children?.().find?.(c => c.has_style_class_name?.('a11y-button'));
+            ?? currentDialog?._bottomButtonGroup?.get_children().find(c => c.has_style_class_name('a11y-button'));
 
         const sessionButton = currentDialog?._authMenuButton
             ?? currentDialog?._sessionMenuButton?._button
-            ?? currentDialog?._sessionMenuButton?.get_child?.()
+            ?? currentDialog?._sessionMenuButton?.get_child()
             ?? currentDialog?._sessionMenuButton
             ?? currentDialog?._bottomButtonGroup?._authMenuButton
             ?? currentDialog?._bottomButtonGroup?._sessionMenuButton?._button
             ?? currentDialog?._bottomButtonGroup?._sessionMenuButton
-            ?? currentDialog?._bottomButtonGroup?.get_children?.().find?.(c => c.has_style_class_name?.('login-dialog-auth-menu-button') || c.has_style_class_name?.('login-dialog-session-list-button'));
+            ?? currentDialog?._bottomButtonGroup?.get_children().find(c => c.has_style_class_name('login-dialog-auth-menu-button') || c.has_style_class_name('login-dialog-session-list-button'));
 
         if (!a11yButton && !sessionButton)
             return;
@@ -816,15 +816,15 @@ export class GdmPromptStyling {
         const dlg = this._gdm._dialog;
         const freshA11y = dlg?._a11yMenuButton
             ?? dlg?._bottomButtonGroup?._a11yMenuButton
-            ?? dlg?._bottomButtonGroup?.get_children?.().find?.(c => c.has_style_class_name?.('a11y-button'));
+            ?? dlg?._bottomButtonGroup?.get_children().find(c => c.has_style_class_name('a11y-button'));
         const freshSession = dlg?._authMenuButton
             ?? dlg?._sessionMenuButton?._button
-            ?? dlg?._sessionMenuButton?.get_child?.()
+            ?? dlg?._sessionMenuButton?.get_child()
             ?? dlg?._sessionMenuButton
             ?? dlg?._bottomButtonGroup?._authMenuButton
             ?? dlg?._bottomButtonGroup?._sessionMenuButton?._button
             ?? dlg?._bottomButtonGroup?._sessionMenuButton
-            ?? dlg?._bottomButtonGroup?.get_children?.().find?.(c => c.has_style_class_name?.('login-dialog-auth-menu-button') || c.has_style_class_name?.('login-dialog-session-list-button'));
+            ?? dlg?._bottomButtonGroup?.get_children().find(c => c.has_style_class_name('login-dialog-auth-menu-button') || c.has_style_class_name('login-dialog-session-list-button'));
 
         if (freshA11y && color.a11yColor) this.applyA11yButtonBackground(freshA11y, color.a11yColor);
         if (freshSession && color.sessionColor) this.applySessionButtonBackground(freshSession, color.sessionColor);

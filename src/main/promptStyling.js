@@ -18,7 +18,7 @@ export class PromptStyling {
         if (!actor)
             return null;
 
-        if (actor.has_style_class_name?.('login-dialog-prompt-entry')) {
+        if (actor.has_style_class_name('login-dialog-prompt-entry')) {
             return actor;
         }
 
@@ -139,8 +139,8 @@ export class PromptStyling {
 
         const isCupertino = this._extension?._lockscreenMode === 'cupertino' ||
             this._extension?._selectedPromptMode === 'cupertino' ||
-            authPrompt.has_style_class_name?.('wack-cupertino-prompt') ||
-            this._extension?._promptActor?.has_style_class_name?.('wack-cupertino-prompt');
+            authPrompt.has_style_class_name('wack-cupertino-prompt') ||
+            this._extension?._promptActor?.has_style_class_name('wack-cupertino-prompt');
 
         if (!isCupertino)
             return;
@@ -336,18 +336,18 @@ export class PromptStyling {
         const dialog = this._extension._dialog;
         const a11yButton = dialog?._a11yMenuButton
             ?? dialog?._bottomButtonGroup?._a11yMenuButton
-            ?? dialog?._bottomButtonGroup?.get_children?.().find?.(c => c.has_style_class_name?.('a11y-button'));
+            ?? dialog?._bottomButtonGroup?.get_children().find(c => c.has_style_class_name('a11y-button'));
         if (a11yButton)
             this.applyA11yButtonBackground(a11yButton, null);
 
         const sessionButton = dialog?._authMenuButton
             ?? dialog?._sessionMenuButton?._button
-            ?? dialog?._sessionMenuButton?.get_child?.()
+            ?? dialog?._sessionMenuButton?.get_child()
             ?? dialog?._sessionMenuButton
             ?? dialog?._bottomButtonGroup?._authMenuButton
             ?? dialog?._bottomButtonGroup?._sessionMenuButton?._button
             ?? dialog?._bottomButtonGroup?._sessionMenuButton
-            ?? dialog?._bottomButtonGroup?.get_children?.().find?.(c => c.has_style_class_name?.('login-dialog-auth-menu-button') || c.has_style_class_name?.('login-dialog-session-list-button'));
+            ?? dialog?._bottomButtonGroup?.get_children().find(c => c.has_style_class_name('login-dialog-auth-menu-button') || c.has_style_class_name('login-dialog-session-list-button'));
         if (sessionButton)
             this.applySessionButtonBackground(sessionButton, null);
     }
@@ -402,7 +402,7 @@ export class PromptStyling {
             if (wellChanged) this.lastWellH = wellH;
             if (yCenterChanged) this.lastYCenterFraction = yCenterFraction;
             if (boundsChanged) this.lastPromptBounds = promptBounds;
-            this._extension._updateClockAlphaAndPromptColor?.().catch(e => {
+            this._extension._updateClockAlphaAndPromptColor().catch(e => {
                 _logError('[WACK/Extension] Failed to update prompt background in allocation: ' + e);
             });
         }

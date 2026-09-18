@@ -25,7 +25,7 @@ export class GdmClockManager {
         this.clock = new WackClock();
         const metadata = this._gdm._currentWallpaperMetadata;
         const dateStyle = metadata?.dateStyle ?? 'full';
-        const userLocale = dialog?._user?.get_language?.() || metadata?.userLocale || null;
+        const userLocale = dialog?._user?.get_language() || metadata?.userLocale || null;
         this.clock.setDateStyle(dateStyle);
         this.clock.setLocale(userLocale);
         const dateLabel = this.clock._dateOutput;
