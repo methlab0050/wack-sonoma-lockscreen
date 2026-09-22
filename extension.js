@@ -160,9 +160,6 @@ export default class WackLockscreenClockExtension extends Extension {
             }, this);
         }
 
-        this._loadSettings();
-        this._unblankManager = new UnblankManager(this);
-
         const lockDialogGroup = Main.screenShield._lockDialogGroup;
 
         // Clock replacement & setup
@@ -171,11 +168,14 @@ export default class WackLockscreenClockExtension extends Extension {
         dialog._clock.setDateStyle(this._dateStyle ?? 'full');
         lockDialogGroup.add_child(dialog._clock);
 
-        this._clockLayoutManager.setup(dialog, lockDialogGroup);
+        this._loadSettings();
+        this._unblankManager = new UnblankManager(this);
 
+        this._clockLayoutManager.setup(dialog, lockDialogGroup);
         this._notifManager.setupNotifBlur(dialog._notificationsBox);
         this._promptActor = dialog._promptBox ?? dialog._stack;
-        this._promptActor?.set_pivot_point(0.5, 0.5);
+        if (this._promptActor)
+            this._promptActor.set_pivot_point(0.5, 0.5);
 
         // Wallpaper settings
         this._bgSettings = new Gio.Settings({ schema_id: 'org.gnome.desktop.background' });
@@ -293,7 +293,8 @@ export default class WackLockscreenClockExtension extends Extension {
         const syncLockscreenMode = () => {
             this._lockscreenMode = this._settings.get_string('lockscreen-mode') ?? 'wack';
             this._applyPromptModeLayout();
-            this._dialog?._updateUserSwitchVisibility();
+            if (this._dialog?._updateUserSwitchVisibility)
+                this._dialog._updateUserSwitchVisibility();
             this._cupertinoShowNotifsOverride = false;
 
             const progress = this._dialog?._adjustment?.value ?? 0;
@@ -367,7 +368,8 @@ export default class WackLockscreenClockExtension extends Extension {
 
         const syncDateStyle = () => {
             this._dateStyle = this._settings.get_string('date-style') ?? 'full';
-            this._dialog?._clock?.setDateStyle(this._dateStyle);
+            if (this._clock)
+                this._clock.setDateStyle(this._dateStyle);
         };
         syncDateStyle();
 
@@ -573,7 +575,7 @@ export default class WackLockscreenClockExtension extends Extension {
             sessionBounds,
             vibrancyMode: this._settings?.get_string('prompt-vibrancy') ?? 'tonal',
         };
-        const textLuminance = dialog?._clock?.getTextLuminance() ?? 1.0;
+        const textLuminance = this._clock ? this._clock.getTextLuminance() : 1.0;
 
         try {
             const [alpha, promptColor] = await Promise.all([
@@ -622,7 +624,8 @@ export default class WackLockscreenClockExtension extends Extension {
                     this._applyPromptEntryBackground(entry, promptColor);
                 if (currentAuthPrompt?.cancelButton)
                     this._applyCancelButtonBackground(currentAuthPrompt.cancelButton, promptColor);
-                this._promptStyling?.updatePromptMessageStyle(promptColor, alpha);
+                if (this._promptStyling)
+                    this._promptStyling.updatePromptMessageStyle(promptColor, alpha);
             }
         } catch (e) {
             _logError(`[WACK/Extension] _updateClockAlphaAndPromptColor error: ${e}`);
@@ -645,8 +648,10 @@ export default class WackLockscreenClockExtension extends Extension {
     _onPromptShow() {
         const isCupertino = this._lockscreenMode === 'cupertino';
         if (isCupertino) {
-            this._promptActor?.remove_style_class_name('wack-cupertino-rest');
-            this._promptActor?.add_style_class_name('wack-cupertino-prompt');
+            if (this._promptActor) {
+                this._promptActor.remove_style_class_name('wack-cupertino-rest');
+                this._promptActor.add_style_class_name('wack-cupertino-prompt');
+            }
             this._cupertinoToPrompt = true;
             this._setupCupertinoAvatarOverride();
             if (this._lastPromptColor) {
@@ -659,7 +664,8 @@ export default class WackLockscreenClockExtension extends Extension {
                     this._applyPromptEntryBackground(entry, this._lastPromptColor);
                 if (currentAuthPrompt?.cancelButton && currentAuthPrompt.cancelButton._wackColor !== this._lastPromptColor)
                     this._applyCancelButtonBackground(currentAuthPrompt.cancelButton, this._lastPromptColor);
-                this._promptStyling?.updatePromptMessageStyle(this._lastPromptColor, this._lastClockAlpha);
+                if (this._promptStyling)
+                    this._promptStyling.updatePromptMessageStyle(this._lastPromptColor, this._lastClockAlpha);
             } else {
                 this._updateClockAlphaAndPromptColor();
             }
@@ -682,46 +688,46 @@ export default class WackLockscreenClockExtension extends Extension {
     }
 
     // Delegations to sub-managers
-    _getLockscreenMessageActor() { return this._messageManager?.getMessageActor() ?? null; }
-    _syncLockscreenMessageFade() { this._messageManager?.syncFade(); }
-    _syncLockscreenMessageLayout() { this._messageManager?.syncLayout(); }
-    _updateLockscreenMessage() { this._messageManager?.update(); }
+    _getLockscreenMessageActor() { return this._messageManager ? this._messageManager.getMessageActor() : null; }
+    _syncLockscreenMessageFade() { if (this._messageManager) this._messageManager.syncFade(); }
+    _syncLockscreenMessageLayout() { if (this._messageManager) this._messageManager.syncLayout(); }
+    _updateLockscreenMessage() { if (this._messageManager) this._messageManager.update(); }
 
-    _findPromptEntry(actor) { return this._promptStyling?.findPromptEntry(actor) ?? null; }
-    _startCursorBlink() { this._promptStyling?.startCursorBlink(); }
-    _stopCursorBlink() { this._promptStyling?.stopCursorBlink(); }
-    _applyPromptEntryBackground(entry, color) { this._promptStyling?.applyPromptEntryBackground(entry, color); }
-    _applyCancelButtonBackground(button, color) { this._promptStyling?.applyCancelButtonBackground(button, color); }
-    _applyA11yButtonBackground(button, color) { this._promptStyling?.applyA11yButtonBackground(button, color); }
-    _applySessionButtonBackground(button, color) { this._promptStyling?.applySessionButtonBackground(button, color); }
-    _clearCupertinoPromptBackground() { this._promptStyling?.clearCupertinoPromptBackground(); }
-    _clearBottomButtonsBackground() { this._promptStyling?.clearBottomButtonsBackground(); }
-    _onAuthPromptAllocation() { this._promptStyling?.onAuthPromptAllocation(); }
+    _findPromptEntry(actor) { return this._promptStyling ? this._promptStyling.findPromptEntry(actor) : null; }
+    _startCursorBlink() { if (this._promptStyling) this._promptStyling.startCursorBlink(); }
+    _stopCursorBlink() { if (this._promptStyling) this._promptStyling.stopCursorBlink(); }
+    _applyPromptEntryBackground(entry, color) { if (this._promptStyling) this._promptStyling.applyPromptEntryBackground(entry, color); }
+    _applyCancelButtonBackground(button, color) { if (this._promptStyling) this._promptStyling.applyCancelButtonBackground(button, color); }
+    _applyA11yButtonBackground(button, color) { if (this._promptStyling) this._promptStyling.applyA11yButtonBackground(button, color); }
+    _applySessionButtonBackground(button, color) { if (this._promptStyling) this._promptStyling.applySessionButtonBackground(button, color); }
+    _clearCupertinoPromptBackground() { if (this._promptStyling) this._promptStyling.clearCupertinoPromptBackground(); }
+    _clearBottomButtonsBackground() { if (this._promptStyling) this._promptStyling.clearBottomButtonsBackground(); }
+    _onAuthPromptAllocation() { if (this._promptStyling) this._promptStyling.onAuthPromptAllocation(); }
 
-    _setupCupertinoAvatarOverride() { this._avatarManager?.setupCupertinoAvatarOverride(); }
-    _teardownCupertinoAvatarOverride() { this._avatarManager?.teardownCupertinoAvatarOverride(); }
+    _setupCupertinoAvatarOverride() { if (this._avatarManager) this._avatarManager.setupCupertinoAvatarOverride(); }
+    _teardownCupertinoAvatarOverride() { if (this._avatarManager) this._avatarManager.teardownCupertinoAvatarOverride(); }
 
-    _updateCustomWallpaperOverlay() { this._wallpaperManager?.updateCustomWallpaperOverlay(); }
-    _setCustomWallpaperBlur(radius, brightness) { this._wallpaperManager?.setCustomWallpaperBlur(radius, brightness); }
+    _updateCustomWallpaperOverlay() { if (this._wallpaperManager) this._wallpaperManager.updateCustomWallpaperOverlay(); }
+    _setCustomWallpaperBlur(radius, brightness) { if (this._wallpaperManager) this._wallpaperManager.setCustomWallpaperBlur(radius, brightness); }
 
-    _positionClock() { this._clockLayoutManager?.positionClock(); }
-    _positionHint() { this._clockLayoutManager?.positionHint(); }
-    _getClockAnimationParams() { return this._clockLayoutManager?.getClockAnimationParams() ?? {}; }
+    _positionClock() { if (this._clockLayoutManager) this._clockLayoutManager.positionClock(); }
+    _positionHint() { if (this._clockLayoutManager) this._clockLayoutManager.positionHint(); }
+    _getClockAnimationParams() { return this._clockLayoutManager ? this._clockLayoutManager.getClockAnimationParams() : {}; }
 
-    _tempSessionModeOverride() { this._themeManager?.tempSessionModeOverride(); }
-    _restoreSessionMode() { this._themeManager?.restoreSessionMode(); }
-    _getUserThemeFile() { return this._themeManager?.getUserThemeFile() ?? null; }
+    _tempSessionModeOverride() { if (this._themeManager) this._themeManager.tempSessionModeOverride(); }
+    _restoreSessionMode() { if (this._themeManager) this._themeManager.restoreSessionMode(); }
+    _getUserThemeFile() { return this._themeManager ? this._themeManager.getUserThemeFile() : null; }
 
-    triggerSwitchUser() { this._cupertinoPromptManager?.triggerSwitchUser(); }
-    triggerToggleNotifications() { this._cupertinoPromptManager?.triggerToggleNotifications(); }
-    _createCupertinoRestPrompt() { this._cupertinoPromptManager?.createCupertinoRestPrompt(); }
-    _syncCupertinoHint() { this._cupertinoPromptManager?.syncCupertinoHint(); }
-    _showInhibitHint(message) { this._cupertinoPromptManager?.showInhibitHint(message); }
-    _isSleepInhibited() { return this._cupertinoPromptManager?.isSleepInhibited() ?? false; }
-    _updateCupertinoHintCycle() { this._cupertinoPromptManager?.updateCupertinoHintCycle(); }
-    _destroyCupertinoRestPrompt() { this._cupertinoPromptManager?.destroyCupertinoRestPrompt(); }
-    _updateCupertinoRestState(animate = false) { this._cupertinoPromptManager?.updateCupertinoRestState(animate); }
-    _applyPromptModeLayout() { this._cupertinoPromptManager?.applyPromptModeLayout(); }
+    triggerSwitchUser() { if (this._cupertinoPromptManager) this._cupertinoPromptManager.triggerSwitchUser(); }
+    triggerToggleNotifications() { if (this._cupertinoPromptManager) this._cupertinoPromptManager.triggerToggleNotifications(); }
+    _createCupertinoRestPrompt() { if (this._cupertinoPromptManager) this._cupertinoPromptManager.createCupertinoRestPrompt(); }
+    _syncCupertinoHint() { if (this._cupertinoPromptManager) this._cupertinoPromptManager.syncCupertinoHint(); }
+    _showInhibitHint(message) { if (this._cupertinoPromptManager) this._cupertinoPromptManager.showInhibitHint(message); }
+    _isSleepInhibited() { return this._cupertinoPromptManager ? this._cupertinoPromptManager.isSleepInhibited() : false; }
+    _updateCupertinoHintCycle() { if (this._cupertinoPromptManager) this._cupertinoPromptManager.updateCupertinoHintCycle(); }
+    _destroyCupertinoRestPrompt() { if (this._cupertinoPromptManager) this._cupertinoPromptManager.destroyCupertinoRestPrompt(); }
+    _updateCupertinoRestState(animate = false) { if (this._cupertinoPromptManager) this._cupertinoPromptManager.updateCupertinoRestState(animate); }
+    _applyPromptModeLayout() { if (this._cupertinoPromptManager) this._cupertinoPromptManager.applyPromptModeLayout(); }
 
     // <GDM_EXCLUDE>
     _syncCrossSessionManager() {
@@ -893,8 +899,10 @@ export default class WackLockscreenClockExtension extends Extension {
         }
         this._notifShowInLockScreen = false;
 
-        this._injectionManager?.clear();
-        this._injectionManager = null;
+        if (this._injectionManager) {
+            this._injectionManager.clear();
+            this._injectionManager = null;
+        }
 
         if (this._authPromptAllocationId) {
             if (authPrompt) {
@@ -904,22 +912,26 @@ export default class WackLockscreenClockExtension extends Extension {
         }
 
         if (this._dialog) {
-            this._dialog._notificationsBox?.disconnectObject(this);
+            if (this._dialog._notificationsBox) {
+                this._dialog._notificationsBox.disconnectObject(this);
+            }
             this._dialog.disconnectObject(this);
         }
         Main.layoutManager.disconnectObject(this);
 
-        const lockDialogGroup = Main.screenShield?._lockDialogGroup;
+        const lockDialogGroup = Main.screenShield ? Main.screenShield._lockDialogGroup : null;
 
         if (this._clockLayoutManager) {
             this._clockLayoutManager.teardown(this._dialog, lockDialogGroup);
             this._clockLayoutManager = null;
         }
 
-        if (this._dialog && this._dialog._clock) {
-            lockDialogGroup?.remove_child(this._dialog._clock);
-            this._dialog._clock.destroy();
-            this._dialog._clock = null;
+        if (this._clock) {
+            if (lockDialogGroup) {
+                lockDialogGroup.remove_child(this._clock);
+            }
+            this._clock.destroy();
+            this._clock = null;
         }
 
         if (this._dialog && this._originalClock) {
@@ -946,12 +958,14 @@ export default class WackLockscreenClockExtension extends Extension {
         this._origLayout = null;
         this._showingInhibitHint = false;
 
-        if (this._promptActor && this._origPromptActorYAlign !== undefined) {
-            this._promptActor.y_align = this._origPromptActorYAlign;
-            this._origPromptActorYAlign = undefined;
+        if (this._promptActor) {
+            if (this._origPromptActorYAlign !== undefined) {
+                this._promptActor.y_align = this._origPromptActorYAlign;
+                this._origPromptActorYAlign = undefined;
+            }
+            this._promptActor.remove_style_class_name('wack-cupertino-prompt');
+            this._promptActor = null;
         }
-        this._promptActor?.remove_style_class_name('wack-cupertino-prompt');
-        this._promptActor = null;
         this._animationState = null;
         this._wasPromptActive = false;
         this._lastPromptColor = null;

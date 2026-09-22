@@ -24,6 +24,8 @@ export class GdmMessageManager {
         this.label.clutter_text.ellipsize = Pango.EllipsizeMode.NONE;
         this.label.clutter_text.line_wrap = true;
         this.label.clutter_text.line_alignment = Pango.Alignment.CENTER;
+        this.label.clutter_text.set_x_align(Clutter.ActorAlign.CENTER);
+        this.label.clutter_text.set_x_expand(true);
         this.label.x_expand = true;
 
         this.content = new St.BoxLayout({
@@ -51,13 +53,6 @@ export class GdmMessageManager {
                 ? Clutter.EVENT_PROPAGATE
                 : Clutter.EVENT_STOP;
         }, this);
-
-        const messageScrollbar = this.scrollView.get_vscroll_bar();
-        if (messageScrollbar) {
-            messageScrollbar.reactive = false;
-            messageScrollbar.can_focus = false;
-            messageScrollbar.track_hover = false;
-        }
 
         dialogParent.add_child(this.scrollView);
         dialogParent.set_child_above_sibling(this.scrollView, null);
@@ -143,7 +138,14 @@ export class GdmMessageManager {
 
         this.width = messageWidth;
         this.content.width = messageWidth;
-        this.label.width = messageWidth;
+        this.content.x_align = Clutter.ActorAlign.CENTER;
+
+        this.label.x_expand = true;
+        this.label.x_align = Clutter.ActorAlign.CENTER;
+        this.label.clutter_text.line_wrap = true;
+        this.label.clutter_text.line_alignment = Pango.Alignment.CENTER;
+        this.label.clutter_text.set_x_align(Clutter.ActorAlign.CENTER);
+        this.label.clutter_text.set_x_expand(true);
 
         const lineHeight = this.getMessageLineHeight();
         const maxVisibleHeight = Math.ceil(lineHeight * 4);

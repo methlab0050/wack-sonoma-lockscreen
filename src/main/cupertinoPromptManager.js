@@ -96,8 +96,10 @@ export class CupertinoPromptManager {
             this.hintCycleId = null;
         }
 
-        wackActor?.remove_all_transitions();
-        cupertinoActor?.remove_all_transitions();
+        if (wackActor)
+            wackActor.remove_all_transitions();
+        if (cupertinoActor)
+            cupertinoActor.remove_all_transitions();
 
         if (wackActor) {
             wackActor.opacity = 255;
@@ -126,8 +128,10 @@ export class CupertinoPromptManager {
             this._extension._showingInhibitHint = false;
             this.inhibitHintTimeoutId = null;
 
-            wackActor?.remove_all_transitions();
-            cupertinoActor?.remove_all_transitions();
+            if (wackActor)
+                wackActor.remove_all_transitions();
+            if (cupertinoActor)
+                cupertinoActor.remove_all_transitions();
 
             const fadeOutDuration = 150;
             const fadeInDuration = 150;
@@ -298,7 +302,8 @@ export class CupertinoPromptManager {
                     this.restPromptContainer.visible = false;
                 }
             } else {
-                this.restPrompt?.setNotifCount(nextCount);
+                if (this.restPrompt)
+                    this.restPrompt.setNotifCount(nextCount);
                 const hintBoxWrapper = this.restPrompt?._hintBoxWrapper;
                 const nameLabel = this.restPrompt?._userWell?.get_child()?._label;
 
@@ -411,14 +416,17 @@ export class CupertinoPromptManager {
 
     applyPromptModeLayout() {
         const promptActor = this._extension._promptActor;
-        if (!promptActor) return;
+        if (!promptActor)
+            return;
+
         const isCupertino = this._extension._lockscreenMode === 'cupertino';
         const dialog = this._extension._dialog;
         const authPrompt = dialog?._authPrompt ?? dialog?._promptBox?._authPrompt;
 
         if (isCupertino) {
             this.createCupertinoRestPrompt();
-            this._extension._avatarManager?.setupCupertinoAvatarOverride();
+            if (this._extension._avatarManager)
+                this._extension._avatarManager.setupCupertinoAvatarOverride();
 
             if (this._extension._origPromptActorYAlign === undefined) {
                 this._extension._origPromptActorYAlign = promptActor.y_align;
@@ -435,7 +443,8 @@ export class CupertinoPromptManager {
 
             if (this._extension._promptActive) {
                 promptActor.add_style_class_name('wack-cupertino-prompt');
-                this._extension._promptStyling?.updatePromptMessageStyle();
+                if (this._extension._promptStyling)
+                    this._extension._promptStyling.updatePromptMessageStyle();
             } else {
                 promptActor.remove_style_class_name('wack-cupertino-prompt');
             }
@@ -443,8 +452,10 @@ export class CupertinoPromptManager {
             this.updateCupertinoRestState(false);
         } else {
             this.destroyCupertinoRestPrompt();
-            this._extension._avatarManager?.teardownCupertinoAvatarOverride();
-            this._extension._promptStyling?.clearCupertinoPromptBackground();
+            if (this._extension._avatarManager)
+                this._extension._avatarManager.teardownCupertinoAvatarOverride();
+            if (this._extension._promptStyling)
+                this._extension._promptStyling.clearCupertinoPromptBackground();
 
             if (this._extension._origPromptActorYAlign !== undefined) {
                 promptActor.y_align = this._extension._origPromptActorYAlign;

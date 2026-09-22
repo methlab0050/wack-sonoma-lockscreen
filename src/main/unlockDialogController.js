@@ -34,7 +34,8 @@ export class UnlockDialogController {
             authPrompt._wackOrigSetMessage = authPrompt.setMessage.bind(authPrompt);
             authPrompt.setMessage = (message, type) => {
                 authPrompt._wackOrigSetMessage(message, type);
-                this._extension._promptStyling?.updatePromptMessageStyle();
+                if (this._extension._promptStyling)
+                    this._extension._promptStyling.updatePromptMessageStyle();
             };
         }
 
@@ -42,7 +43,8 @@ export class UnlockDialogController {
             if (authPrompt._message) {
                 authPrompt._message.add_style_class_name('wack-cupertino-message');
             }
-            this._extension._promptStyling?.updatePromptMessageStyle();
+            if (this._extension._promptStyling)
+                this._extension._promptStyling.updatePromptMessageStyle();
         }
     }
 
@@ -262,12 +264,16 @@ export class UnlockDialogController {
         if (dialog._notificationsBox) {
             dialog._notificationsBox.connectObject(
                 'notify::height', () => {
-                    this._extension._clockLayoutManager?.positionHint();
-                    this._extension._notifManager?.positionOverflow();
+                    if (this._extension._clockLayoutManager)
+                        this._extension._clockLayoutManager.positionHint();
+                    if (this._extension._notifManager)
+                        this._extension._notifManager.positionOverflow();
                 },
                 'notify::visible', () => {
-                    this._extension._clockLayoutManager?.positionHint();
-                    this._extension._notifManager?.positionOverflow();
+                    if (this._extension._clockLayoutManager)
+                        this._extension._clockLayoutManager.positionHint();
+                    if (this._extension._notifManager)
+                        this._extension._notifManager.positionOverflow();
                 },
                 this
             );
@@ -304,7 +310,9 @@ export class UnlockDialogController {
                 const effect = widget.get_effect('blur');
                 if (effect) effect.set({ radius: globalBlur, brightness: globalBrightness });
             }
-            this._extension._wallpaperManager?.setCustomWallpaperBlur(globalBlur, globalBrightness);
+            if (this._extension._wallpaperManager) {
+                this._extension._wallpaperManager.setCustomWallpaperBlur(globalBlur, globalBrightness);
+            }
 
             const hasNotifs = this._extension._notifManager.hasVisibleNotifs();
             const cardBlur = hasNotifs ? NOTIF_BLUR_RADIUS * (1 - progress) : 0;
@@ -394,7 +402,8 @@ export class UnlockDialogController {
 
                 if (progress === 0) {
                     this._extension._notifManager.enforceCardLimit(this._extension._notifManager._notifBox);
-                    cupertinoMgr?.updateCupertinoRestState();
+                    if (cupertinoMgr)
+                        cupertinoMgr.updateCupertinoRestState();
                 }
             } else {
                 applyClockAnimation(

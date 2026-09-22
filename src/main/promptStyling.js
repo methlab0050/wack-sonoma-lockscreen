@@ -18,7 +18,7 @@ export class PromptStyling {
         if (!actor)
             return null;
 
-        if (actor.has_style_class_name('login-dialog-prompt-entry')) {
+        if (actor.has_style_class_name && actor.has_style_class_name('login-dialog-prompt-entry')) {
             return actor;
         }
 
@@ -137,10 +137,11 @@ export class PromptStyling {
         if (!authPrompt)
             return;
 
+        const promptActor = this._extension ? this._extension._promptActor : null;
         const isCupertino = this._extension?._lockscreenMode === 'cupertino' ||
             this._extension?._selectedPromptMode === 'cupertino' ||
             authPrompt.has_style_class_name('wack-cupertino-prompt') ||
-            this._extension?._promptActor?.has_style_class_name('wack-cupertino-prompt');
+            (promptActor ? promptActor.has_style_class_name('wack-cupertino-prompt') : false);
 
         if (!isCupertino)
             return;

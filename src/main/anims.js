@@ -71,7 +71,8 @@ export function applyClockAnimation(animation, actor, clockActor, progress, para
         break;
     }
 
-    clockActor?.set({ opacity });
+    if (clockActor)
+        clockActor.set({ opacity });
     actor.set({
         opacity,
         scale_x: scale,
@@ -122,16 +123,20 @@ export function applyPromptAnimation(animation, actor, progress) {
 }
 
 export function resetAnimationActors(clockActor, promptActor) {
-    clockActor?.set({
-        opacity: 255,
-        scale_x: 1,
-        scale_y: 1,
-        translation_y: 0,
-    });
-    promptActor?.set({
-        opacity: 255,
-        scale_x: 1,
-        scale_y: 1,
-        translation_y: 0,
-    });
+    if (clockActor) {
+        clockActor.set({
+            opacity: 255,
+            scale_x: 1,
+            scale_y: 1,
+            translation_y: 0,
+        });
+    }
+    if (promptActor) {
+        promptActor.set({
+            opacity: 255,
+            scale_x: 1,
+            scale_y: 1,
+            translation_y: 0,
+        });
+    }
 }

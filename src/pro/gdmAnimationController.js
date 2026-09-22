@@ -152,7 +152,7 @@ export class GdmAnimationController {
         const btn = this._gdm._dialog?._sessionMenuButton;
         if (!btn) return;
 
-        if (!btn.visible && this._gdm._dialog._shouldShowSessionMenuButton())
+        if (!btn.visible && this._gdm._dialog?._shouldShowSessionMenuButton && this._gdm._dialog._shouldShowSessionMenuButton())
             btn.visible = true;
         if (!btn.visible) return;
 
@@ -348,8 +348,10 @@ export class GdmAnimationController {
             authPrompt.translation_y = 0;
             authPrompt.add_style_class_name('wack-gdm-legacy-prompt');
             authPrompt.remove_style_class_name('wack-cupertino-prompt');
-            authPrompt._message?.remove_style_class_name('wack-cupertino-message');
-            authPrompt._capsLockWarningLabel?.remove_style_class_name('wack-cupertino-caps-lock-warning');
+            if (authPrompt._message)
+                authPrompt._message.remove_style_class_name('wack-cupertino-message');
+            if (authPrompt._capsLockWarningLabel)
+                authPrompt._capsLockWarningLabel.remove_style_class_name('wack-cupertino-caps-lock-warning');
             this._gdm._clearCupertinoPromptBackground();
             _setActorVisible(this._gdm._getLockscreenMessageActor(), false, 0);
             this.setLegacyPromptChrome(true);
@@ -374,7 +376,7 @@ export class GdmAnimationController {
         });
         this._gdm._cupertinoRestPromptContainer.set_position(-1000, -1000);
         this._gdm._cupertinoRestPrompt = new WackCupertinoRestPrompt(this._gdm._dialog._user, this._gdm._extension);
-        if (this._gdm._avatarManager?._lastAvatarColor) {
+        if (this._gdm._avatarManager && this._gdm._avatarManager._lastAvatarColor) {
             this._gdm._cupertinoRestPrompt.updateVisuals(this._gdm._avatarManager._lastAvatarColor);
         }
         this._gdm._cupertinoRestPromptContainer.add_child(this._gdm._cupertinoRestPrompt);
@@ -391,7 +393,9 @@ export class GdmAnimationController {
         if (authPrompt._capsLockWarningLabel) {
             authPrompt._capsLockWarningLabel.add_style_class_name('wack-cupertino-caps-lock-warning');
         }
-        this._gdm._promptStyling?.updatePromptMessageStyle();
+        if (this._gdm._promptStyling) {
+            this._gdm._promptStyling.updatePromptMessageStyle();
+        }
 
         const uw = authPrompt._userWell?.get_child();
         if (uw) {

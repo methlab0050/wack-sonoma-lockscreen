@@ -256,8 +256,10 @@ export class GdmClockManager {
         this.clockWrapper.set_position(alloc.x1, topY);
         this.clockWrapper.set_pivot_point(0.5, 0.5);
 
-        this.clockGlowDate?.set_y(0);
-        this.clockGlowTime?.set_y(DATE_LABEL_HEIGHT);
+        if (this.clockGlowDate)
+            this.clockGlowDate.set_y(0);
+        if (this.clockGlowTime)
+            this.clockGlowTime.set_y(DATE_LABEL_HEIGHT);
         this.clock._dateOutput.set_y(0);
         this.clock._time.set_y(DATE_LABEL_HEIGHT);
 

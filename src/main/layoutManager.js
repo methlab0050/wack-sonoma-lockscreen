@@ -80,7 +80,9 @@ class WackLayout extends Clutter.LayoutManager {
             let msgH = this._extension._lockscreenMessageHeight ?? 0;
 
             if (msgW <= 0 || msgH <= 0) {
-                this._extension._messageManager?.syncLayout();
+                if (this._extension._messageManager) {
+                    this._extension._messageManager.syncLayout();
+                }
                 msgW = this._extension._lockscreenMessageWidth ?? 0;
                 msgH = this._extension._lockscreenMessageHeight ?? 0;
             }

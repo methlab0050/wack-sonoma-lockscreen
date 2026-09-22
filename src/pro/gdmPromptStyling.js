@@ -92,7 +92,7 @@ export class GdmPromptStyling {
         if (!actor)
             return null;
 
-        if (actor.has_style_class_name('login-dialog-prompt-entry')) {
+        if (actor.has_style_class_name && actor.has_style_class_name('login-dialog-prompt-entry')) {
             return actor;
         }
 
@@ -128,7 +128,8 @@ export class GdmPromptStyling {
         if (entry._wackOriginalStyle === undefined)
             entry._wackOriginalStyle = entry.get_style() ?? '';
 
-        const vibrancyMode = color.vibrancyMode ?? (this._gdm._extension?.getSettings().get_string('prompt-vibrancy') ?? 'tonal');
+        const defaultVibrancy = this._gdm._extension ? this._gdm._extension.getSettings().get_string('prompt-vibrancy') : 'tonal';
+        const vibrancyMode = color.vibrancyMode ?? defaultVibrancy;
 
         let shadowStyle = '';
         if (color.shadowAlpha !== undefined) {
@@ -257,7 +258,8 @@ export class GdmPromptStyling {
         if (!colorObj || colorObj.r == null || colorObj.g == null || colorObj.b == null)
             return;
 
-        const vibrancyMode = color.vibrancyMode ?? (this._gdm._extension?.getSettings().get_string('prompt-vibrancy') ?? 'tonal');
+        const defaultVibrancy = this._gdm._extension ? this._gdm._extension.getSettings().get_string('prompt-vibrancy') : 'tonal';
+        const vibrancyMode = color.vibrancyMode ?? defaultVibrancy;
         const isSolid = (vibrancyMode === 'tonal' || vibrancyMode === 'less');
 
         const visualState = colorObj.visualState ?? color.visualState ?? colorObj;
@@ -540,7 +542,8 @@ export class GdmPromptStyling {
             if (promptColor?.sessionColor)
                 this._lastSessionColor = promptColor.sessionColor;
 
-            const vibrancyMode = effectiveMetadata?.promptVibrancyMode ?? (this._gdm._extension?.getSettings().get_string('prompt-vibrancy') ?? 'tonal');
+            const defaultVibrancy = this._gdm._extension ? this._gdm._extension.getSettings().get_string('prompt-vibrancy') : 'tonal';
+            const vibrancyMode = effectiveMetadata?.promptVibrancyMode ?? defaultVibrancy;
             const isSolid = (vibrancyMode === 'tonal' || vibrancyMode === 'less');
 
             if (promptColor &&
@@ -617,7 +620,8 @@ export class GdmPromptStyling {
                 this._gdm._currentWallpaperMetadata.promptColor = color;
 
             if (effectiveMetadata.username === 'gdm' || !effectiveMetadata.username) {
-                this._gdm._wallpaperManager?.saveGdmWallpaperMetadata(effectiveMetadata);
+                if (this._gdm._wallpaperManager)
+                    this._gdm._wallpaperManager.saveGdmWallpaperMetadata(effectiveMetadata);
             }
         }
 

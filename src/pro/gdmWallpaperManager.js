@@ -58,7 +58,8 @@ export class GdmWallpaperManager {
         }
 
         for (let i = 0; i < this.bgManagers.length; i++) {
-            this.bgManagers[i]._bms_pipeline?.destroy();
+            if (this.bgManagers[i]._bms_pipeline)
+                this.bgManagers[i]._bms_pipeline.destroy();
             this.bgManagers[i].destroy();
         }
         this.bgManagers = [];
@@ -150,7 +151,8 @@ export class GdmWallpaperManager {
         if (!this.backgroundGroup) return;
 
         for (let i = 0; i < this.bgManagers.length; i++) {
-            this.bgManagers[i]._bms_pipeline?.destroy();
+            if (this.bgManagers[i]._bms_pipeline)
+                this.bgManagers[i]._bms_pipeline.destroy();
             this.bgManagers[i].destroy();
         }
 
@@ -319,7 +321,7 @@ export class GdmWallpaperManager {
 
         if (!metadata) return;
 
-        const currentVibrancyMode = this._gdm._extension?.getSettings().get_string('prompt-vibrancy') ?? 'tonal';
+        const currentVibrancyMode = this._gdm._extension ? this._gdm._extension.getSettings().get_string('prompt-vibrancy') : 'tonal';
         const promptColor = metadata.promptColor;
 
         const isPromptImageValid = promptColor?.imagePath &&
@@ -513,8 +515,10 @@ export class GdmWallpaperManager {
 
             const clock = this._gdm._clockManager?.clock ?? this._gdm._gdmClock;
             if (clock) {
-                clock.setClockFormat(metadata?.clockFormat ?? null);
-                clock.setDateStyle(metadata?.dateStyle ?? 'full');
+                if (clock.setClockFormat)
+                    clock.setClockFormat(metadata?.clockFormat ?? null);
+                if (clock.setDateStyle)
+                    clock.setDateStyle(metadata?.dateStyle ?? 'full');
                 const userLocale = this._gdm._dialog?._user?.get_language() || metadata?.userLocale || null;
                 if (clock.setLocale)
                     clock.setLocale(userLocale);
@@ -558,7 +562,8 @@ export class GdmWallpaperManager {
                 const activeClock = this._gdm._clockManager?.clock ?? this._gdm._gdmClock;
                 if (activeClock)
                     activeClock.setWallpaperAlpha(alpha);
-                this._gdm._promptStyling?.updatePromptMessageStyle(null, alpha);
+                if (this._gdm._promptStyling)
+                    this._gdm._promptStyling.updatePromptMessageStyle(null, alpha);
             }).catch(e => {
                 _log('[WACK/GdmManager] Failed to compute dynamic alpha: ' + e);
             });

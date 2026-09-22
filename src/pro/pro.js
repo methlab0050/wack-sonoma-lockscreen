@@ -500,8 +500,8 @@ export class GdmManager {
                 const item = args[0];
                 const userName = item?.user?.get_user_name() ?? item?.userName ?? null;
                 const userLang = item?.user?.get_language() || null;
-                if (userLang)
-                    this._clockManager?.setUserLocale(userLang);
+                if (userLang && this._clockManager)
+                    this._clockManager.setUserLocale(userLang);
                 if (userName)
                     this._prewarmUserWallpaperColor(userName).catch(() => {});
                 return this._origBeginVerificationForItem(...args);
@@ -601,7 +601,8 @@ export class GdmManager {
             this._origAuthPromptSetMessage = dialog._authPrompt.setMessage.bind(dialog._authPrompt);
             dialog._authPrompt.setMessage = (message, type) => {
                 this._origAuthPromptSetMessage(message, type);
-                this._promptStyling?.updatePromptMessageStyle();
+                if (this._promptStyling)
+                    this._promptStyling.updatePromptMessageStyle();
             };
         }
     }

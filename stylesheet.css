@@ -269,6 +269,10 @@
     margin: 0px !important;
 }
 
+.wack-cupertino-lockscreen-message-content {
+    text-align: center !important;
+}
+
 .wack-cupertino-lockscreen-message-scroll {
     -st-vfade-offset: 32px;
 }

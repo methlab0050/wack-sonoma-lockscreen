@@ -214,8 +214,10 @@ export class NotificationManager {
 
         let count = 0;
 
-        for (const m of nb._players?.values() ?? []) {
-            if (m.visible) count++;
+        if (nb._players) {
+            for (const m of nb._players.values()) {
+                if (m.visible) count++;
+            }
         }
 
         const shellVisible = new Set();
@@ -280,14 +282,17 @@ export class NotificationManager {
         nb._updateVisibility = () => {
             this._origUpdateVisibility();
             this.enforceCardLimit(nb);
-            this._extension?._updateCupertinoRestState();
+            if (this._extension) {
+                this._extension._updateCupertinoRestState();
+            }
         };
 
         this.enforceCardLimit(nb);
 
         nb._notificationBox.connectObject(
             'child-added', (container, actor) => {
-                this._extension?._idleAdd(GLib.PRIORITY_DEFAULT_IDLE, () => {
+                if (!this._extension) return;
+                this._extension._idleAdd(GLib.PRIORITY_DEFAULT_IDLE, () => {
                     if (!this._extension) return GLib.SOURCE_REMOVE;
                     if (!actor.get_parent()) return GLib.SOURCE_REMOVE;
 
@@ -298,7 +303,8 @@ export class NotificationManager {
                         this._trackMediaPlayer(nb, player, actor);
                     } else {
                         const visId = actor.connect('notify::visible', () => {
-                            this._extension?._idleAdd(GLib.PRIORITY_DEFAULT_IDLE, () => {
+                            if (!this._extension) return;
+                            this._extension._idleAdd(GLib.PRIORITY_DEFAULT_IDLE, () => {
                                 if (!this._extension) return GLib.SOURCE_REMOVE;
                                 this.enforceCardLimit(nb);
                                 return GLib.SOURCE_REMOVE;
@@ -323,12 +329,14 @@ export class NotificationManager {
                 }
                 this._playerActorIds.delete(actor);
 
-                this._extension?._idleAdd(GLib.PRIORITY_DEFAULT_IDLE, () => {
-                    if (!this._extension) return GLib.SOURCE_REMOVE;
-                    this.enforceCardLimit(nb);
-                    this._extension._updateCupertinoRestState();
-                    return GLib.SOURCE_REMOVE;
-                });
+                if (this._extension) {
+                    this._extension._idleAdd(GLib.PRIORITY_DEFAULT_IDLE, () => {
+                        if (!this._extension) return GLib.SOURCE_REMOVE;
+                        this.enforceCardLimit(nb);
+                        this._extension._updateCupertinoRestState();
+                        return GLib.SOURCE_REMOVE;
+                    });
+                }
             }, this._extension);
 
         this._notifBox = nb;

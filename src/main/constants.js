@@ -104,7 +104,7 @@ export function getPrettyDate(style = 'full', wallClock = null, explicitLocale =
                 const now = GLib.DateTime.new_now_local();
                 const full = clock.string_for_datetime(now, 0, true, true, false);
                 // In GnomeDesktop.WallClock, the date part is separated from time by an en-space (\u2002)
-                const datePart = full?.split('\u2002')[0]?.trim();
+                const datePart = full ? full.split('\u2002')[0].trim() : '';
                 if (datePart)
                     return datePart;
             } catch {
@@ -114,9 +114,10 @@ export function getPrettyDate(style = 'full', wallClock = null, explicitLocale =
 
         try {
             const now = GLib.DateTime.new_now_local();
-            const formatted = now.format('%a %e %b')?.trim();
-            if (formatted)
-                return formatted;
+            const formatted = now.format('%a %e %b');
+            const trimmed = formatted ? formatted.trim() : '';
+            if (trimmed)
+                return trimmed;
         } catch {
             // Fallback to Intl if GLib failed
         }
