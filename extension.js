@@ -164,9 +164,10 @@ export default class WackLockscreenClockExtension extends Extension {
 
         // Clock replacement & setup
         dialog._stack.remove_child(dialog._clock);
-        dialog._clock = new WackClock();
-        dialog._clock.setDateStyle(this._dateStyle ?? 'full');
-        lockDialogGroup.add_child(dialog._clock);
+        this._clock = new WackClock();
+        dialog._clock = this._clock;
+        this._clock.setDateStyle(this._dateStyle ?? 'full');
+        lockDialogGroup.add_child(this._clock);
 
         this._loadSettings();
         this._unblankManager = new UnblankManager(this);
