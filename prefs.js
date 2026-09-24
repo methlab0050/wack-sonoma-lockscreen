@@ -924,28 +924,24 @@ export default class WackLockscreenClockPreferences extends ExtensionPreferences
 
         syncModeFromSettings();
 
-        // -- Screen Timeout options -----------------------------------------
-        const timeoutGroup = new Adw.PreferencesGroup({
-            title: _('Screen Timeout'),
+        // -- Display & Power options ----------------------------------------
+        const displayPowerGroup = new Adw.PreferencesGroup({
+            title: _('Display and Power'),
         });
 
-        const enableUnblankRow = new Adw.ActionRow({
+        const enableUnblankRow = new Adw.ExpanderRow({
             title: _('Keep Screen On'),
             subtitle: _('Prevent the screen from immediately turning off when locked. The screen will still turn off after the normal timeout duration set in system settings.'),
+            show_enable_switch: true,
         });
-        const enableUnblankSwitch = new Gtk.Switch({
-            valign: Gtk.Align.CENTER,
-            active: settings.get_boolean('enable-unblank'),
-        });
-        enableUnblankSwitch.connect('notify::active', () => {
-            settings.set_boolean('enable-unblank', enableUnblankSwitch.active);
+        enableUnblankRow.enable_expansion = settings.get_boolean('enable-unblank');
+        enableUnblankRow.connect('notify::enable-expansion', () => {
+            settings.set_boolean('enable-unblank', enableUnblankRow.enable_expansion);
         });
         settingsSignalIds.push(settings.connect('changed::enable-unblank', () => {
-            enableUnblankSwitch.active = settings.get_boolean('enable-unblank');
+            enableUnblankRow.enable_expansion = settings.get_boolean('enable-unblank');
         }));
-        enableUnblankRow.add_suffix(enableUnblankSwitch);
-        enableUnblankRow.activatable_widget = enableUnblankSwitch;
-        timeoutGroup.add(enableUnblankRow);
+        displayPowerGroup.add(enableUnblankRow);
 
         const unblankOnAcOnlyRow = new Adw.ActionRow({
             title: _('Only on AC Power'),
@@ -963,7 +959,7 @@ export default class WackLockscreenClockPreferences extends ExtensionPreferences
         }));
         unblankOnAcOnlyRow.add_suffix(unblankOnAcOnlySwitch);
         unblankOnAcOnlyRow.activatable_widget = unblankOnAcOnlySwitch;
-        timeoutGroup.add(unblankOnAcOnlyRow);
+        enableUnblankRow.add_row(unblankOnAcOnlyRow);
 
         const escToSleepRow = new Adw.ActionRow({
             title: _('Escape to Sleep / Suspend'),
@@ -981,16 +977,9 @@ export default class WackLockscreenClockPreferences extends ExtensionPreferences
         }));
         escToSleepRow.add_suffix(escToSleepSwitch);
         escToSleepRow.activatable_widget = escToSleepSwitch;
-        timeoutGroup.add(escToSleepRow);
+        displayPowerGroup.add(escToSleepRow);
 
-        const syncSensitivity = () => {
-            const enabled = settings.get_boolean('enable-unblank');
-            unblankOnAcOnlyRow.sensitive = enabled;
-        };
-        syncSensitivity();
-        settingsSignalIds.push(settings.connect('changed::enable-unblank', syncSensitivity));
-
-        animPage.add(timeoutGroup);
+        animPage.add(displayPowerGroup);
 
         // -- Extras group ---------------------------------------------------
         const extrasGroup = new Adw.PreferencesGroup({
