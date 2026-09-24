@@ -101,11 +101,11 @@ export class NotificationManager {
     }
 
     setVibrancyInverse(useInverse, promptColor = null) {
-        if (typeof useInverse === 'object' && useInverse !== null) {
+        if (useInverse && (useInverse.visualState !== undefined || useInverse.useInverse !== undefined || useInverse.r !== undefined)) {
             this._promptColor = useInverse;
             this._useInverse = useInverse.useInverse ?? useInverse.visualState?.useInverse ?? false;
         } else {
-            this._useInverse = !!useInverse;
+            this._useInverse = Boolean(useInverse);
             if (promptColor)
                 this._promptColor = promptColor;
         }

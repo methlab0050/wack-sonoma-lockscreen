@@ -178,7 +178,7 @@ export class GdmAvatarManager {
         const user = avatar._user;
         if (user) {
             const iconFile = user.get_icon_file();
-            if (iconFile && typeof iconFile === 'string' && iconFile !== '' && Gio.File.new_for_path(iconFile).query_exists(null))
+            if (iconFile && GLib.file_test(iconFile, GLib.FileTest.EXISTS))
                 return true;
         }
         return false;

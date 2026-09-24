@@ -172,11 +172,8 @@ export const WackCupertinoRestPrompt = GObject.registerClass(
 
         _hasImageAvatar(avatar) {
             if (!avatar || !avatar._user) return false;
-            const user = avatar._user;
-            const iconFile = user.get_icon_file();
-            if (iconFile && typeof iconFile === 'string' && iconFile !== '' && Gio.File.new_for_path(iconFile).query_exists(null))
-                return true;
-            return false;
+            const iconFile = avatar._user.get_icon_file();
+            return Boolean(iconFile && GLib.file_test(iconFile, GLib.FileTest.EXISTS));
         }
 
         updateAvatarVibrancy(avatarColor) {

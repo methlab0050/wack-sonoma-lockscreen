@@ -390,15 +390,16 @@ export class PromptStyling {
             return;
 
         const menu = button._menu ?? button.menu;
-        const isMenuOpen = menu ? (menu.isOpen === true) : false;
+        const isMenuOpen = menu ? menu.isOpen : false;
 
-        const isPressed = (button._wackMousePressed === true) ||
-            (button._wackKeyPressed === true) ||
+        const isPressed = button._wackMousePressed ||
+            button._wackKeyPressed ||
             isMenuOpen ||
-            (button.has_style_pseudo_class && (button.has_style_pseudo_class('active') || button.has_style_pseudo_class('checked'))) ||
-            (button.checked === true);
+            button.has_style_pseudo_class('active') ||
+            button.has_style_pseudo_class('checked') ||
+            button.checked;
         const isHovered = button.hover && !isPressed;
-        const isFocused = button.has_focus || (isMenuOpen && button._wackOpenedViaKey === true);
+        const isFocused = button.has_focus || (isMenuOpen && button._wackOpenedViaKey);
 
         const colorObj = buttonType === 'cancel'
             ? (color.cancelColor ?? (color.r !== undefined ? color : null))
