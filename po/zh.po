@@ -222,6 +222,9 @@ msgstr "缩放"
 msgid "Screen Timeout"
 msgstr "屏幕超时"
 
+msgid "Display and Power"
+msgstr "屏幕与电源"
+
 msgid "Keep Screen On"
 msgstr "保持屏幕常亮"
 
@@ -242,6 +245,9 @@ msgstr "在锁屏界面按 Escape 键关闭屏幕（或使系统睡眠）"
 
 msgid "Extras"
 msgstr "附加功能"
+
+msgid "Integrations"
+msgstr "集成"
 
 msgid "[PRO] GDM Expansion"
 msgstr "[PRO] GDM Expansion"
@@ -307,7 +313,7 @@ msgid "Visit documentation on GitHub"
 msgstr "在 GitHub 上查看文档"
 
 msgid "[BETA] WACK Shell Integration"
-msgstr "[BETA] WACK Shell Integration"
+msgstr "[BETA] WACK Shell 集成"
 
 msgid "Installed. Enables crossfade transitions and Cupertino-inspired shell customisations."
 msgstr "已安装。启用淡入淡出过渡效果以及受 Cupertino 启发的 Shell 定制。"

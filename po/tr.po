@@ -222,6 +222,9 @@ msgstr "Yakınlaştır"
 msgid "Screen Timeout"
 msgstr "Ekran Zaman Aşımı"
 
+msgid "Display and Power"
+msgstr "Ekran ve Güç"
+
 msgid "Keep Screen On"
 msgstr "Ekranı Açık Tut"
 
@@ -242,6 +245,9 @@ msgstr "Ekranı kapatmak (veya askıya almak) için kilit ekranında Escape tuş
 
 msgid "Extras"
 msgstr "Ekstralar"
+
+msgid "Integrations"
+msgstr "Entegrasyonlar"
 
 msgid "[PRO] GDM Expansion"
 msgstr "[PRO] GDM Expansion"
@@ -307,7 +313,7 @@ msgid "Visit documentation on GitHub"
 msgstr "GitHub'daki Belgeleri Ziyaret Edin"
 
 msgid "[BETA] WACK Shell Integration"
-msgstr "[BETA] WACK Shell Integration"
+msgstr "[BETA] WACK Shell Entegrasyonu"
 
 msgid "Installed. Enables crossfade transitions and Cupertino-inspired shell customisations."
 msgstr "Kuruldu. Çapraz geçişleri ve Cupertino'dan ilham alan kabuk özelleştirmelerini etkinleştirir."

@@ -222,6 +222,9 @@ msgstr "Thu phóng"
 msgid "Screen Timeout"
 msgstr "Thời gian chờ màn hình"
 
+msgid "Display and Power"
+msgstr "Màn hình và nguồn điện"
+
 msgid "Keep Screen On"
 msgstr "Giữ màn hình luôn bật"
 
@@ -242,6 +245,9 @@ msgstr "Nhấn Escape trên màn hình khóa để tắt hiển thị (hoặc t�
 
 msgid "Extras"
 msgstr "Tính năng bổ sung"
+
+msgid "Integrations"
+msgstr "Tích hợp"
 
 msgid "[PRO] GDM Expansion"
 msgstr "[PRO] GDM Expansion"
@@ -307,7 +313,7 @@ msgid "Visit documentation on GitHub"
 msgstr "Xem tài liệu trên GitHub"
 
 msgid "[BETA] WACK Shell Integration"
-msgstr "[BETA] WACK Shell Integration"
+msgstr "[BETA] Tích hợp WACK Shell"
 
 msgid "Installed. Enables crossfade transitions and Cupertino-inspired shell customisations."
 msgstr "Đã cài đặt. Kích hoạt hiệu ứng làm mờ chuyển tiếp và tùy biến Shell phong cách Cupertino."

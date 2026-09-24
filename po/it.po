@@ -222,6 +222,9 @@ msgstr "Zoom"
 msgid "Screen Timeout"
 msgstr "Sospensione dello schermo"
 
+msgid "Display and Power"
+msgstr "Schermo ed energia"
+
 msgid "Keep Screen On"
 msgstr "Mantieni lo schermo acceso"
 
@@ -242,6 +245,9 @@ msgstr "Premi Esc sulla schermata di blocco per spegnere lo schermo (o sospender
 
 msgid "Extras"
 msgstr "Extra"
+
+msgid "Integrations"
+msgstr "Integrazioni"
 
 msgid "[PRO] GDM Expansion"
 msgstr "[PRO] GDM Expansion"
@@ -307,7 +313,7 @@ msgid "Visit documentation on GitHub"
 msgstr "Visualizza documentazione su GitHub"
 
 msgid "[BETA] WACK Shell Integration"
-msgstr "[BETA] WACK Shell Integration"
+msgstr "[BETA] Integrazione WACK Shell"
 
 msgid "Installed. Enables crossfade transitions and Cupertino-inspired shell customisations."
 msgstr "Installato. Abilita transizioni in dissolvenza e personalizzazioni di Shell ispirate a Cupertino."

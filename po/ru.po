@@ -222,6 +222,9 @@ msgstr "Масштабирование"
 msgid "Screen Timeout"
 msgstr "Выключение экрана"
 
+msgid "Display and Power"
+msgstr "Экран и питание"
+
 msgid "Keep Screen On"
 msgstr "Не выключать экран"
 
@@ -242,6 +245,9 @@ msgstr "Нажмите Escape на экране блокировки, чтобы
 
 msgid "Extras"
 msgstr "Дополнительно"
+
+msgid "Integrations"
+msgstr "Интеграции"
 
 msgid "[PRO] GDM Expansion"
 msgstr "[PRO] GDM Expansion"
@@ -307,7 +313,7 @@ msgid "Visit documentation on GitHub"
 msgstr "Открыть документацию на GitHub"
 
 msgid "[BETA] WACK Shell Integration"
-msgstr "[BETA] WACK Shell Integration"
+msgstr "[BETA] Интеграция с WACK Shell"
 
 msgid "Installed. Enables crossfade transitions and Cupertino-inspired shell customisations."
 msgstr "Установлено. Включает плавные переходы и улучшения оболочки в стиле Cupertino."

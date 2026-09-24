@@ -222,6 +222,9 @@ msgstr "ซูม"
 msgid "Screen Timeout"
 msgstr "การหมดเวลาหน้าจอ"
 
+msgid "Display and Power"
+msgstr "หน้าจอและพลังงาน"
+
 msgid "Keep Screen On"
 msgstr "เปิดหน้าจอค้างไว้"
 
@@ -242,6 +245,9 @@ msgstr "กด Escape บนหน้าจอล็อกเพื่อดั�
 
 msgid "Extras"
 msgstr "ฟังก์ชันเสริม"
+
+msgid "Integrations"
+msgstr "การผสานการทำงาน"
 
 msgid "[PRO] GDM Expansion"
 msgstr "[PRO] GDM Expansion"
@@ -307,7 +313,7 @@ msgid "Visit documentation on GitHub"
 msgstr "ดูเอกสารคู่มือบน GitHub"
 
 msgid "[BETA] WACK Shell Integration"
-msgstr "[BETA] WACK Shell Integration"
+msgstr "[BETA] การผสานการทำงานกับ WACK Shell"
 
 msgid "Installed. Enables crossfade transitions and Cupertino-inspired shell customisations."
 msgstr "ติดตั้งแล้ว เปิดใช้งานการเปลี่ยนภาพแบบเฟดข้ามและการปรับแต่งเชลล์สไตล์คูเปอร์ติโน"

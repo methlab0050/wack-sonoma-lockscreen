@@ -222,6 +222,9 @@ msgstr "תקריב"
 msgid "Screen Timeout"
 msgstr "זמן קצוב למסך"
 
+msgid "Display and Power"
+msgstr "מסך וצריכת חשמל"
+
 msgid "Keep Screen On"
 msgstr "השאר מסך דולק"
 
@@ -242,6 +245,9 @@ msgstr "הקש Escape במסך הנעילה כדי לכבות את התצוגה 
 
 msgid "Extras"
 msgstr "תוספות"
+
+msgid "Integrations"
+msgstr "אינטגרציות"
 
 msgid "[PRO] GDM Expansion"
 msgstr "[PRO] GDM Expansion"
@@ -307,7 +313,7 @@ msgid "Visit documentation on GitHub"
 msgstr "בקר בתיעוד ב-GitHub"
 
 msgid "[BETA] WACK Shell Integration"
-msgstr "[BETA] WACK Shell Integration"
+msgstr "[BETA] שילוב WACK Shell"
 
 msgid "Installed. Enables crossfade transitions and Cupertino-inspired shell customisations."
 msgstr "מותקן. מאפשר מעברי עמעום והתאמות אישיות למעטפת בהשראת Cupertino."

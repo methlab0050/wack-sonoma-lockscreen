@@ -222,6 +222,9 @@ msgstr ""
 msgid "Screen Timeout"
 msgstr ""
 
+msgid "Display and Power"
+msgstr ""
+
 msgid "Keep Screen On"
 msgstr ""
 
@@ -241,6 +244,9 @@ msgid "Press Escape on the lock screen to sleep display (or suspend)"
 msgstr ""
 
 msgid "Extras"
+msgstr ""
+
+msgid "Integrations"
 msgstr ""
 
 msgid "[PRO] GDM Expansion"

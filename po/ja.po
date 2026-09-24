@@ -222,6 +222,9 @@ msgstr "ズーム"
 msgid "Screen Timeout"
 msgstr "画面のタイムアウト"
 
+msgid "Display and Power"
+msgstr "画面と電源"
+
 msgid "Keep Screen On"
 msgstr "画面をオンのままにする"
 
@@ -242,6 +245,9 @@ msgstr "ロック画面で Esc キーを押して画面をオフ（またはサ�
 
 msgid "Extras"
 msgstr "追加機能"
+
+msgid "Integrations"
+msgstr "統合"
 
 msgid "[PRO] GDM Expansion"
 msgstr "[PRO] GDM Expansion"
@@ -307,7 +313,7 @@ msgid "Visit documentation on GitHub"
 msgstr "GitHub でドキュメントを表示"
 
 msgid "[BETA] WACK Shell Integration"
-msgstr "[BETA] WACK Shell Integration"
+msgstr "[BETA] WACK Shell 統合"
 
 msgid "Installed. Enables crossfade transitions and Cupertino-inspired shell customisations."
 msgstr "インストール済み。クロスフェード効果と Cupertino 風のシェルカスタマイズを有効化します。"

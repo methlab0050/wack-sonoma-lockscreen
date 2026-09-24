@@ -227,14 +227,28 @@
 .unlock-dialog .login-dialog-button.login-dialog-auth-menu-button:focus {
     box-shadow: none !important;
     color: #ffffff !important;
-    border: 1px solid rgba(255, 255, 255, 0.4) !important;
+    border: 1px solid rgba(255, 255, 255, 0.8) !important;
     outline: none !important;
 }
 
 .unlock-dialog .login-dialog-button.a11y-button:active,
 .unlock-dialog .login-dialog-button.login-dialog-session-list-button:active,
-.unlock-dialog .login-dialog-button.login-dialog-auth-menu-button:active {
+.unlock-dialog .login-dialog-button.login-dialog-auth-menu-button:active,
+.unlock-dialog .login-dialog-button.a11y-button:checked,
+.unlock-dialog .login-dialog-button.login-dialog-session-list-button:checked,
+.unlock-dialog .login-dialog-button.login-dialog-auth-menu-button:checked {
     box-shadow: inset 0 0 8px rgba(255, 255, 255, 0.088) !important;
+}
+
+.unlock-dialog .login-dialog-button.a11y-button:focus:active,
+.unlock-dialog .login-dialog-button.login-dialog-session-list-button:focus:active,
+.unlock-dialog .login-dialog-button.login-dialog-auth-menu-button:focus:active,
+.unlock-dialog .login-dialog-button.a11y-button:focus:checked,
+.unlock-dialog .login-dialog-button.login-dialog-session-list-button:focus:checked,
+.unlock-dialog .login-dialog-button.login-dialog-auth-menu-button:focus:checked {
+    box-shadow: inset 0 0 8px rgba(255, 255, 255, 0.088) !important;
+    color: #ffffff !important;
+    border: 1px solid rgba(255, 255, 255, 0.8) !important;
 }
 
 /* Tighten vertical spacing inside the rest-prompt widget */

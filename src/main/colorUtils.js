@@ -20,7 +20,7 @@ export const PROMPT_INVERSE_ALPHA_CEILING = 0.18;
 export const PROMPT_SHADOW_FLOOR = 0.0175;
 export const PROMPT_SHADOW_ROOF = 0.1175;
 
-export const PROMPT_VISUAL_ALGORITHM_VERSION = 23;
+export const PROMPT_VISUAL_ALGORITHM_VERSION = 25;
 
 export function clamp01(val) {
     if (typeof val !== 'number' || isNaN(val))
@@ -573,6 +573,57 @@ export function getPromptMessageStyle(visualStateOrLightness, wallpaperAlpha = n
  */
 export function getChromeAlpha(visualStateOrLightness, state = 'base') {
     let pL = 0.5;
+    let noise = 0.0;
+
+    if (typeof visualStateOrLightness === 'number') {
+        pL = visualStateOrLightness <= 1.0 && visualStateOrLightness >= 0.0
+            ? visualStateOrLightness
+            : clamp01((visualStateOrLightness - 0.60) / 0.25);
+    } else if (visualStateOrLightness) {
+        const vs = visualStateOrLightness.visualState ?? visualStateOrLightness;
+        pL = vs.perceptualLightness ?? vs.perceptualL ??
+            (vs.luminance != null ? getPerceptualLightness(vs.luminance) : 0.5);
+        noise = vs.noise ?? 0.0;
+    }
+
+    const clampedL = clamp01(pL);
+
+    switch (state) {
+        case 'hover':
+            return clamp01(0.18 - 0.04 * clampedL);
+
+        case 'focus':
+            return clamp01(0.20 - 0.04 * clampedL);
+
+        case 'active':
+            return clamp01(0.28 - 0.04 * clampedL);
+
+        case 'base':
+        default: {
+            let baseAlpha = 0.18 - 0.05 * clampedL;
+            if (noise > 0.0) {
+                baseAlpha += Math.min(0.04, noise * 2.0);
+            }
+            return clamp01(Math.max(0.12, Math.min(0.25, baseAlpha)));
+        }
+    }
+}
+
+/**
+ * Calculates adaptive dim veil alpha for unfocused prompt background (Acrylic & Tonal)
+ * based on APCA / perceptual lightness sensibilities.
+ *
+ * Sensibilities:
+ * - On dark backdrops: slightly deeper dark veil (0.25 - 0.35) creates distinct unfocused depth.
+ * - On bright/inverse backdrops: gentle, subtle dark veil (0.10 - 0.16) avoids muddy black blotches
+ *   and maintains clean macOS-style frosted aesthetic.
+ * - Monotonic mapping bounded between 0.10 and 0.35.
+ *
+ * @param {object|number} visualStateOrLightness
+ * @returns {number} veil alpha between 0.10 and 0.35
+ */
+export function getPromptDimVeilAlpha(visualStateOrLightness) {
+    let pL = 0.5;
     let isInverse = false;
     let noise = 0.0;
 
@@ -590,42 +641,19 @@ export function getChromeAlpha(visualStateOrLightness, state = 'base') {
 
     const clampedL = clamp01(pL);
 
-    switch (state) {
-        case 'hover':
-            // Inverse/bright backdrops need gentle white highlight (0.08-0.10) to avoid blowout
-            // Dark backgrounds need crisp white highlight (0.14-0.18) to stand out against black
-            if (isInverse) {
-                return clamp01(0.08 + 0.04 * (1.0 - clampedL));
-            }
-            return clamp01(0.18 - 0.04 * clampedL);
-
-        case 'focus':
-            // Focus border alpha
-            if (isInverse) {
-                return clamp01(0.18 + 0.04 * (1.0 - clampedL));
-            }
-            return clamp01(0.20 - 0.04 * clampedL);
-
-        case 'active':
-            // Pressed state highlight
-            if (isInverse) {
-                return clamp01(0.16 + 0.04 * (1.0 - clampedL));
-            }
-            return clamp01(0.28 - 0.04 * clampedL);
-
-        case 'base':
-        default: {
-            let baseAlpha;
-            if (isInverse) {
-                baseAlpha = 0.20 + 0.04 * clampedL;
-            } else {
-                baseAlpha = 0.18 - 0.05 * clampedL;
-            }
-            if (noise > 0.0) {
-                baseAlpha += Math.min(0.04, noise * 2.0);
-            }
-            return clamp01(Math.max(0.12, Math.min(0.25, baseAlpha)));
-        }
+    let veilAlpha;
+    if (isInverse) {
+        // Reduced by 25%: range 0.075 - 0.1125
+        veilAlpha = 0.1125 - 0.0375 * clampedL;
+    } else {
+        // Reduced by 50%: range 0.100 - 0.175
+        veilAlpha = 0.175 - 0.075 * clampedL;
     }
+
+    if (noise > 0.0) {
+        veilAlpha += Math.min(0.02, noise * 1.0);
+    }
+
+    return clamp01(Math.max(0.075, Math.min(0.175, veilAlpha)));
 }
 

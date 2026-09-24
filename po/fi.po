@@ -222,6 +222,9 @@ msgstr "Zoom"
 msgid "Screen Timeout"
 msgstr "Näytön aikakatkaisu"
 
+msgid "Display and Power"
+msgstr "Näyttö ja virranhallinta"
+
 msgid "Keep Screen On"
 msgstr "Pidä näyttö päällä"
 
@@ -242,6 +245,9 @@ msgstr "Paina Escape lukitusnäytössä sammuttaaksesi näytön (tai siirtyäkse
 
 msgid "Extras"
 msgstr "Lisätoiminnot"
+
+msgid "Integrations"
+msgstr "Integraatiot"
 
 msgid "[PRO] GDM Expansion"
 msgstr "[PRO] GDM Expansion"
@@ -307,7 +313,7 @@ msgid "Visit documentation on GitHub"
 msgstr "Katso dokumentaatio GitHubissa"
 
 msgid "[BETA] WACK Shell Integration"
-msgstr "[BETA] WACK Shell Integration"
+msgstr "[BETA] WACK Shell -integraatio"
 
 msgid "Installed. Enables crossfade transitions and Cupertino-inspired shell customisations."
 msgstr "Asennettu. Ottaa käyttöön häivytyssiirtymät ja Cupertino-vaikutteiset kuorimukautukset."

@@ -222,6 +222,9 @@ msgstr "Zoom"
 msgid "Screen Timeout"
 msgstr "Skärmavstängning"
 
+msgid "Display and Power"
+msgstr "Skärm och ström"
+
 msgid "Keep Screen On"
 msgstr "Håll skärmen igång"
 
@@ -242,6 +245,9 @@ msgstr "Tryck på Escape på låsskärmen för att släcka skärmen (eller gå i
 
 msgid "Extras"
 msgstr "Extra"
+
+msgid "Integrations"
+msgstr "Integrationer"
 
 msgid "[PRO] GDM Expansion"
 msgstr "[PRO] GDM Expansion"
@@ -307,7 +313,7 @@ msgid "Visit documentation on GitHub"
 msgstr "Visa dokumentation på GitHub"
 
 msgid "[BETA] WACK Shell Integration"
-msgstr "[BETA] WACK Shell Integration"
+msgstr "[BETA] WACK Shell-integrering"
 
 msgid "Installed. Enables crossfade transitions and Cupertino-inspired shell customisations."
 msgstr "Installerat. Aktiverar mjuka övergångar och Cupertino-inspirerade skalanpassningar."

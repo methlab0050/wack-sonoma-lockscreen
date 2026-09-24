@@ -2,6 +2,7 @@ import GdkPixbuf from 'gi://GdkPixbuf';
 import GLib from 'gi://GLib';
 import {
     resolvePromptVisualState,
+    getPromptDarkenedHueColor,
     PROMPT_SHADOW_FLOOR,
     CUPERTINO_PROMPT_WHITE_BLEND_ALPHA,
     clamp01,
@@ -252,6 +253,8 @@ export function createBlurredPromptSlice(
         const hG = 255;
         const hB = 255;
 
+        const isBrightHue = resolvedState.isBrightHue ?? false;
+
         for (let y = 0; y < dsCropH; y++) {
             const clampedY = Math.max(0, Math.min(dsH - 1, y + dsOffY));
             for (let x = 0; x < dsCropW; x++) {
@@ -259,9 +262,20 @@ export function createBlurredPromptSlice(
                 const srcOff = (clampedY * dsW + clampedX) * dsChannels;
                 const dstOff = (y * dsCropW + x) * dsChannels;
 
-                let r = (pass2[srcOff] * invAlpha + overlayR * blendAlpha) * bFactor;
-                let g = (pass2[srcOff + 1] * invAlpha + overlayG * blendAlpha) * bFactor;
-                let b = (pass2[srcOff + 2] * invAlpha + overlayB * blendAlpha) * bFactor;
+                let srcR = pass2[srcOff];
+                let srcG = pass2[srcOff + 1];
+                let srcB = pass2[srcOff + 2];
+
+                if (isBrightHue) {
+                    const darkened = getPromptDarkenedHueColor({ r: srcR, g: srcG, b: srcB });
+                    srcR = darkened.r;
+                    srcG = darkened.g;
+                    srcB = darkened.b;
+                }
+
+                let r = (srcR * invAlpha + overlayR * blendAlpha) * bFactor;
+                let g = (srcG * invAlpha + overlayG * blendAlpha) * bFactor;
+                let b = (srcB * invAlpha + overlayB * blendAlpha) * bFactor;
 
                 if (highlightAlpha > 0) {
                     r = r * hInv + hR * highlightAlpha;

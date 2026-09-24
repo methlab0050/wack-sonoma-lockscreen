@@ -222,6 +222,9 @@ msgstr "Zoom"
 msgid "Screen Timeout"
 msgstr "Apagado de pantalla"
 
+msgid "Display and Power"
+msgstr "Pantalla y energía"
+
 msgid "Keep Screen On"
 msgstr "Mantener la pantalla encendida"
 
@@ -242,6 +245,9 @@ msgstr "Presiona Escape en la pantalla de bloqueo para apagar la pantalla (o sus
 
 msgid "Extras"
 msgstr "Extras"
+
+msgid "Integrations"
+msgstr "Integraciones"
 
 msgid "[PRO] GDM Expansion"
 msgstr "[PRO] GDM Expansion"
@@ -307,7 +313,7 @@ msgid "Visit documentation on GitHub"
 msgstr "Ver documentación en GitHub"
 
 msgid "[BETA] WACK Shell Integration"
-msgstr "[BETA] WACK Shell Integration"
+msgstr "[BETA] Integración con WACK Shell"
 
 msgid "Installed. Enables crossfade transitions and Cupertino-inspired shell customisations."
 msgstr "Instalado. Permite transiciones suaves y personalizaciones de GNOME Shell inspiradas en Cupertino."

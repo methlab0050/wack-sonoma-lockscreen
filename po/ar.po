@@ -222,6 +222,9 @@ msgstr "تكبير"
 msgid "Screen Timeout"
 msgstr "مهلة إيقاف الشاشة"
 
+msgid "Display and Power"
+msgstr "الشاشة والطاقة"
+
 msgid "Keep Screen On"
 msgstr "إبقاء الشاشة قيد التشغيل"
 
@@ -242,6 +245,9 @@ msgstr "اضغط على Escape في شاشة القفل لإطفاء الشاش�
 
 msgid "Extras"
 msgstr "إضافات"
+
+msgid "Integrations"
+msgstr "عمليات التكامل"
 
 msgid "[PRO] GDM Expansion"
 msgstr "[PRO] GDM Expansion"
@@ -307,7 +313,7 @@ msgid "Visit documentation on GitHub"
 msgstr "زيارة التوثيق على GitHub"
 
 msgid "[BETA] WACK Shell Integration"
-msgstr "[BETA] WACK Shell Integration"
+msgstr "[BETA] تكامل WACK Shell"
 
 msgid "Installed. Enables crossfade transitions and Cupertino-inspired shell customisations."
 msgstr "مثبّت. يتيح انتقالات التلاشي التدريجي وتخصيصات الواجهة المستوحاة من Cupertino."

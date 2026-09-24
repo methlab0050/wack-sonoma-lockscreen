@@ -145,7 +145,7 @@
 .login-dialog .wack-cupertino-prompt .login-dialog-button.cancel-button:focus {
     box-shadow: none !important;
     color: #ffffff !important;
-    border: 1px solid rgba(255, 255, 255, 0.4) !important;
+    border: 1px solid rgba(255, 255, 255, 0.8) !important;
     outline: none !important;
 }
 
@@ -192,15 +192,34 @@
 .login-dialog .login-dialog-button.cancel-button:focus {
     box-shadow: none !important;
     color: #ffffff !important;
-    border: 1px solid rgba(255, 255, 255, 0.4) !important;
+    border: 1px solid rgba(255, 255, 255, 0.8) !important;
     outline: none !important;
 }
 
 .login-dialog .login-dialog-button.a11y-button:active,
 .login-dialog .login-dialog-button.login-dialog-session-list-button:active,
 .login-dialog .login-dialog-button.login-dialog-auth-menu-button:active,
-.login-dialog .login-dialog-button.cancel-button:active {
+.login-dialog .login-dialog-button.cancel-button:active,
+.login-dialog .login-dialog-button.a11y-button:checked,
+.login-dialog .login-dialog-button.login-dialog-session-list-button:checked,
+.login-dialog .login-dialog-button.login-dialog-auth-menu-button:checked,
+.login-dialog .login-dialog-button.cancel-button:checked {
     box-shadow: inset 0 0 8px rgba(255, 255, 255, 0.088) !important;
+}
+
+.login-dialog .wack-cupertino-prompt .login-dialog-button.cancel-button:focus:active,
+.login-dialog .wack-cupertino-prompt .login-dialog-button.cancel-button:focus:checked,
+.login-dialog .login-dialog-button.a11y-button:focus:active,
+.login-dialog .login-dialog-button.login-dialog-session-list-button:focus:active,
+.login-dialog .login-dialog-button.login-dialog-auth-menu-button:focus:active,
+.login-dialog .login-dialog-button.cancel-button:focus:active,
+.login-dialog .login-dialog-button.a11y-button:focus:checked,
+.login-dialog .login-dialog-button.login-dialog-session-list-button:focus:checked,
+.login-dialog .login-dialog-button.login-dialog-auth-menu-button:focus:checked,
+.login-dialog .login-dialog-button.cancel-button:focus:checked {
+    box-shadow: inset 0 0 8px rgba(255, 255, 255, 0.088) !important;
+    color: #ffffff !important;
+    border: 1px solid rgba(255, 255, 255, 0.8) !important;
 }
 
 /* ── GDM Messages & Warnings ─────────────────────────────────────────── */

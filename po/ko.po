@@ -222,6 +222,9 @@ msgstr "줌"
 msgid "Screen Timeout"
 msgstr "화면 꺼짐 시간"
 
+msgid "Display and Power"
+msgstr "화면 및 전원"
+
 msgid "Keep Screen On"
 msgstr "화면 켜짐 유지"
 
@@ -242,6 +245,9 @@ msgstr "잠금 화면에서 Esc 키를 눌러 디스플레이를 끄거나 절�
 
 msgid "Extras"
 msgstr "추가 기능"
+
+msgid "Integrations"
+msgstr "통합"
 
 msgid "[PRO] GDM Expansion"
 msgstr "[PRO] GDM Expansion"
@@ -307,7 +313,7 @@ msgid "Visit documentation on GitHub"
 msgstr "GitHub에서 문서 보기"
 
 msgid "[BETA] WACK Shell Integration"
-msgstr "[BETA] WACK Shell Integration"
+msgstr "[BETA] WACK Shell 통합"
 
 msgid "Installed. Enables crossfade transitions and Cupertino-inspired shell customisations."
 msgstr "설치됨. 크로스페이드 전환 효과 및 쿠퍼티노 스타일의 셸 사용자 정의를 활성화합니다."

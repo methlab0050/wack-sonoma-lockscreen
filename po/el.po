@@ -222,6 +222,9 @@ msgstr "Ζουμ"
 msgid "Screen Timeout"
 msgstr "Χρονικό όριο οθόνης"
 
+msgid "Display and Power"
+msgstr "Οθόνη και ενέργεια"
+
 msgid "Keep Screen On"
 msgstr "Διατήρηση οθόνης ενεργής"
 
@@ -242,6 +245,9 @@ msgstr "Πατήστε Escape στην οθόνη κλειδώματος για 
 
 msgid "Extras"
 msgstr "Πρόσθετα"
+
+msgid "Integrations"
+msgstr "Ενσωματώσεις"
 
 msgid "[PRO] GDM Expansion"
 msgstr "[PRO] GDM Expansion"
@@ -307,7 +313,7 @@ msgid "Visit documentation on GitHub"
 msgstr "Δείτε την τεκμηρίωση στο GitHub"
 
 msgid "[BETA] WACK Shell Integration"
-msgstr "[BETA] WACK Shell Integration"
+msgstr "[BETA] Ενσωμάτωση WACK Shell"
 
 msgid "Installed. Enables crossfade transitions and Cupertino-inspired shell customisations."
 msgstr "Εγκατεστημένο. Ενεργοποιεί μεταβάσεις βαθμιαίας απόσβεσης και προσαρμογές του κελύφους εμπνευσμένες από το Cupertino."

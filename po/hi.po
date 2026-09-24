@@ -222,6 +222,9 @@ msgstr "ज़ूम"
 msgid "Screen Timeout"
 msgstr "स्क्रीन टाइमआउट"
 
+msgid "Display and Power"
+msgstr "स्क्रीन और पावर"
+
 msgid "Keep Screen On"
 msgstr "स्क्रीन को चालू रखें"
 
@@ -242,6 +245,9 @@ msgstr "डिस्प्ले को बंद (या सस्पेंड)
 
 msgid "Extras"
 msgstr "अतिरिक्त"
+
+msgid "Integrations"
+msgstr "एकीकरण"
 
 msgid "[PRO] GDM Expansion"
 msgstr "[PRO] GDM Expansion"
@@ -307,7 +313,7 @@ msgid "Visit documentation on GitHub"
 msgstr "GitHub पर दस्तावेज़ देखें"
 
 msgid "[BETA] WACK Shell Integration"
-msgstr "[BETA] WACK Shell Integration"
+msgstr "[BETA] WACK Shell एकीकरण"
 
 msgid "Installed. Enables crossfade transitions and Cupertino-inspired shell customisations."
 msgstr "स्थापित। क्रॉसफ़ेड संक्रमण और क्यूपर्टिनो-प्रेरित शेल अनुकूलन सक्षम करता है।"
