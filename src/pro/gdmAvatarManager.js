@@ -1,5 +1,6 @@
 import Clutter from 'gi://Clutter';
 import Gio from 'gi://Gio';
+import GLib from 'gi://GLib';
 import St from 'gi://St';
 import { _log } from './gdmUtils.js';
 import { getUserLabelStyle } from '../main/colorUtils.js';
