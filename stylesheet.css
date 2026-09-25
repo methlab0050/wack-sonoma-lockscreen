@@ -7,7 +7,7 @@
     font-size: 30px;
     font-weight: 500;
     font-family: 'Inter';
-    letter-spacing: -1px;
+    letter-spacing: -2px;
     /* for Inter, it's better to use -1px. safe to use -2px for SF Pro Text */
     text-shadow: 0 1px 8px rgba(0, 0, 0, 0.035);
 }
@@ -16,9 +16,9 @@
     color: rgba(255, 255, 255, 0.75);
     font-size: 128px;
     font-family: 'Inter';
-    font-weight: 600;
+    font-weight: 700;
     font-feature-settings: "pnum" 1, "tnum" 0;
-    letter-spacing: 0;
+    letter-spacing: -1px;
     text-shadow: 0 2px 16px rgba(0, 0, 0, 0.05);
 }
 
@@ -103,6 +103,7 @@
 .unlock-dialog .user-widget.vertical .user-widget-label {
     font-weight: 600;
     text-shadow: 0 1px 10px rgba(0, 0, 0, 0.275);
+    letter-spacing: -2px;
 }
 
 .wack-avatar-well {
