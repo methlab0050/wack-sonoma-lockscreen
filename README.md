@@ -1,3 +1,7 @@
+> This is a fork of [rinzler69-wastaken/wack-sonoma-lockscreen](https://github.com/rinzler69-wastaken/wack-sonoma-lockscreen/)
+> with a couple of changes to match my preferences.
+> This will not be maintained, please check out the main repo.
+
 # GNOME Shell Extension — WACK Sonoma Lockscreen
 
 [<img src="https://github.com/aunetx/files_utils/raw/master/get_it_on_gnome_extensions.png" height="100" align="right">](https://extensions.gnome.org/extension/9713/wack-sonoma-lockscreen/)
