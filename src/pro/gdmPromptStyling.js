@@ -117,7 +117,7 @@ export class GdmPromptStyling {
             if (entry.clutter_text)
                 entry.clutter_text.disconnectObject(this);
             if (global.stage)
-                global.stage.disconnectObject(this);
+                global.stage.disconnectObject(entry);
 
             const authPrompt = this._gdm._dialog?._authPrompt;
             if (authPrompt)
@@ -144,20 +144,37 @@ export class GdmPromptStyling {
                 'key-focus-in', () => {
                     entry._wackPreserveFocus = false;
                     this._updatePromptEntryStyle(entry);
+                    return Clutter.EVENT_PROPAGATE;
                 },
                 'key-focus-out', () => {
-                    this._updatePromptEntryStyle(entry);
+                    GLib.idle_add(GLib.PRIORITY_DEFAULT_IDLE, () => {
+                        if (entry && entry.get_stage && entry.get_stage())
+                            this._updatePromptEntryStyle(entry);
+                        return GLib.SOURCE_REMOVE;
+                    });
+                    return Clutter.EVENT_PROPAGATE;
+                },
+                'destroy', () => {
+                    if (global.stage)
+                        global.stage.disconnectObject(entry);
                 },
                 this
             );
             if (entry.clutter_text) {
                 entry.clutter_text.connectObject(
+                    'notify::has-key-focus', () => this._updatePromptEntryStyle(entry),
                     'key-focus-in', () => {
                         entry._wackPreserveFocus = false;
                         this._updatePromptEntryStyle(entry);
+                        return Clutter.EVENT_PROPAGATE;
                     },
                     'key-focus-out', () => {
-                        this._updatePromptEntryStyle(entry);
+                        GLib.idle_add(GLib.PRIORITY_DEFAULT_IDLE, () => {
+                            if (entry && entry.get_stage && entry.get_stage())
+                                this._updatePromptEntryStyle(entry);
+                            return GLib.SOURCE_REMOVE;
+                        });
+                        return Clutter.EVENT_PROPAGATE;
                     },
                     'activate', () => {
                         entry._wackPreserveFocus = true;
@@ -166,18 +183,15 @@ export class GdmPromptStyling {
                     this
                 );
             }
+
             if (global.stage) {
                 global.stage.connectObject(
                     'notify::key-focus', () => {
-                        const kf = global.stage ? global.stage.key_focus : null;
-                        if (kf && kf !== entry && (!entry.clutter_text || kf !== entry.clutter_text)) {
-                            if (kf.reactive && kf.can_focus) {
-                                entry._wackPreserveFocus = false;
-                            }
-                        }
+                        if (!entry || !entry.get_stage || !entry.get_stage())
+                            return;
                         this._updatePromptEntryStyle(entry);
                     },
-                    this
+                    entry
                 );
             }
 
@@ -205,14 +219,18 @@ export class GdmPromptStyling {
     }
 
     _updatePromptEntryStyle(entry) {
+        if (!entry || !entry.get_stage || !entry.get_stage())
+            return;
+
         const color = entry._wackColor;
         if (!color)
             return;
 
         const keyFocus = global.stage ? global.stage.key_focus : null;
+        const textActor = entry.clutter_text ?? null;
         const hasDirectFocus = entry.has_focus ||
             keyFocus === entry ||
-            (entry.clutter_text ? (keyFocus === entry.clutter_text || (entry.clutter_text.has_key_focus && entry.clutter_text.has_key_focus())) : false);
+            (textActor ? (keyFocus === textActor || textActor.has_key_focus()) : false);
 
         const isFocused = hasDirectFocus || (entry._wackPreserveFocus === true);
 
@@ -232,7 +250,8 @@ export class GdmPromptStyling {
                 if (color.shadowAlpha !== undefined)
                     shadowStyle = ` box-shadow: 0 2px 24px rgba(0, 0, 0, ${color.shadowAlpha.toFixed(3)}) !important;`;
             } else {
-                shadowStyle = ` box-shadow: inset 0 0 0 999px rgba(0, 0, 0, ${veilAlpha.toFixed(3)}) !important;`;
+                const sAlpha = color.shadowAlpha !== undefined ? (color.shadowAlpha * (1.0 - veilAlpha)).toFixed(3) : '0';
+                shadowStyle = ` box-shadow: 0 2px 24px rgba(0, 0, 0, ${sAlpha}), inset 0 0 0 999px rgba(0, 0, 0, ${veilAlpha.toFixed(3)}) !important;`;
             }
             bgStyle = ` background-color: transparent !important; background-gradient-direction: none !important; background-image: url("${imageUri}") !important; background-size: cover !important; background-position: center !important; background-repeat: no-repeat !important; border: none !important;`;
         } else {
@@ -298,15 +317,53 @@ export class GdmPromptStyling {
         }
     }
 
+    _findMenuForButton(button) {
+        if (!button)
+            return null;
+        if (button._menu)
+            return button._menu;
+        if (button.menu)
+            return button.menu;
+        if (button._authMenuButton?._menu)
+            return button._authMenuButton._menu;
+        if (button._authMenuButton?.menu)
+            return button._authMenuButton.menu;
+        if (button._sessionMenuButton?._menu)
+            return button._sessionMenuButton._menu;
+        if (button._sessionMenuButton?.menu)
+            return button._sessionMenuButton.menu;
+        const parent = button.get_parent ? button.get_parent() : null;
+        if (parent) {
+            if (parent._menu)
+                return parent._menu;
+            if (parent.menu)
+                return parent.menu;
+            if (parent._authMenuButton?._menu)
+                return parent._authMenuButton._menu;
+            if (parent._sessionMenuButton?._menu)
+                return parent._sessionMenuButton._menu;
+        }
+        const dialog = this._gdm?._dialog;
+        if (dialog) {
+            if (dialog._authMenuButton?._menu)
+                return dialog._authMenuButton._menu;
+            if (dialog._sessionMenuButton?._menu)
+                return dialog._sessionMenuButton._menu;
+            if (dialog._sessionMenuButton?.menu)
+                return dialog._sessionMenuButton.menu;
+        }
+        return null;
+    }
+
     _setupChromeButton(button, color, buttonType = 'generic') {
         if (!button)
             return;
 
         if (!color) {
             button.disconnectObject(this);
-            const menu = button._menu ?? button.menu;
+            const menu = this._findMenuForButton(button);
             if (menu)
-                menu.disconnectObject(this);
+                menu.disconnectObject(button);
             if (button._wackOriginalStyle !== undefined) {
                 button.set_style(button._wackOriginalStyle);
                 delete button._wackOriginalStyle;
@@ -317,6 +374,8 @@ export class GdmPromptStyling {
             delete button._wackMousePressed;
             delete button._wackKeyPressed;
             delete button._wackButtonType;
+            delete button._wackMenuConnected;
+            delete button._wackOpenedViaKey;
             return;
         }
 
@@ -377,21 +436,22 @@ export class GdmPromptStyling {
                 },
                 this
             );
+        }
 
-            const menu = button._menu ?? button.menu;
-            if (menu) {
-                menu.connectObject(
-                    'open-state-changed', (m, isOpen) => {
-                        button._wackMousePressed = false;
-                        button._wackKeyPressed = false;
-                        if (!isOpen) {
-                            button._wackOpenedViaKey = false;
-                        }
-                        this._updateChromeButtonStyle(button, button._wackButtonType);
-                    },
-                    this
-                );
-            }
+        const menu = this._findMenuForButton(button);
+        if (menu && !button._wackMenuConnected) {
+            button._wackMenuConnected = true;
+            menu.connectObject(
+                'open-state-changed', (m, isOpen) => {
+                    button._wackMousePressed = false;
+                    button._wackKeyPressed = false;
+                    if (!isOpen) {
+                        button._wackOpenedViaKey = false;
+                    }
+                    this._updateChromeButtonStyle(button, button._wackButtonType);
+                },
+                button
+            );
         }
 
         this._updateChromeButtonStyle(button, buttonType);
@@ -402,7 +462,22 @@ export class GdmPromptStyling {
         if (!color)
             return;
 
-        const menu = button._menu ?? button.menu;
+        const menu = this._findMenuForButton(button);
+        if (menu && !button._wackMenuConnected) {
+            button._wackMenuConnected = true;
+            menu.connectObject(
+                'open-state-changed', (m, isOpen) => {
+                    button._wackMousePressed = false;
+                    button._wackKeyPressed = false;
+                    if (!isOpen) {
+                        button._wackOpenedViaKey = false;
+                    }
+                    this._updateChromeButtonStyle(button, button._wackButtonType);
+                },
+                button
+            );
+        }
+
         const isMenuOpen = menu ? menu.isOpen : false;
 
         const isPressed = button._wackMousePressed ||

@@ -9,7 +9,7 @@ export const CUPERTINO_PROMPT_WHITE_BLEND_ALPHA = 0.16;
 // Bright colorful samples should become a darker version of themselves, rather
 // than getting muddied by blending toward black. This tunes the target lightness
 // for that hue-preserving darken step.
-export const PROMPT_BRIGHT_HUE_LIGHTNESS_FACTOR = 0.88;
+export const PROMPT_BRIGHT_HUE_LIGHTNESS_FACTOR = 0.935;
 export const PROMPT_BRIGHT_HUE_MIN_CHROMA = 0.08;
 export const PROMPT_BRIGHT_HUE_LIGHTNESS_THRESHOLD = 0.72;
 export const PROMPT_INVERSE_ALPHA_CEILING = 0.18;
@@ -20,7 +20,7 @@ export const PROMPT_INVERSE_ALPHA_CEILING = 0.18;
 export const PROMPT_SHADOW_FLOOR = 0.0175;
 export const PROMPT_SHADOW_ROOF = 0.1175;
 
-export const PROMPT_VISUAL_ALGORITHM_VERSION = 25;
+export const PROMPT_VISUAL_ALGORITHM_VERSION = 26;
 
 export function clamp01(val) {
     if (typeof val !== 'number' || isNaN(val))
@@ -655,5 +655,61 @@ export function getPromptDimVeilAlpha(visualStateOrLightness) {
     }
 
     return clamp01(Math.max(0.075, Math.min(0.175, veilAlpha)));
+}
+
+/**
+ * Calculates adaptive background styling for notification and media cards on the lockscreen.
+ * Adapts opacity and hue overlay to match prompt vibrancy and prevent wash-out on bright wallpapers.
+ *
+ * @param {object|null} color
+ * @param {boolean} [useInverse=false]
+ * @returns {{style: string, isInverseClass: boolean}}
+ */
+export function getNotifCardBackground(color, useInverse = false) {
+    if (!color) {
+        return { style: '', isInverseClass: useInverse };
+    }
+
+    const vs = color.visualState ?? color;
+    const isBrightHue = color.isBrightHue ?? vs.isBrightHue ?? false;
+    const isInv = useInverse || (vs.useInverse ?? vs.isBrightSample ?? false);
+    const darkened = vs.finalColor ?? color.start ?? (color.r != null ? color : null);
+
+    const pL = vs.perceptualLightness ?? vs.perceptualL ??
+        (vs.luminance != null ? getPerceptualLightness(vs.luminance) : 0.5);
+    const noise = vs.noise ?? 0.0;
+    const clampedL = clamp01(pL);
+
+    if (isInv && isBrightHue && darkened && darkened.r != null) {
+        let alpha = 0.58 + 0.12 * clampedL;
+        if (noise > 0.0) {
+            alpha += Math.min(0.025, noise * 1.5);
+        }
+        alpha = clamp01(Math.max(0.55, Math.min(0.70, alpha)));
+
+        return {
+            style: `background-color: rgba(${darkened.r}, ${darkened.g}, ${darkened.b}, ${alpha.toFixed(3)}) !important;`,
+            isInverseClass: false,
+        };
+    } else if (isInv) {
+        let blendAlpha = vs.overlay?.alpha ?? vs.blendAlpha;
+        if (blendAlpha == null) {
+            const t = clamp01((clampedL - PROMPT_BRIGHT_HUE_LIGHTNESS_THRESHOLD) / (1.0 - PROMPT_BRIGHT_HUE_LIGHTNESS_THRESHOLD));
+            blendAlpha = PROMPT_INVERSE_ALPHA_CEILING * t;
+        }
+        let darkAlpha = Math.max(0.04, Math.min(PROMPT_INVERSE_ALPHA_CEILING, blendAlpha));
+        if (noise > 0.0) {
+            darkAlpha += Math.min(0.02, noise * 1.0);
+        }
+        return {
+            style: `background-color: rgba(0, 0, 0, ${darkAlpha.toFixed(3)}) !important;`,
+            isInverseClass: false,
+        };
+    }
+
+    return {
+        style: '',
+        isInverseClass: false,
+    };
 }
 

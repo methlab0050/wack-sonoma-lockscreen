@@ -19,6 +19,7 @@ import {
     HINT_VERTICAL_FRACTION,
     HINT_NOTIF_MARGIN
 } from './constants.js';
+import { getNotifCardBackground } from './colorUtils.js';
 
 const shellGettext = Gettext.domain('gnome-shell').gettext.bind(Gettext.domain('gnome-shell'));
 
@@ -56,21 +57,16 @@ export class NotificationManager {
 
     _applyCardStyle(actor) {
         if (!actor) return;
-        const color = this._promptColor;
-        const isInverse = this._useInverse;
-        const isBrightHue = color?.isBrightHue ?? color?.visualState?.isBrightHue ?? false;
-        const darkened = color?.visualState?.finalColor ?? color?.start ?? (color?.r != null ? color : null);
+        const { style, isInverseClass } = getNotifCardBackground(this._promptColor, this._useInverse);
 
-        if (isInverse && isBrightHue && darkened && darkened.r != null) {
-            actor.remove_style_class_name('wack-vibrancy-inverted');
-            actor.set_style(`border-radius: ${NOTIF_CARD_RADIUS}px; background-color: rgba(${darkened.r}, ${darkened.g}, ${darkened.b}, 0.50) !important;`);
-        } else if (isInverse) {
+        if (isInverseClass) {
             actor.add_style_class_name('wack-vibrancy-inverted');
-            actor.set_style(`border-radius: ${NOTIF_CARD_RADIUS}px;`);
         } else {
             actor.remove_style_class_name('wack-vibrancy-inverted');
-            actor.set_style(`border-radius: ${NOTIF_CARD_RADIUS}px;`);
         }
+
+        const baseStyle = `border-radius: ${NOTIF_CARD_RADIUS}px;`;
+        actor.set_style(style ? `${baseStyle} ${style}` : baseStyle);
     }
 
     _addCardBlur(actor) {
